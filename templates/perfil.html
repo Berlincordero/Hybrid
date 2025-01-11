@@ -8,44 +8,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% trans "Perfil de Usuario" %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <style>
+        .circle-container {
+            width: 12rem; /* 192px */
+            height: 12rem; /* 192px */
+            position: relative;
+        }
+
+        .lottie-icon {
+            position: absolute;
+            top: 0%; /* Posición relativa al círculo */
+            bottom: 10%; /* Posición relativa al círculo */
+            right: 2%; /* Ajustado hacia la esquina */
+            width: 100px; /* Ancho del Lottie */
+            height: 100px; /* Altura del Lottie */
+        }
+
+        @media (min-width: 768px) { /* Pantallas medianas */
+            .circle-container {
+                width: 16rem; /* 256px */
+                height: 16rem; /* 256px */
+            }
+            .lottie-icon {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        @media (min-width: 1024px) { /* Pantallas grandes */
+            .circle-container {
+                width: 20rem; /* 320px */
+                height: 20rem; /* 320px */
+            }
+            .lottie-icon {
+                margin-top: 11rem;
+                width: 170px;
+                height: 170px;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
-    <div class="w-full max-w-2xl bg-gray-800 p-6 rounded-xl shadow-md">
-        <h1 class="text-2xl font-bold mb-4">{% trans "Perfil de Usuario" %}</h1>
-
-        <!-- Mostrar foto de perfil -->
-        {% if perfil.foto_perfil %}
-        <img src="{{ perfil.foto_perfil.url }}" alt="{% trans 'Foto de Perfil' %}" class="w-32 h-32 rounded-full mx-auto mb-4">
-        {% endif %}
-
-        <form method="post" enctype="multipart/form-data" class="space-y-4">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-
-            <div>
-                <label for="{{ form.bio.id_for_label }}" class="block font-medium text-gray-200">{% trans "Biografía" %}</label>
-                {{ form.bio }}
-            </div>
-            <div>
-                <label for="{{ form.location.id_for_label }}" class="block font-medium text-gray-200">{% trans "Ubicación" %}</label>
-                {{ form.location }}
-            </div>
-            <div>
-                <label for="{{ form.birth_date.id_for_label }}" class="block font-medium text-gray-200">{% trans "Fecha de Nacimiento" %}</label>
-                {{ form.birth_date }}
-            </div>
-            <div>
-                <label for="{{ form.actividad_comercial.id_for_label }}" class="block font-medium text-gray-200">{% trans "Actividad Comercial" %}</label>
-                {{ form.actividad_comercial }}
-            </div>
-            <div>
-                <label for="{{ form.foto_perfil.id_for_label }}" class="block font-medium text-gray-200">{% trans "Foto de Perfil" %}</label>
-                {{ form.foto_perfil }}
-            </div>
-            <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md font-semibold text-white transition">
-                {% trans "Guardar Cambios" %}
-            </button>
-        </form>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center space-y-6">
+    <!-- Enlace para regresar al inicio -->
+    <div class="w-full max-w-4xl text-left px-6">
+        <a href="{% url 'index' %}" target="_blank" class="flex flex-row items-center text-white hover:text-indigo-400">
+            <!-- Ícono Lottie -->
+            <lottie-player
+                src="{% static 'animations/Inicio.json' %}"
+                background="transparent"
+                speed="1"
+                style="width: 50px; height: 50px;"
+                loop
+                autoplay>
+            </lottie-player>
+            <!-- Texto del enlace -->
+            <span class="ml-2">
+                {% trans "Volver al inicio" %}
+            </span>
+        </a>
     </div>
+    
+
+    <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-xl shadow-md">
+        <!-- Encabezado del perfil -->
+        <div class="text-center mb-8">
+            <p class="text-gray-300 text-lg mt-2">
+                <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong>
+            </p>
+        </div>
+
+        <!-- Sección de perfil -->
+        <div class="flex flex-col lg:flex-row lg:items-start lg:space-x-12">
+            <!-- Foto de perfil -->
+            <div class="flex flex-col items-center">
+                <div class="circle-container rounded-full bg-gray-600 flex items-center justify-center overflow-hidden">
+                    {% if perfil.foto_perfil %}
+                    <img src="{{ perfil.foto_perfil.url }}" alt="{% trans 'Foto de Perfil' %}" class="w-full h-full object-cover">
+                    {% else %}
+                    <span class="text-gray-400">{% trans "Sin Foto" %}</span>
+                    {% endif %}
+
+                    <!-- Lottie para subir la foto -->
+                    <label for="foto_perfil" class="lottie-icon cursor-pointer">
+                        <lottie-player
+                            src="{% static 'animations/foto.json' %}"
+                            background="transparent"
+                            speed="1"
+                            loop
+                            autoplay
+                        ></lottie-player>
+                    </label>
+                </div>
+                <form id="foto-perfil-form" method="post" enctype="multipart/form-data" action="{% url 'actualizar_foto_perfil' %}" class="mt-4">
+                    {% csrf_token %}
+                    <input type="file" name="foto_perfil" id="foto_perfil" class="hidden" onchange="guardarFoto()">
+                    <button type="button" onclick="document.getElementById('foto_perfil').click()" class="text-sm text-indigo-500 hover:underline">
+                    </button>
+                </form>
+            </div>
+
+            <!-- Formulario de perfil -->
+            <form method="post" class="space-y-4 flex-1">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div>
+                    <label for="{{ form.bio.id_for_label }}" class="block font-medium text-gray-200">{% trans "Biografía" %}</label>
+                    {{ form.bio }}
+                </div>
+                <div>
+                    <label for="{{ form.location.id_for_label }}" class="block font-medium text-gray-200">{% trans "Ubicación" %}</label>
+                    {{ form.location }}
+                </div>
+                <div>
+                    <label for="{{ form.birth_date.id_for_label }}" class="block font-medium text-gray-200">{% trans "Fecha de Nacimiento" %}</label>
+                    {{ form.birth_date }}
+                </div>
+                <div>
+                    <label for="{{ form.actividad_comercial.id_for_label }}" class="block font-medium text-gray-200">{% trans "Actividad Comercial" %}</label>
+                    {{ form.actividad_comercial }}
+                </div>
+                <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md font-semibold text-white transition">
+                    {% trans "Guardar Cambios" %}
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script para envío automático de la foto -->
+    <script>
+        function guardarFoto() {
+            const form = document.getElementById('foto-perfil-form');
+            form.submit();
+        }
+    </script>
 </body>
 </html>
+

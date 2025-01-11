@@ -17,3 +17,12 @@ def perfil_view(request):
         form = PerfilForm(instance=perfil)
     
     return render(request, 'perfil.html', {'form': form, 'perfil': perfil})
+
+@login_required
+def actualizar_foto_perfil(request):
+    if request.method == 'POST' and request.FILES.get('foto_perfil'):
+        perfil = Perfil.objects.get(user=request.user)
+        perfil.foto_perfil = request.FILES['foto_perfil']
+        perfil.save()
+        return redirect('perfil')  # Redirige al perfil después de guardar
+    return redirect('perfil')

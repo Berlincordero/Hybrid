@@ -1,0 +1,226 @@
+<!-- register.html -->
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% trans "Registro - FACEAGRO" %}</title>
+    <!-- Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center relative"
+  >
+    <!-- Bloque de mensajes -->
+    {% if messages %}
+        <div class="fixed top-4 right-4 space-y-2">
+            {% for message in messages %}
+                <div class="p-4 rounded-md {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Contenedor principal del formulario de registro -->
+    <div
+      class="w-full max-w-sm sm:max-w-md lg:max-w-lg bg-gray-800 p-6 sm:p-8 md:p-10 rounded-xl shadow-md"
+    >
+      <div class="flex flex-col items-center space-y-2">
+        <!-- Animación Lottie -->
+        <lottie-player
+          src="{% static 'animations/Salchicha.json' %}"
+          background="transparent"
+          speed="1"
+          class="w-64 h-64"
+          loop
+          autoplay
+        ></lottie-player>
+        <h1 class="text-2xl font-bold mb-2">{% trans "Crea una cuenta" %}</h1>
+        <p class="text-gray-300 text-center text-sm sm:text-base mb-6">
+          {% trans "Es rápido y fácil." %}
+        </p>
+      </div>
+
+      <!-- Formulario -->
+      <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <!-- Nombre y Apellido -->
+        <div
+          class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0"
+        >
+          <input
+            type="text"
+            name="first_name"
+            placeholder="{% trans 'Nombre' %}"
+            required
+            class="w-full sm:w-1/2 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-300 placeholder-gray-400"
+            value="{{ previous_data.first_name|default:'' }}"
+          />
+          <input
+            type="text"
+            name="last_name"
+            placeholder="{% trans 'Apellido' %}"
+            required
+            class="w-full sm:w-1/2 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-300 placeholder-gray-400"
+            value="{{ previous_data.last_name|default:'' }}"
+          />
+        </div>
+
+        <!-- Fecha de Nacimiento -->
+        <div>
+          <label class="block text-sm text-gray-300 mb-1"
+            >{% trans "Fecha de nacimiento" %}</label
+          >
+          <div
+            class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0"
+          >
+            <select
+              name="birth_day"
+              class="w-full sm:w-1/3 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-300"
+            >
+              <option value="">{% trans "Día" %}</option>
+              {% for day in days %}
+              <option value="{{ day }}" {% if previous_data.birth_day == day|stringformat:"s" %}selected{% endif %}>{{ day }}</option>
+              {% endfor %}
+            </select>
+            <select
+              name="birth_month"
+              class="w-full sm:w-1/3 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-300"
+            >
+              <option value="">{% trans "Mes" %}</option>
+              {% for month, name in months %}
+              <option value="{{ month }}" {% if previous_data.birth_month == month|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
+              {% endfor %}
+            </select>
+            <select
+              name="birth_year"
+              class="w-full sm:w-1/3 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-300"
+            >
+              <option value="">{% trans "Año" %}</option>
+              {% for year in years %}
+              <option value="{{ year }}" {% if previous_data.birth_year == year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <!-- Género -->
+        <div>
+          <label class="block text-sm text-gray-300 mb-1"
+            >{% trans "Género" %}</label
+          >
+          <div class="flex flex-wrap space-x-4">
+            <label class="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="gender"
+                value="female"
+                class="form-radio text-indigo-500"
+                {% if previous_data.gender == 'female' %}checked{% endif %}
+              />
+              <span>{% trans "Mujer" %}</span>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="gender"
+                value="male"
+                class="form-radio text-indigo-500"
+                {% if previous_data.gender == 'male' %}checked{% endif %}
+              />
+              <span>{% trans "Hombre" %}</span>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="gender"
+                value="custom"
+                class="form-radio text-indigo-500"
+                {% if previous_data.gender == 'custom' %}checked{% endif %}
+              />
+              <span>{% trans "Personalizado" %}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <input
+            type="email"
+            name="email"
+            placeholder="{% trans 'Número de celular o correo electrónico' %}"
+            required
+            class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-300 placeholder-gray-400"
+            value="{{ previous_data.email|default:'' }}"
+          />
+        </div>
+
+        <!-- Contraseña -->
+        <div>
+          <input
+            type="password"
+            name="password"
+            placeholder="{% trans 'Contraseña nueva' %}"
+            required
+            class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-300 placeholder-gray-400"
+          />
+        </div>
+
+        <!-- Botón Registrarte -->
+        <div>
+          <button
+            type="submit"
+            class="w-full py-2 bg-green-600 hover:bg-green-700 rounded-md font-semibold text-white transition"
+          >
+            {% trans "Registrarte" %}
+          </button>
+        </div>
+      </form>
+
+      <!-- Enlace para iniciar sesión -->
+      <div class="mt-4 text-center">
+        <p class="text-gray-400 text-sm">
+          {% trans "¿Ya tienes cuenta?" %}
+          <a href="{% url 'login_view' %}" class="text-blue-500 hover:underline"
+            >{% trans "Inicia sesión" %}</a
+          >
+        </p>
+        <p class="text-gray-400 text-xs mt-4">
+          {% trans "Es posible que las personas que usan nuestro servicio hayan subido tu información de contacto." %}
+          <a
+            href="{% url 'mas_informacion' %}"
+            class="text-blue-500 hover:underline"
+            >{% trans "Más información." %}</a
+          >
+        </p>
+        <p class="text-gray-400 text-xs mt-2">
+          {% trans "Al hacer clic en 'Registrarte', aceptas nuestras" %}
+          <a
+            href="{% url 'condiciones_uso' %}"
+            class="text-blue-500 hover:underline"
+            >{% trans "Condiciones de Uso" %}</a
+          >
+          {% trans "y nuestra" %}
+          <a
+            href="{% url 'politica_privacidad' %}"
+            class="text-blue-500 hover:underline"
+            >{% trans "Política de Privacidad" %}</a
+          >. {% trans "y" %}
+          <a
+          href="{% url 'politica_cookies' %}"
+          class="text-blue-500 hover:underline"
+          >{% trans "Política de Cookies" %}</a>
+        <a>
+      </p>
+    </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  </body>
+</html>

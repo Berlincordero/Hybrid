@@ -1,0 +1,8 @@
+django==5.0.6
+django-environ==0.11.2
+django-crispy-forms
+crispy-bootstrap5
+fontawesome
+django-allauth
+openpyxl==3.1.5
+django-axes==7.0.1

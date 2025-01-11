@@ -1,0 +1,99 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Formulario de Contacto - FincaHub" %}</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Lottie Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-start pt-10">
+
+    <!-- Contenedor principal -->
+    <div class="w-full max-w-lg sm:max-w-xl bg-gray-800 p-6 sm:p-8 md:p-12 rounded-xl shadow-md mx-4">
+        <!-- Animación Lottie -->
+        <div class="flex justify-center mb-6">
+            <lottie-player
+                src="{% static 'animations/contact_us.json' %}" 
+                background="transparent"
+                speed="1"
+                class="w-56 h-56"
+                loop
+                autoplay
+            ></lottie-player>
+        </div>
+
+        <!-- Título -->
+        <h1 class="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-6">{% trans "Formulario de Contacto" %}</h1>
+        <p class="text-gray-300 text-sm sm:text-base text-center mb-6 sm:mb-8">
+            {% trans "¿Tienes alguna pregunta o necesitas ayuda? Llena este formulario y nos pondremos en contacto contigo lo antes posible." %}
+        </p>
+
+        <!-- Formulario -->
+        <form action="{% url 'enviar_contacto' %}" method="POST" class="space-y-4 sm:space-y-6">
+            {% csrf_token %}
+            <!-- Nombre -->
+            <div>
+                <label for="nombre" class="block text-sm font-medium mb-1">{% trans "Nombre Completo" %}</label>
+                <input
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    required
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="{% trans 'Escribe tu nombre completo' %}">
+            </div>
+            <!-- Correo -->
+            <div>
+                <label for="correo" class="block text-sm font-medium mb-1">{% trans "Correo Electrónico" %}</label>
+                <input
+                    type="email"
+                    id="correo"
+                    name="correo"
+                    required
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="{% trans 'ejemplo@correo.com' %}">
+            </div>
+            <!-- Asunto -->
+            <div>
+                <label for="asunto" class="block text-sm font-medium mb-1">{% trans "Asunto" %}</label>
+                <input
+                    type="text"
+                    id="asunto"
+                    name="asunto"
+                    required
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="{% trans 'Escribe el asunto' %}">
+            </div>
+            <!-- Mensaje -->
+            <div>
+                <label for="mensaje" class="block text-sm font-medium mb-1">{% trans "Mensaje" %}</label>
+                <textarea
+                    id="mensaje"
+                    name="mensaje"
+                    rows="5"
+                    required
+                    class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="{% trans 'Escribe tu mensaje aquí...' %}"></textarea>
+            </div>
+            <!-- Botón Enviar -->
+            <div>
+                <button
+                    type="submit"
+                    class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md font-semibold text-white transition">
+                    {% trans "Enviar Mensaje" %}
+                </button>
+            </div>
+        </form>
+
+        <!-- Enlace para regresar -->
+        <div class="mt-6 text-center">
+            <a href="{% url 'login_view' %}" class="text-blue-500 hover:underline">{% trans "Regresar al login" %}</a>
+        </div>
+    </div>
+
+</body>
+</html>

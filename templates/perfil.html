@@ -1,0 +1,51 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Perfil de Usuario" %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-2xl bg-gray-800 p-6 rounded-xl shadow-md">
+        <h1 class="text-2xl font-bold mb-4">{% trans "Perfil de Usuario" %}</h1>
+
+        <!-- Mostrar foto de perfil -->
+        {% if perfil.foto_perfil %}
+        <img src="{{ perfil.foto_perfil.url }}" alt="{% trans 'Foto de Perfil' %}" class="w-32 h-32 rounded-full mx-auto mb-4">
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div>
+                <label for="{{ form.bio.id_for_label }}" class="block font-medium text-gray-200">{% trans "Biografía" %}</label>
+                {{ form.bio }}
+            </div>
+            <div>
+                <label for="{{ form.location.id_for_label }}" class="block font-medium text-gray-200">{% trans "Ubicación" %}</label>
+                {{ form.location }}
+            </div>
+            <div>
+                <label for="{{ form.birth_date.id_for_label }}" class="block font-medium text-gray-200">{% trans "Fecha de Nacimiento" %}</label>
+                {{ form.birth_date }}
+            </div>
+            <div>
+                <label for="{{ form.actividad_comercial.id_for_label }}" class="block font-medium text-gray-200">{% trans "Actividad Comercial" %}</label>
+                {{ form.actividad_comercial }}
+            </div>
+            <div>
+                <label for="{{ form.foto_perfil.id_for_label }}" class="block font-medium text-gray-200">{% trans "Foto de Perfil" %}</label>
+                {{ form.foto_perfil }}
+            </div>
+            <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md font-semibold text-white transition">
+                {% trans "Guardar Cambios" %}
+            </button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Más información - FincaHub" %}</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Lottie Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-start pt-10">
+
+    <!-- Contenedor principal -->
+    <div class="w-full max-w-4xl bg-gray-800 p-6 sm:p-8 md:p-12 rounded-xl shadow-md mx-4">
+        <!-- Animación Lottie -->
+        <div class="flex justify-center mb-6">
+            <lottie-player
+                src="{% static 'animations/mas_informacion.json' %}" 
+                background="transparent"
+                speed="1"
+                class="w-56 h-56"
+                loop
+                autoplay
+            ></lottie-player>
+        </div>
+
+        <!-- Título -->
+        <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">{% trans "Más información sobre privacidad en FincaHub" %}</h1>
+
+        <!-- Contenido -->
+        <div class="text-gray-300 text-sm sm:text-base space-y-4 sm:space-y-6 leading-6 sm:leading-7">
+            <p>
+                {% trans "En FincaHub, nuestra misión es conectar a personas y comunidades interesadas en el mundo agropecuario, incluyendo animales agrícolas, cultivos, y más. Tratamos con el máximo respeto la privacidad de quienes interactúan con nuestra plataforma, incluso si no son usuarios registrados." %}
+            </p>
+
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Sincronización de Contactos: Cómo Funciona" %}</h2>
+            <p>
+                {% trans "Cuando un usuario registrado en FincaHub utiliza la función de sincronización de contactos, podemos recibir nombres, números de teléfono y direcciones de correo electrónico que figuran en la libreta de direcciones de su dispositivo. Esto incluye tanto a usuarios actuales de FincaHub como a personas que no tienen cuenta en nuestra plataforma ('No usuarios')." %}
+            </p>
+
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Datos Recopilados sobre los No Usuarios" %}</h2>
+            <p>
+                {% trans "Recopilamos los siguientes datos de los contactos de los usuarios: nombre, número de teléfono y dirección de correo electrónico. Estos datos se tratan con cuidado y conforme a las leyes aplicables de privacidad." %}
+            </p>
+
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Cómo Usamos la Información de los No Usuarios" %}</h2>
+            <p>
+                {% trans "La información recopilada de los contactos puede usarse para:" %}
+            </p>
+            <ul class="list-disc list-inside space-y-2">
+                <li>{% trans "Sugerir conexiones relevantes en el muro o en secciones específicas como el Marketplace de productos agropecuarios." %}</li>
+                <li>{% trans "Permitir que los usuarios inviten a sus contactos a unirse a FincaHub." %}</li>
+                <li>{% trans "Realizar investigaciones y mejorar la seguridad de nuestra plataforma." %}</li>
+                <li>{% trans "Desarrollar funciones futuras que mejoren la experiencia de los usuarios." %}</li>
+            </ul>
+
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Duración de Almacenamiento de los Datos" %}</h2>
+            <p>
+                {% trans "La información recopilada de los No usuarios se retiene solo mientras sea necesaria para proporcionar nuestras funciones, garantizar la seguridad de la plataforma y cumplir con los requisitos legales." %}
+            </p>
+
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Tus Derechos como No Usuario" %}</h2>
+            <p>
+                {% trans "Si no eres usuario de FincaHub pero deseas ejercer tus derechos de acceso, corrección o eliminación de información, puedes contactarnos a través de los siguientes medios:" %}
+            </p>
+            <ul class="list-disc list-inside space-y-2">
+                <li>
+                    {% trans "Formulario de Contacto:" %} 
+                    <a href="{% url 'enviar_contacto' %}" class="text-blue-500 hover:underline">{% trans "Enlace al Formulario" %}</a>
+                </li>
+                <li>
+                    {% trans "Correo Postal:" %} 
+                    {% trans "FincaHub, Atención: Equipo de Privacidad, Dirección específica según el país." %}
+                </li>
+                <li>
+                    {% trans "Dirección Oficinas Centrales:" %} 
+                    {% trans "50 mts sur oeste Salon Ecofiesta, San Jeronimo, Moravia, San José, Costa Rica" %}
+                </li>
+            </ul>
+        </div>
+
+        <!-- Enlace para regresar -->
+        <div class="mt-6 sm:mt-8 text-center">
+            <a href="{% url 'register' %}" class="text-blue-500 hover:underline">
+                {% trans "Regresar al registro" %}
+            </a>
+        </div>
+    </div>
+</body>
+</html>

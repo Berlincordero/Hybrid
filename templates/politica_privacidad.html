@@ -1,0 +1,60 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Política de Privacidad - FincaHub" %}</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Lottie Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-start pt-10">
+
+    <!-- Contenedor principal -->
+    <div class="w-full max-w-4xl sm:max-w-5xl bg-gray-800 p-6 sm:p-8 md:p-12 rounded-xl shadow-md mx-4">
+        <!-- Animación Lottie -->
+        <div class="flex justify-center mb-6">
+            <lottie-player
+                src="{% static 'animations/policy.json' %}" 
+                background="transparent"
+                speed="1"
+                class="w-56 h-56"
+                loop
+                autoplay
+            ></lottie-player>
+        </div>
+ 
+        <!-- Título -->
+        <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">{% trans "Política de Privacidad" %}</h1>
+
+        <!-- Contenido -->
+        <div class="text-gray-300 text-sm sm:text-base space-y-4 sm:space-y-6 leading-6 sm:leading-7">
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Protección de los Datos" %}</h2>
+            <p>
+                {% trans "Durante la fase beta, recopilamos datos básicos como nombre, correo electrónico y comentarios. Estos datos se utilizan exclusivamente para mejorar el desarrollo de la plataforma y nunca se compartirán con terceros sin tu consentimiento." %}
+            </p>
+
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Derechos de Autor sobre los Datos" %}</h2>
+            <p>
+                {% trans "Todos los datos generados por los usuarios dentro de FincaHub son de su propiedad. Sin embargo, al publicar contenido en la plataforma, otorgas una licencia limitada para su uso en el desarrollo y funcionamiento de la aplicación." %}
+            </p>
+
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Cómo Protegemos tus Datos" %}</h2>
+            <p>
+                {% trans "Aunque implementamos medidas para proteger tu información, al tratarse de una plataforma en desarrollo, no podemos garantizar una seguridad absoluta frente a vulnerabilidades técnicas." %}
+            </p>
+        </div>
+
+        <!-- Enlace para regresar -->
+        <div class="mt-6 sm:mt-8 text-center">
+            <a href="{% url 'register' %}" class="text-blue-500 hover:underline">
+                {% trans "Regresar al registro" %}
+            </a>
+        </div>
+    </div>
+</body>
+</html>
+
+</html>

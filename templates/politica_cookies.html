@@ -1,0 +1,58 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Política de Cookies - FincaHub" %}</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Lottie Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-start pt-10">
+
+    <!-- Contenedor principal -->
+    <div class="w-full max-w-4xl sm:max-w-5xl bg-gray-800 p-6 sm:p-8 md:p-12 rounded-xl shadow-md mx-4">
+        <!-- Animación Lottie -->
+        <div class="flex justify-center mb-6">
+            <lottie-player
+                src="{% static 'animations/Space.json' %}" 
+                background="transparent"
+                speed="1"
+                class="w-64 h-64"
+                loop
+                autoplay
+            ></lottie-player>
+        </div>
+
+        <!-- Título -->
+        <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">{% trans "Política de Cookies" %}</h1>
+
+        <!-- Contenido -->
+        <div class="text-gray-300 text-sm sm:text-base space-y-4 sm:space-y-6 leading-6 sm:leading-7">
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Cookies en la Fase Beta" %}</h2>
+            <p>
+                {% trans "Durante la fase beta, utilizamos únicamente cookies esenciales para garantizar el funcionamiento de la plataforma." %}
+            </p>
+
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Derechos sobre los Datos Generados por Cookies" %}</h2>
+            <p>
+                {% trans "Los datos recopilados mediante cookies son propiedad de FincaHub y se utilizan exclusivamente para mejorar la funcionalidad de la aplicación." %}
+            </p>
+
+            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Control de Cookies" %}</h2>
+            <p>
+                {% trans "Puedes desactivar las cookies en la configuración de tu navegador. Sin embargo, algunas funciones de FincaHub podrían no funcionar correctamente." %}
+            </p>
+        </div>
+
+        <!-- Enlace para regresar -->
+        <div class="mt-6 sm:mt-8 text-center">
+            <a href="{% url 'login_view' %}" class="text-blue-500 hover:underline">
+                {% trans "Regresar al registro" %}
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -9,6 +9,8 @@
     <title>{% trans "Perfil de Usuario" %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
         .circle-container {
             width: 12rem; /* 192px */
@@ -18,14 +20,14 @@
 
         .lottie-icon {
             position: absolute;
-            top: 0%; /* Posición relativa al círculo */
-            bottom: 10%; /* Posición relativa al círculo */
-            right: 2%; /* Ajustado hacia la esquina */
-            width: 100px; /* Ancho del Lottie */
-            height: 100px; /* Altura del Lottie */
+            top: 0%; 
+            bottom: 10%; 
+            right: 2%; 
+            width: 100px; 
+            height: 100px; 
         }
 
-        @media (min-width: 768px) { /* Pantallas medianas */
+        @media (min-width: 768px) {
             .circle-container {
                 width: 16rem; /* 256px */
                 height: 16rem; /* 256px */
@@ -36,10 +38,10 @@
             }
         }
 
-        @media (min-width: 1024px) { /* Pantallas grandes */
+        @media (min-width: 1024px) {
             .circle-container {
-                width: 20rem; /* 320px */
-                height: 20rem; /* 320px */
+                width: 20rem; 
+                height: 20rem; 
             }
             .lottie-icon {
                 margin-top: 11rem;
@@ -48,7 +50,7 @@
             }
         }
 
-        /* === Aquí forzamos que los campos se vean como texto sin caja ni sombreado === */
+        /* === Campos como texto plano (sin caja ni sombreado) === */
         input[type="text"],
         input[type="date"],
         input[type="email"],
@@ -59,9 +61,8 @@
             border: none !important;
             box-shadow: none !important;
             outline: none !important;
-            color: inherit; /* Mantiene el color de texto (blanco) */
-            padding: 0 !important; 
-            /* Si deseas dejar un poco de espacio, cambia "0" a lo que quieras */
+            color: inherit;
+            padding: 0 !important;
         }
     </style>
 </head>
@@ -69,7 +70,6 @@
     <!-- Enlace para regresar al inicio -->
     <div class="w-full max-w-4xl text-left px-6">
         <a href="{% url 'index' %}" target="_blank" class="flex flex-row items-center text-white hover:text-indigo-400">
-            <!-- Ícono Lottie -->
             <lottie-player
                 src="{% static 'animations/Inicio.json' %}"
                 background="transparent"
@@ -78,7 +78,6 @@
                 loop
                 autoplay>
             </lottie-player>
-            <!-- Texto del enlace -->
             <span class="ml-2">
                 {% trans "Volver al inicio" %}
             </span>
@@ -122,29 +121,51 @@
                 {% csrf_token %}
                 {{ form.non_field_errors }}
 
-                <!-- Encabezado con nombre, fecha y género -->
+                <!-- Encabezado con nombre y fecha de nacimiento -->
                 <div class="text-center mb-8">
                     <p class="text-gray-300 text-lg mt-2">
                         <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong>
                     </p>
-                    
-                    <!-- MOSTRAR FECHA DE NACIMIENTO (modelo "Perfil") -->
-                    <p class="text-gray-300 text-md mt-2">
-                        {% trans "fecha de nacimiento:" %}
-                        {{ perfil.fecha_nacimiento|date:"d/m/Y" }}
-                    </p>
+                    <div class="mt-3">
+                        <p class="text-gray-400 text-sm font-semibold">
+                            {% trans "Fecha de nacimiento:" %}
+                        </p>
+                        <p class="text-gray-300 text-md">
+                            {{ profile.birth_date|date:"d/m/Y" }}
+                        </p>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-gray-400 text-sm font-semibold">
+                            {% trans "Género:" %}
+                        </p>
+                        <p class="text-gray-300 text-md">
+                            {{ profile.get_gender_display }}
+                        </p>
+                    </div>
+                </div>
 
-                    <!-- MOSTRAR FECHA DE NACIMIENTO (modelo "Profile" - app Administrador) -->
-                    <p class="text-gray-300 text-md mt-2">
-                        {% trans "" %}
-                        {{ profile.birth_date|date:"d/m/Y" }}
-                    </p>
-
-                    <!-- MOSTRAR GÉNERO (modelo "Profile") -->
-                    <p class="text-gray-300 text-md mt-2">
-                        {% trans "Género (Profile):" %}
-                        {{ profile.get_gender_display }}
-                    </p>
+                <!-- Campo: Biografía Personal -->
+                <div>
+                    <label for="{{ form.biografia.id_for_label }}" class="block font-medium text-gray-200">
+                        {% trans "Biografía Personal" %}
+                    </label>
+                    {{ form.biografia }}
+                    <div class="mt-2 space-x-2">
+                        <button 
+                            type="button" 
+                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+                            data-target="id_biografia"
+                        >
+                            {% trans "Editar" %}
+                        </button>
+                        <button 
+                            type="button" 
+                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+                            data-target="id_biografia"
+                        >
+                            {% trans "Guardar" %}
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Campo: Dirección -->
@@ -171,7 +192,53 @@
                     </div>
                 </div>
 
-                <!-- Campo: Actividad Económica -->
+                <!-- Campo: Nombre de la Empresa o Pymes -->
+<div>
+    <label for="{{ form.nombre_empresa.id_for_label }}" class="block font-medium text-gray-200">
+        {% trans "Nombre de la Empresa o Pymes" %}
+    </label>
+    {{ form.nombre_empresa }}
+    <div class="mt-2 space-x-2">
+        <button 
+            type="button" 
+            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+            data-target="id_nombre_empresa"
+        >
+            {% trans "Editar" %}
+        </button>
+        <button 
+            type="button" 
+            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+            data-target="id_nombre_empresa"
+        >
+            {% trans "Guardar" %}
+        </button>
+    </div>
+</div>
+
+<!-- Campo: Año de Fundación -->
+<div>
+    <label for="{{ form.anio_fundacion.id_for_label }}" class="block font-medium text-gray-200">
+        {% trans "Año de Fundación" %}
+    </label>
+    {{ form.anio_fundacion }}
+    <div class="mt-2 space-x-2">
+        <button 
+            type="button" 
+            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+            data-target="id_anio_fundacion"
+        >
+            {% trans "Editar" %}
+        </button>
+        <button 
+            type="button" 
+            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+            data-target="id_anio_fundacion"
+        >
+            {% trans "Guardar" %}
+        </button>
+    </div>
+</div>        <!-- Campo: Actividad Económica -->
                 <div>
                     <label for="{{ form.actividad_economica.id_for_label }}" class="block font-medium text-gray-200">
                         {% trans "Actividad Económica" %}
@@ -257,29 +324,22 @@
     <!-- Script para habilitar/deshabilitar cada campo y guardar -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Todos los inputs del formulario
             const allInputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
-            // Todos los botones "Editar"
             const editButtons = document.querySelectorAll('.editFieldBtn');
-            // Todos los botones "Guardar"
             const saveButtons = document.querySelectorAll('.saveFieldBtn');
 
-            // 1. Deja todos los campos en modo lectura al cargar
             allInputs.forEach(input => {
                 if (input.type !== 'hidden' && input.name !== 'csrfmiddlewaretoken') {
                     input.setAttribute('readonly', true);
                 }
             });
 
-            // 2. Botones "Editar" -> habilita el campo
             editButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
                     const targetInput = document.getElementById(targetId);
                     if (targetInput) {
-                        // Quita el modo lectura
                         targetInput.removeAttribute('readonly');
-                        // Muestra el botón Guardar y oculta Editar
                         const saveBtn = this.parentNode.querySelector('.saveFieldBtn');
                         this.classList.add('hidden');
                         saveBtn.classList.remove('hidden');
@@ -287,20 +347,24 @@
                 });
             });
 
-            // 3. Botones "Guardar" -> re-habilita readonly y envía el formulario
             saveButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
                     const targetInput = document.getElementById(targetId);
                     if (targetInput) {
-                        // Vuelve a poner el campo en modo lectura
                         targetInput.setAttribute('readonly', true);
-                        // Envía el formulario (para que se guarde en la BD)
                         document.getElementById('profileForm').submit();
                     }
                 });
             });
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            flatpickr('#id_anio_fundacion', {
+                dateFormat: "Y-m-d", // Formato de fecha (ejemplo: 2023-01-01)
+            });
+    
+        });
     </script>
 </body>
 </html>
+

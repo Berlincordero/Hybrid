@@ -47,6 +47,22 @@
                 height: 170px;
             }
         }
+
+        /* === Aquí forzamos que los campos se vean como texto sin caja ni sombreado === */
+        input[type="text"],
+        input[type="date"],
+        input[type="email"],
+        input[type="password"],
+        textarea,
+        select {
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            color: inherit; /* Mantiene el color de texto (blanco) */
+            padding: 0 !important; 
+            /* Si deseas dejar un poco de espacio, cambia "0" a lo que quieras */
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center space-y-6">
@@ -71,13 +87,6 @@
     
 
     <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-xl shadow-md">
-        <!-- Encabezado del perfil -->
-        <div class="text-center mb-8">
-            <p class="text-gray-300 text-lg mt-2">
-                <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong>
-            </p>
-        </div>
-
         <!-- Sección de perfil -->
         <div class="flex flex-col lg:flex-row lg:items-start lg:space-x-12">
             <!-- Foto de perfil -->
@@ -109,29 +118,130 @@
             </div>
 
             <!-- Formulario de perfil -->
-            <form method="post" class="space-y-4 flex-1">
+            <form method="post" class="space-y-4 flex-1" id="profileForm">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
 
-                <div>
-                    <label for="{{ form.bio.id_for_label }}" class="block font-medium text-gray-200">{% trans "Biografía" %}</label>
-                    {{ form.bio }}
+                <!-- Encabezado con nombre, fecha y género -->
+                <div class="text-center mb-8">
+                    <p class="text-gray-300 text-lg mt-2">
+                        <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong>
+                    </p>
+                    
+                    <!-- MOSTRAR FECHA DE NACIMIENTO (modelo "Perfil") -->
+                    <p class="text-gray-300 text-md mt-2">
+                        {% trans "fecha de nacimiento:" %}
+                        {{ perfil.fecha_nacimiento|date:"d/m/Y" }}
+                    </p>
+
+                    <!-- MOSTRAR FECHA DE NACIMIENTO (modelo "Profile" - app Administrador) -->
+                    <p class="text-gray-300 text-md mt-2">
+                        {% trans "" %}
+                        {{ profile.birth_date|date:"d/m/Y" }}
+                    </p>
+
+                    <!-- MOSTRAR GÉNERO (modelo "Profile") -->
+                    <p class="text-gray-300 text-md mt-2">
+                        {% trans "Género (Profile):" %}
+                        {{ profile.get_gender_display }}
+                    </p>
                 </div>
+
+                <!-- Campo: Dirección -->
                 <div>
-                    <label for="{{ form.location.id_for_label }}" class="block font-medium text-gray-200">{% trans "Ubicación" %}</label>
-                    {{ form.location }}
+                    <label for="{{ form.direccion.id_for_label }}" class="block font-medium text-gray-200">
+                        {% trans "Dirección" %}
+                    </label>
+                    {{ form.direccion }}
+                    <div class="mt-2 space-x-2">
+                        <button 
+                            type="button" 
+                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+                            data-target="id_direccion"
+                        >
+                            {% trans "Editar" %}
+                        </button>
+                        <button 
+                            type="button" 
+                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+                            data-target="id_direccion"
+                        >
+                            {% trans "Guardar" %}
+                        </button>
+                    </div>
                 </div>
+
+                <!-- Campo: Actividad Económica -->
                 <div>
-                    <label for="{{ form.birth_date.id_for_label }}" class="block font-medium text-gray-200">{% trans "Fecha de Nacimiento" %}</label>
-                    {{ form.birth_date }}
+                    <label for="{{ form.actividad_economica.id_for_label }}" class="block font-medium text-gray-200">
+                        {% trans "Actividad Económica" %}
+                    </label>
+                    {{ form.actividad_economica }}
+                    <div class="mt-2 space-x-2">
+                        <button 
+                            type="button" 
+                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+                            data-target="id_actividad_economica"
+                        >
+                            {% trans "Editar" %}
+                        </button>
+                        <button 
+                            type="button" 
+                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+                            data-target="id_actividad_economica"
+                        >
+                            {% trans "Guardar" %}
+                        </button>
+                    </div>
                 </div>
+
+                <!-- Campo: Preferencias Agropecuarias -->
                 <div>
-                    <label for="{{ form.actividad_comercial.id_for_label }}" class="block font-medium text-gray-200">{% trans "Actividad Comercial" %}</label>
-                    {{ form.actividad_comercial }}
+                    <label for="{{ form.preferencias_agropecuarias.id_for_label }}" class="block font-medium text-gray-200">
+                        {% trans "Preferencias Agropecuarias" %}
+                    </label>
+                    {{ form.preferencias_agropecuarias }}
+                    <div class="mt-2 space-x-2">
+                        <button 
+                            type="button" 
+                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+                            data-target="id_preferencias_agropecuarias"
+                        >
+                            {% trans "Editar" %}
+                        </button>
+                        <button 
+                            type="button" 
+                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+                            data-target="id_preferencias_agropecuarias"
+                        >
+                            {% trans "Guardar" %}
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md font-semibold text-white transition">
-                    {% trans "Guardar Cambios" %}
-                </button>
+
+                <!-- Campo: Preferencias Comerciales -->
+                <div>
+                    <label for="{{ form.preferencias_comerciales.id_for_label }}" class="block font-medium text-gray-200">
+                        {% trans "Preferencias Comerciales" %}
+                    </label>
+                    {{ form.preferencias_comerciales }}
+                    <div class="mt-2 space-x-2">
+                        <button 
+                            type="button" 
+                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+                            data-target="id_preferencias_comerciales"
+                        >
+                            {% trans "Editar" %}
+                        </button>
+                        <button 
+                            type="button" 
+                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+                            data-target="id_preferencias_comerciales"
+                        >
+                            {% trans "Guardar" %}
+                        </button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -143,6 +253,54 @@
             form.submit();
         }
     </script>
+
+    <!-- Script para habilitar/deshabilitar cada campo y guardar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Todos los inputs del formulario
+            const allInputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
+            // Todos los botones "Editar"
+            const editButtons = document.querySelectorAll('.editFieldBtn');
+            // Todos los botones "Guardar"
+            const saveButtons = document.querySelectorAll('.saveFieldBtn');
+
+            // 1. Deja todos los campos en modo lectura al cargar
+            allInputs.forEach(input => {
+                if (input.type !== 'hidden' && input.name !== 'csrfmiddlewaretoken') {
+                    input.setAttribute('readonly', true);
+                }
+            });
+
+            // 2. Botones "Editar" -> habilita el campo
+            editButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetInput = document.getElementById(targetId);
+                    if (targetInput) {
+                        // Quita el modo lectura
+                        targetInput.removeAttribute('readonly');
+                        // Muestra el botón Guardar y oculta Editar
+                        const saveBtn = this.parentNode.querySelector('.saveFieldBtn');
+                        this.classList.add('hidden');
+                        saveBtn.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // 3. Botones "Guardar" -> re-habilita readonly y envía el formulario
+            saveButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetInput = document.getElementById(targetId);
+                    if (targetInput) {
+                        // Vuelve a poner el campo en modo lectura
+                        targetInput.setAttribute('readonly', true);
+                        // Envía el formulario (para que se guarde en la BD)
+                        document.getElementById('profileForm').submit();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
-

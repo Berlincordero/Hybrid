@@ -1,0 +1,47 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "Registra tus enlaces" %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center">
+  
+  <div class="text-center">
+    <!-- Lottie centrado -->
+    <lottie-player
+      src="{% static 'animations/ErrorNotPage.json' %}"
+      background="transparent"
+      speed="1"
+      style="width: 600px; height: 600px; margin: 0 auto;"
+      loop
+      autoplay>
+    </lottie-player>
+
+    <h1 class="text-xl font-semibold mt-4">
+      {% trans "Aún no registraste tus enlaces de YouTube, Instagram o WhatsApp" %}
+    </h1>
+
+    <p class="mt-2 text-gray-300">
+      {% trans "Por favor, completa la información en tu perfil como en los ejemplos." %}
+    </p>
+    
+    <!-- Ejemplo de links de ejemplo -->
+    <ul class="mt-4 text-gray-400 text-sm">
+      <li>https://www.youtube.com/watch?v=XXXXXX</li>
+      <li>https://www.instagram.com/tuusuario/</li>
+      <li>https://wa.me/5066003687</li>
+    </ul>
+
+    <!-- Botón que lleva a la edición del perfil -->
+    <a href="{% url 'perfil' %}" class="inline-block mt-6 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded">
+      {% trans "Ir a mi Perfil" %}
+    </a>
+  </div>
+
+</body>
+</html>

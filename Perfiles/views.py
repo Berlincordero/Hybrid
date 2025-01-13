@@ -8,6 +8,7 @@ from Administrador.models import Profile
 
 
 
+
 @login_required
 def actualizar_foto_perfil(request):
     if request.method == 'POST' and request.FILES.get('foto_perfil'):
@@ -17,14 +18,7 @@ def actualizar_foto_perfil(request):
         return redirect('perfil')  # Redirige al perfil después de guardar
     return redirect('perfil')
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Perfil
-from .forms import PerfilForm
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Perfil
-from .forms import PerfilForm
+
 
 
 
@@ -56,3 +50,7 @@ def perfil_view(request):
         }
     )
 
+@login_required
+def links_empty_view(request):
+    # Solo renderiza tu HTML con el Lottie y mensaje
+    return render(request, 'links_empty.html')

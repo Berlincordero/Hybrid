@@ -30,7 +30,7 @@
         @media (min-width: 768px) {
             .circle-container {
                 width: 16rem; /* 256px */
-                height: 16rem; /* 256px */
+                height: 16rem; 
             }
             .lottie-icon {
                 width: 100px;
@@ -40,7 +40,7 @@
 
         @media (min-width: 1024px) {
             .circle-container {
-                width: 20rem; 
+                width: 20rem; /* 320px */
                 height: 20rem; 
             }
             .lottie-icon {
@@ -193,52 +193,54 @@
                 </div>
 
                 <!-- Campo: Nombre de la Empresa o Pymes -->
-<div>
-    <label for="{{ form.nombre_empresa.id_for_label }}" class="block font-medium text-gray-200">
-        {% trans "Nombre de la Empresa o Pymes" %}
-    </label>
-    {{ form.nombre_empresa }}
-    <div class="mt-2 space-x-2">
-        <button 
-            type="button" 
-            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-            data-target="id_nombre_empresa"
-        >
-            {% trans "Editar" %}
-        </button>
-        <button 
-            type="button" 
-            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-            data-target="id_nombre_empresa"
-        >
-            {% trans "Guardar" %}
-        </button>
-    </div>
-</div>
+                <div>
+                    <label for="{{ form.nombre_empresa.id_for_label }}" class="block font-medium text-gray-200">
+                        {% trans "Nombre de la Empresa o Pymes" %}
+                    </label>
+                    {{ form.nombre_empresa }}
+                    <div class="mt-2 space-x-2">
+                        <button 
+                            type="button" 
+                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+                            data-target="id_nombre_empresa"
+                        >
+                            {% trans "Editar" %}
+                        </button>
+                        <button 
+                            type="button" 
+                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+                            data-target="id_nombre_empresa"
+                        >
+                            {% trans "Guardar" %}
+                        </button>
+                    </div>
+                </div>
 
-<!-- Campo: Año de Fundación -->
-<div>
-    <label for="{{ form.anio_fundacion.id_for_label }}" class="block font-medium text-gray-200">
-        {% trans "Año de Fundación" %}
-    </label>
-    {{ form.anio_fundacion }}
-    <div class="mt-2 space-x-2">
-        <button 
-            type="button" 
-            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-            data-target="id_anio_fundacion"
-        >
-            {% trans "Editar" %}
-        </button>
-        <button 
-            type="button" 
-            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-            data-target="id_anio_fundacion"
-        >
-            {% trans "Guardar" %}
-        </button>
-    </div>
-</div>        <!-- Campo: Actividad Económica -->
+                <!-- Campo: Año de Fundación -->
+                <div>
+                    <label for="{{ form.anio_fundacion.id_for_label }}" class="block font-medium text-gray-200">
+                        {% trans "Año de Fundación" %}
+                    </label>
+                    {{ form.anio_fundacion }}
+                    <div class="mt-2 space-x-2">
+                        <button 
+                            type="button" 
+                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+                            data-target="id_anio_fundacion"
+                        >
+                            {% trans "Editar" %}
+                        </button>
+                        <button 
+                            type="button" 
+                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+                            data-target="id_anio_fundacion"
+                        >
+                            {% trans "Guardar" %}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Campo: Actividad Económica -->
                 <div>
                     <label for="{{ form.actividad_economica.id_for_label }}" class="block font-medium text-gray-200">
                         {% trans "Actividad Económica" %}
@@ -309,6 +311,165 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Contenedor de texto y Lotties -->
+<div class="mt-6 text-center">
+    <!-- Texto descriptivo -->
+    <p class="text-lg font-medium text-gray-200">
+        {% trans "Revisa tus otras apps sociales desde nuestra plataforma solo presiona el ícono correspondiente" %}
+    </p>
+
+    <!-- Contenedor flex para alinear íconos uno al lado del otro -->
+    <div class="mt-4 flex justify-center items-center space-x-4">
+        <!-- Primer Lottie (YouTube) -->
+        <lottie-player
+            id="lottieYoutube"
+            src="{% static 'animations/youtube.json' %}"
+            background="transparent"
+            speed="1"
+            style="width: 150px; height: 150px; cursor: pointer;"
+            loop
+            autoplay>
+        </lottie-player>
+
+        <!-- Segundo Lottie (Instagram) -->
+        <lottie-player
+            id="lottieInstagram"
+            src="{% static 'animations/instagram.json' %}"
+            background="transparent"
+            speed="1"
+            style="width: 130px; height: 130px; cursor: pointer;"
+            loop
+            autoplay>
+        </lottie-player>
+
+        <!-- Tercer Lottie (WhatsApp) -->
+        <lottie-player
+            id="lottieWhatsapp"
+            src="{% static 'animations/watsapp.json' %}"
+            background="transparent"
+            speed="1"
+            style="width: 100px; height: 100px; cursor: pointer;"
+            loop
+            autoplay>
+        </lottie-player>
+    </div>
+</div>
+
+
+                <!-- Campo: Enlace de YouTube, debajo del Lottie -->
+                <div class="mt-6">
+                    <label for="{{ form.youtube_link.id_for_label }}" class="block font-medium text-gray-200">
+                        {% trans "Mi Canal de YouTube" %}
+                    </label>
+
+                    <!-- Contenedor para el input -->
+                    <div class="w-full">
+                        {{ form.youtube_link }}
+                    </div>
+
+                    <div class="mt-2 space-x-2">
+                        <button 
+                            type="button" 
+                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+                            data-target="id_youtube_link"
+                        >
+                            {% trans "Editar" %}
+                        </button>
+                        <button 
+                            type="button" 
+                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+                            data-target="id_youtube_link"
+                        >
+                            {% trans "Guardar" %}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Campo: Enlace de Instagram, debajo del Lottie (por ejemplo) -->
+                <div class="mt-6">
+                    <label for="{{ form.instagram_link.id_for_label }}" class="block font-medium text-gray-200">
+                        {% trans "Mi Instagram" %}
+                    </label>
+
+                    <!-- Contenedor para el input -->
+                    <div class="w-full">
+                        {{ form.instagram_link }}
+                    </div>
+
+                    <div class="mt-2 space-x-2">
+                        <button
+                            type="button"
+                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+                            data-target="id_instagram_link"
+                        >
+                            {% trans "Editar" %}
+                        </button>
+                        <button
+                            type="button"
+                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+                            data-target="id_instagram_link"
+                        >
+                            {% trans "Guardar" %}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Campo: Enlace de WhatsApp (sin caja, solo texto) -->
+                <div class="mt-6">
+                    <label for="{{ form.whatsapp_link.id_for_label }}" class="block font-medium text-gray-200">
+                        {% trans "Mi WhatsApp" %}
+                    </label>
+                    
+                    <!-- Contenedor para el input con 100% de ancho -->
+                    <div class="w-full">
+                        {{ form.whatsapp_link }}
+                    </div>
+
+                    <!-- Botones de edición -->
+                    <div class="mt-2 space-x-2">
+                        <button 
+                            type="button" 
+                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
+                            data-target="id_whatsapp_link"
+                        >
+                            {% trans "Editar" %}
+                        </button>
+                        <button 
+                            type="button" 
+                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
+                            data-target="id_whatsapp_link"
+                        >
+                            {% trans "Guardar" %}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Estilos extras para el campo, de modo que se vea como texto blanco sin borde -->
+                <style>
+                  #id_youtube_link {
+                    width: 100% !important;
+                    background-color: transparent !important;
+                    border: none !important;
+                    outline: none !important;
+                    color: white !important;       /* Para que el texto escrito se vea en blanco */
+                  }
+                  #id_instagram_link {
+                    width: 100% !important;
+                    background-color: transparent !important;
+                    border: none !important;
+                    outline: none !important;
+                    color: white !important;  /* Para ver el texto en blanco */
+                  }
+                  #id_whatsapp_link {
+                    width: 100% !important;
+                    background-color: transparent !important;
+                    border: none !important;
+                    outline: none !important;
+                    color: white !important;  /* Para ver el texto en blanco */
+                  }
+                </style>
+
             </form>
         </div>
     </div>
@@ -324,16 +485,19 @@
     <!-- Script para habilitar/deshabilitar cada campo y guardar -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // ========== EDICIÓN Y GUARDADO DE CAMPOS (lo de siempre) ==========
             const allInputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
             const editButtons = document.querySelectorAll('.editFieldBtn');
             const saveButtons = document.querySelectorAll('.saveFieldBtn');
 
+            // 1. Marcar todos los campos como readonly al cargar
             allInputs.forEach(input => {
                 if (input.type !== 'hidden' && input.name !== 'csrfmiddlewaretoken') {
                     input.setAttribute('readonly', true);
                 }
             });
 
+            // 2. Al hacer clic en "Editar"
             editButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
@@ -347,6 +511,7 @@
                 });
             });
 
+            // 3. Al hacer clic en "Guardar"
             saveButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const targetId = this.getAttribute('data-target');
@@ -357,14 +522,60 @@
                     }
                 });
             });
+
+            // ========== LÓGICA PARA LOTTIES (YouTube/Instagram/WhatsApp) ==========
+
+            // Obtenemos los enlaces
+            const youtubeLink = "{{ perfil.youtube_link|default_if_none:'' }}";
+            const instagramLink = "{{ perfil.instagram_link|default_if_none:'' }}";
+            const whatsappLink = "{{ perfil.whatsapp_link|default_if_none:'' }}";
+
+            // Referencia a cada Lottie
+            const lottieYoutube = document.getElementById('lottieYoutube');
+            const lottieInstagram = document.getElementById('lottieInstagram');
+            const lottieWhatsapp = document.getElementById('lottieWhatsapp');
+
+            // CLICK EN Lottie (YouTube)
+            if (lottieYoutube) {
+                lottieYoutube.addEventListener('click', function() {
+                    // Si youtubeLink está vacío => links_empty
+                    if (!youtubeLink) {
+                        window.location.href = "{% url 'links_empty' %}";
+                    } else {
+                        window.open(youtubeLink, '_blank');
+                    }
+                });
+            }
+
+            // CLICK EN Lottie (Instagram)
+            if (lottieInstagram) {
+                lottieInstagram.addEventListener('click', function() {
+                    if (!instagramLink) {
+                        window.location.href = "{% url 'links_empty' %}";
+                    } else {
+                        window.open(instagramLink, '_blank');
+                    }
+                });
+            }
+
+            // CLICK EN Lottie (WhatsApp)
+            if (lottieWhatsapp) {
+                lottieWhatsapp.addEventListener('click', function() {
+                    if (!whatsappLink) {
+                        window.location.href = "{% url 'links_empty' %}";
+                    } else {
+                        window.open(whatsappLink, '_blank');
+                    }
+                });
+            }
         });
+
+        // Inicializar Flatpickr en el campo de Año de Fundación (si corresponde)
         document.addEventListener('DOMContentLoaded', function () {
             flatpickr('#id_anio_fundacion', {
-                dateFormat: "Y-m-d", // Formato de fecha (ejemplo: 2023-01-01)
+                dateFormat: "Y-m-d", // Formato de fecha
             });
-    
         });
     </script>
 </body>
 </html>
-

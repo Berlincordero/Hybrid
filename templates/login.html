@@ -16,16 +16,16 @@
     class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center relative"
   >
     {% if messages %}
-      <div class="fixed top-4 right-4 space-y-2">
-          {% for message in messages %}
-              <div class="p-4 rounded-md {{ message.tags }}">
-                  {{ message }}
-              </div>
-          {% endfor %}
-      </div>
+    <div class="fixed top-4 right-4 space-y-2">
+      {% for message in messages %}
+      <div class="p-4 rounded-md {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
     {% endif %}
 
-    <div class="w-full max-w-sm sm:max-w-md lg:max-w-lg bg-gray-800 p-6 sm:p-8 md:p-10 rounded-xl shadow-md">
+    <div
+      class="w-full max-w-sm sm:max-w-md lg:max-w-lg bg-gray-800 p-6 sm:p-8 md:p-10 rounded-xl shadow-md"
+    >
       <div class="flex flex-col items-center">
         <!-- Animación Lottie -->
         <lottie-player
@@ -41,7 +41,8 @@
           {% trans "Cultivando conexiones, cosechando oportunidades" %}
         </p>
         <p class="text-gray-300 text-center text-sm sm:text-base">
-          {% trans "FincaHub es una app social exclusiva dedicada a los animales y la agropecuaria" %}
+          {% trans "FincaHub es una app social exclusiva dedicada a los animales
+          y la agropecuaria" %}
         </p>
         <p class="text-gray-400 text-center mt-2">
           {% trans "Inicia sesión para continuar" %}
@@ -50,18 +51,18 @@
 
       <!-- Formulario -->
       <form method="post" class="mt-6 space-y-4">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        
+        {% csrf_token %} {{ form.non_field_errors }}
+
         <!-- Campo Email -->
         <div class="flex flex-col">
-          <label for="{{ form.email.id_for_label }}" class="mb-1 font-medium text-gray-200">
+          <label
+            for="{{ form.email.id_for_label }}"
+            class="mb-1 font-medium text-gray-200"
+          >
             {% trans "Email" %}
           </label>
           {% if form.email.errors %}
-            <div class="text-red-500 text-sm mb-1">
-              {{ form.email.errors }}
-            </div>
+          <div class="text-red-500 text-sm mb-1">{{ form.email.errors }}</div>
           {% endif %}
           <input
             type="email"
@@ -72,16 +73,19 @@
             value=""
           />
         </div>
-        
+
         <!-- Campo Contraseña -->
         <div class="flex flex-col">
-          <label for="{{ form.password.id_for_label }}" class="mb-1 font-medium text-gray-200">
+          <label
+            for="{{ form.password.id_for_label }}"
+            class="mb-1 font-medium text-gray-200"
+          >
             {% trans "Contraseña" %}
           </label>
           {% if form.password.errors %}
-            <div class="text-red-500 text-sm mb-1">
-              {{ form.password.errors }}
-            </div>
+          <div class="text-red-500 text-sm mb-1">
+            {{ form.password.errors }}
+          </div>
           {% endif %}
           <input
             type="password"
@@ -92,7 +96,7 @@
             value=""
           />
         </div>
-        
+
         <!-- Botón de Envío -->
         <div>
           <button
@@ -108,10 +112,7 @@
       <div class="mt-4 text-center">
         <p class="text-gray-400 text-sm">
           {% trans "¿No tienes cuenta?" %}
-          <a
-            href="{% url 'register' %}"
-            class="text-blue-500 hover:underline"
-          >
+          <a href="{% url 'register' %}" class="text-blue-500 hover:underline">
             {% trans "Regístrate" %}
           </a>
         </p>
@@ -133,8 +134,8 @@
     <!-- Footer con selector de idioma -->
     <footer class="absolute bottom-4 w-full text-center text-gray-400">
       <div class="flex justify-center flex-wrap gap-2 text-sm">
-        {% get_language_info_list for LANGUAGES as languages %}
-        {% for language in languages %}
+        {% get_language_info_list for LANGUAGES as languages %} {% for language
+        in languages %}
         <form
           action="{% url 'set_language' %}"
           method="POST"
@@ -151,14 +152,15 @@
             {{ language.name_local }}
           </button>
         </form>
-        {% if not forloop.last %}<span>|</span>{% endif %}
-        {% endfor %}
+        {% if not forloop.last %}<span>|</span>{% endif %} {% endfor %}
       </div>
       <div class="mt-2 text-xs">
-        &copy; {% trans "Magic Technology. Todos los derechos reservados." %}
+        &copy; {% trans "Magic Technology S.A. Todos los derechos reservados."
+        %}
       </div>
       <div class="mt-2 text-sm">
-        {% trans "MarketPlace, Subastas, Chat, Red Social, Noticias, Eventos, Cursos." %}
+        {% trans "MarketPlace, Subastas, Chat, Red Social, Noticias, Eventos,
+        Cursos." %}
       </div>
     </footer>
 

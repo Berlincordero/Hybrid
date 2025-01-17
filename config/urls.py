@@ -20,7 +20,9 @@ urlpatterns += i18n_patterns(
     path('index/', views.index, name='index'),
     path('Administrador/', include('Administrador.urls')),
     path('Perfiles/', include('Perfiles.urls')),
-   
+    path('Friends/', include('Friends.urls')), # <--- Aquí importamos nuestras URLs de 'friends'
+    path('chats/', include('chats.urls')),
+    path('opiniones/', include('opiniones.urls')),
 )
 
 if settings.DEBUG:

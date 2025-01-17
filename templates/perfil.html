@@ -68,21 +68,37 @@
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center space-y-6">
     <!-- Enlace para regresar al inicio -->
-    <div class="w-full max-w-4xl text-left px-6">
-        <a href="{% url 'index' %}" target="_blank" class="flex flex-row items-center text-white hover:text-indigo-400">
-            <lottie-player
+    <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center space-y-6">
+
+        <!-- Encabezado: Contenedor para "Volver al inicio" y "Amigos" en línea -->
+        <div class="w-full max-w-4xl px-6">
+          <div class="flex items-center justify-between">
+            <!-- Enlace Volver al inicio -->
+            <a href="{% url 'index' %}" target="_blank" class="flex items-center text-white hover:text-indigo-400">
+              <lottie-player
                 src="{% static 'animations/Inicio.json' %}"
                 background="transparent"
                 speed="1"
                 style="width: 50px; height: 50px;"
                 loop
                 autoplay>
-            </lottie-player>
-            <span class="ml-2">
-                {% trans "Volver al inicio" %}
-            </span>
-        </a>
-    </div>
+              </lottie-player>
+              <span class="ml-2">{% trans "Volver al inicio" %}</span>
+            </a>
+            <!-- Enlace Amigos -->
+            <a href="{%  url 'friends_suggestions' %}" class="flex items-center text-indigo-400 hover:text-indigo-500 font-semibold">
+              <lottie-player
+                src="{% static 'animations/contact.json' %}"
+                background="transparent"
+                speed="1"
+                style="width: 50px; height: 50px;"
+                loop
+                autoplay>
+              </lottie-player>
+              <span class="ml-2">{% trans "Contactos" %}</span>
+            </a>
+          </div>
+        </div>
     
 
     <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-xl shadow-md">

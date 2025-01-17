@@ -5,7 +5,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% trans "Login - FincaHub" %}</title>
+    <title>{% trans "Login - Umbrella Network" %}</title>
     <!-- Tailwind CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
@@ -29,7 +29,7 @@
       <div class="flex flex-col items-center">
         <!-- Animación Lottie -->
         <lottie-player
-          src="{% static 'animations/Pig.json' %}"
+          src="{% static 'animations/capibara.json' %}"
           background="transparent"
           speed="1"
           style="width: 200px; height: 200px border-radius: 50%"
@@ -38,12 +38,9 @@
         ></lottie-player>
         <h1 class="text-2xl font-bold mb-1">{% trans "FincaHub" %}</h1>
         <p class="text-gray-300 text-center text-sm sm:text-base">
-          {% trans "Cultivando conexiones, cosechando oportunidades" %}
+          {% trans "FincaHub es una app social ecommerce exclusiva dedicada a los animales y la agropecuaria .. El 30% de las ganacias de esta compañia esta destinada a donaciones de refugios animales " %}
         </p>
-        <p class="text-gray-300 text-center text-sm sm:text-base">
-          {% trans "FincaHub es una app social exclusiva dedicada a los animales
-          y la agropecuaria" %}
-        </p>
+        
         <p class="text-gray-400 text-center mt-2">
           {% trans "Inicia sesión para continuar" %}
         </p>
@@ -131,39 +128,44 @@
       </div>
     </div>
 
-    <!-- Footer con selector de idioma -->
-    <footer class="absolute bottom-4 w-full text-center text-gray-400">
+     <!-- Footer con selector de idioma -->
+     <footer class="absolute bottom-4 w-full text-center text-gray-400">
       <div class="flex justify-center flex-wrap gap-2 text-sm">
-        {% get_language_info_list for LANGUAGES as languages %} {% for language
-        in languages %}
-        <form
-          action="{% url 'set_language' %}"
-          method="POST"
-          class="inline-block"
-        >
-          {% csrf_token %}
-          <input
-            type="hidden"
-            name="next"
-            value="{{ request.get_full_path }}"
-          />
-          <input type="hidden" name="language" value="{{ language.code }}" />
-          <button type="submit" class="hover:underline focus:outline-none">
-            {{ language.name_local }}
-          </button>
-        </form>
-        {% if not forloop.last %}<span>|</span>{% endif %} {% endfor %}
+
+        <!-- Asegúrate de cargar la lista de idiomas -->
+        {% get_language_info_list for LANGUAGES as languages %}
+
+        <!-- Recorremos cada idioma -->
+        {% for language in languages %}
+          <form
+            action="{% url 'set_language' %}"
+            method="POST"
+            class="inline-block"
+          >
+            {% csrf_token %}
+            <input
+              type="hidden"
+              name="next"
+              value="{{ request.get_full_path }}"
+            />
+            <input type="hidden" name="language" value="{{ language.code }}" />
+            <button type="submit" class="hover:underline focus:outline-none">
+              {{ language.name_local }}
+            </button>
+          </form>
+          {% if not forloop.last %}
+            <span>|</span>
+          {% endif %}
+        {% endfor %}
+
       </div>
       <div class="mt-2 text-xs">
-        &copy; {% trans "Magic Technology S.A. Todos los derechos reservados."
-        %}
+        &copy; {% trans "Umbrella Neural Technology S.A Una compañia orgullosamente Costarricense. Todos los derechos reservados." %}
       </div>
       <div class="mt-2 text-sm">
-        {% trans "MarketPlace, Subastas, Chat, Red Social, Noticias, Eventos,
-        Cursos." %}
+        {% trans "MarketPlace, Subastas, Chat, Red Social, Noticias, Eventos, Cursos." %}
       </div>
     </footer>
-
     <!-- Scripts -->
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   </body>

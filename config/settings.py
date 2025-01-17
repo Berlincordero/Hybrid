@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     'config',          # Asegúrate de que 'config' esté incluido
     'Administrador',
     'Perfiles',
+    'Friends',
+    'chats',
+    'opiniones',
 ]
 
 # Middleware
@@ -62,18 +65,18 @@ MESSAGE_TAGS = {
 
 
 # Configuración de django-axes
-AXES_FAILURE_LIMIT = 5  # Número máximo de intentos fallidos permitidos
-AXES_COOLOFF_TIME = 1  # Tiempo en horas para desbloquear automáticamente
-AXES_USE_IP_ADDRESS = False  # No bloquear por IP, solo por usuario/email
-AXES_RESET_ON_SUCCESS = True  # Reiniciar el contador de intentos fallidos en caso de éxito
-AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = False  # Bloquear solo por usuario, no por combinación de usuario e IP
-AXES_LOCK_OUT_AT_FAILURE = True  # Bloquear después del número de intentos fallidos
-
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = 1
+AXES_USE_IP_ADDRESS = False
+AXES_RESET_ON_SUCCESS = True
+AXES_FAILURE_LIMITING_BY_USER_AND_IP = False
+AXES_FAILURE_LIMITING_BY_USER = True
+AXES_LOCK_OUT_AT_FAILURE = True
 AXES_USERNAME_CALLABLE = 'Administrador.utils.get_email_as_username'
+AXES_HANDLER = 'axes.handlers.database.AxesDatabaseHandler'
+AXES_VERBOSE = True
 
-AXES_ONLY_USER_FAILURES = True  # Rastrea intentos fallidos solo por usuario
-AXES_HANDLER = 'axes.handlers.database.AxesDatabaseHandler'  # Almacenar intentos fallidos en la base de datos
-AXES_VERBOSE = True  # Muestra información adicional en los logs
+# Desde el archivo .env
 
 
 # Configuración de URLs
@@ -91,7 +94,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',  # Necesario para i18n
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.i18n',    # Añadido para i18n
+                'django.template.context_processors.i18n', 
+                'Perfiles.context_processors.user_profile_context',
             ],
         },
     },

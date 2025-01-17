@@ -1,0 +1,176 @@
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white h-screen">
+  <!-- Contenedor general -->
+  <div class="relative h-full">
+    <div class="flex h-full">
+      <!-- Sidebar de contactos -->
+      <div class="w-1/4 bg-gray-800 border-r border-gray-700 overflow-y-auto">
+        <div class="p-4 border-b border-gray-700 flex flex-col space-y-2">
+          <!-- Enlace para regresar al inicio -->
+          <a href="{% url 'index' %}" class="flex items-center text-indigo-400 hover:text-indigo-600">
+            <span class="text-xl">←</span>
+            <span class="ml-2">Regresar al Inicio</span>
+          </a>
+          <h1 class="text-xl font-bold">Chats</h1>
+        </div>
+        <ul class="space-y-2 mt-4">
+          {% for user in users %}
+          <li>
+            <a href="{% url 'chat_list' user.id %}" class="flex items-center p-3 hover:bg-gray-700 rounded-lg">
+              <div class="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center overflow-hidden">
+                {% if user.perfil.foto_perfil %}
+                  <img src="{{ user.perfil.foto_perfil.url }}" alt="{% trans 'Foto de Perfil' %}" class="w-full h-full object-cover">
+                {% else %}
+                  <span class="text-gray-400 text-xs">{% trans "Sin Foto" %}</span>
+                {% endif %}
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium">{{ user.first_name }} {{ user.last_name }}</p>
+                <p class="text-xs text-gray-400">Último mensaje...</p>
+              </div>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Ventana de chat -->
+      <div class="flex-1 flex flex-col">
+        {% if other_user %}
+        <!-- Encabezado del chat -->
+        <div class="flex items-center justify-between p-4 bg-gray-800 border-b border-gray-700">
+          <div class="flex items-center">
+            <div class="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center overflow-hidden">
+              {% if perfil and perfil.foto_perfil %}
+                <img src="{{ perfil.foto_perfil.url }}" alt="{% trans 'Foto de Perfil' %}" class="w-full h-full object-cover">
+              {% else %}
+                <span class="text-gray-400 text-xs">{% trans "Sin Foto" %}</span>
+              {% endif %}
+            </div>
+            <div class="ml-3">
+              <h2 class="text-lg font-bold">{{ other_user.first_name }} {{ other_user.last_name }}</h2>
+              <p class="text-sm text-gray-400">En línea</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lista de Mensajes -->
+        <div class="flex-1 p-4 overflow-y-auto">
+          {% for message in messages %}
+          <div class="mb-4">
+            {% if message.sender == request.user %}
+            <!-- Mensaje enviado -->
+            <div class="flex justify-end">
+              <div class="bg-indigo-600 text-white py-2 px-4 rounded-lg max-w-xs text-sm">
+                {{ message.text }}
+                {% if message.attachment %}
+                  <div class="mt-2">
+                    {% if message.attachment.url|endswith:".jpg" or message.attachment.url|endswith:".png" or message.attachment.url|endswith:".gif" %}
+                      <img src="{{ message.attachment.url }}" alt="Imagen adjunta" class="max-h-40">
+                    {% else %}
+                      <a href="{{ message.attachment.url }}" class="text-blue-400 underline" target="_blank">Ver adjunto</a>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            {% else %}
+            <!-- Mensaje recibido -->
+            <div class="flex justify-start">
+              <div class="bg-gray-700 text-white py-2 px-4 rounded-lg max-w-xs text-sm">
+                {{ message.text }}
+                {% if message.attachment %}
+                  <div class="mt-2">
+                    {% if message.attachment.url|endswith:".jpg" or message.attachment.url|endswith:".png" or message.attachment.url|endswith:".gif" %}
+                      <img src="{{ message.attachment.url }}" alt="Imagen adjunta" class="max-h-40">
+                    {% else %}
+                      <a href="{{ message.attachment.url }}" class="text-blue-400 underline" target="_blank">Ver adjunto</a>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          {% empty %}
+            <p class="text-gray-400">No hay mensajes en esta conversación.</p>
+          {% endfor %}
+        </div>
+
+        <!-- Área para enviar mensaje -->
+        <div class="p-4 border-t border-gray-700">
+          <!-- Formulario para enviar el mensaje -->
+          <form method="post" class="flex items-center" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.text }}
+
+            <!-- Contenedor para el input file, botón personalizado y nombre del archivo -->
+            <div class="flex items-center ml-4">
+              <!-- Input file oculto -->
+              <input type="file" id="attachment" name="attachment" class="hidden" onchange="updateFilename(event)">
+              
+              <!-- Botón personalizado para elegir archivo -->
+              <label for="attachment" class="bg-gray-800 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors">
+                Elegir archivo
+              </label>
+              
+              <!-- Contenedor para mostrar el nombre del archivo y botón "x" -->
+              <div id="file-container" class="ml-2 flex items-center space-x-2">
+                <span id="file-name" class="text-gray-300 text-sm"></span>
+                <!-- Botón "x" para cancelar la selección (se muestra solo si hay nombre) -->
+                <button type="button" id="clear-file" class="hidden text-red-500 hover:text-red-400" onclick="clearFile()">x</button>
+              </div>
+            </div>
+
+            <!-- Botón de enviar, estilizado -->
+            <button type="submit" class="ml-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+              Enviar
+            </button>
+          </form>
+        </div>
+        {% else %}
+        <div class="flex-1 flex items-center justify-center">
+          <p class="text-gray-400">Selecciona un usuario para iniciar una conversación.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Script JavaScript para actualizar el nombre del archivo y limpiar selección -->
+  <script>
+    function updateFilename(event) {
+      const input = event.target;
+      const fileNameSpan = document.getElementById('file-name');
+      const clearBtn = document.getElementById('clear-file');
+      if (input.files && input.files.length > 0) {
+        fileNameSpan.textContent = input.files[0].name;
+        clearBtn.classList.remove('hidden');
+      } else {
+        fileNameSpan.textContent = "";
+        clearBtn.classList.add('hidden');
+      }
+    }
+
+    function clearFile() {
+      // Reinicia el valor del input file
+      const input = document.getElementById('attachment');
+      input.value = "";
+      
+      // Limpia el nombre del archivo y oculta el botón "x"
+      document.getElementById('file-name').textContent = "";
+      document.getElementById('clear-file').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

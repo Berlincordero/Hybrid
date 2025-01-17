@@ -1,0 +1,46 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Videos" %} - Medios</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- TailwindCSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto p-4">
+        <!-- Encabezado -->
+        <header class="flex items-center justify-between mb-6">
+            <h1 class="text-3xl font-bold">{% trans "Videos Agropecuarios" %}</h1>
+            <!-- Enlace para subir video -->
+            <a href="{% url 'video_upload' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition">
+                {% trans "Subir Video" %}
+            </a>
+        </header>
+
+        <!-- Listado de videos -->
+        <section class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {% if videos %}
+                {% for video in videos %}
+                    <div class="bg-gray-800 shadow p-4 rounded">
+                        <!-- Miniatura del video (se recomienda generar una miniatura del video en producción) -->
+                        <div class="mb-2">
+                            <video controls class="w-full h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+                                <source src="{{ video.video_file.url }}" type="video/mp4">
+                                {% trans "Tu navegador no soporta videos HTML5." %}
+                            </video>
+                        </div>
+                        <h2 class="text-lg font-semibold mb-1">{{ video.titulo }}</h2>
+                        <p class="text-sm text-gray-400 mb-1">{% trans "Por" %} {{ video.autor.username }}</p>
+                        <p class="text-xs text-gray-500">{% trans "Subido el" %} {{ video.created_at|date:"d/m/Y H:i" }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-gray-400">{% trans "No hay videos subidos." %}</p>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>

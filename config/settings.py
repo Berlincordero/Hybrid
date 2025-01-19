@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'chats',
     'opiniones',
     'Medios',
+    'Marketplace',
+    'Foro',
 ]
 
 # Middleware

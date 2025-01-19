@@ -1,0 +1,121 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "Lista de Foros" %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- TailwindCSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white">
+  <div class="container mx-auto px-4 py-4 max-w-5xl">
+    
+    <!-- Enlace para crear un foro en página aparte -->
+    <div class="mb-8">
+      <a href="{% url 'foro_create' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition">
+        {% trans "Crear Foro" %}
+      </a>
+    </div>
+
+    <!-- Lista de foros (feed) -->
+    <section class="space-y-8">
+      {% if foros %}
+        {% for foro in foros %}
+          <div class="bg-gray-800 p-4 rounded shadow mx-auto max-w-2xl">
+            <h2 class="text-xl font-bold mb-2">{{ foro.titulo }}</h2>
+            <p class="text-sm text-gray-400 mb-2">
+              {% trans "Por" %} {{ foro.autor.username }} 
+              - {{ foro.created_at|date:"d/m/Y H:i" }}
+              {% if foro.reposted %}
+                <span class="text-xs text-red-400 ml-2">({% trans "Repost" %})</span>
+              {% endif %}
+            </p>
+
+            <!-- Mostrar contenido según tipo de post -->
+            {% if foro.post_type == "text" %}
+              <p class="mb-2">{{ foro.contenido_texto }}</p>
+            
+            {% elif foro.post_type == "image" and foro.imagen %}
+              <!-- Imagen moderada (máx. 80 de alto) -->
+              <img 
+                src="{{ foro.imagen.url }}" 
+                alt="{{ foro.titulo }}" 
+                class="w-full h-auto max-h-80 object-cover mb-2"
+              >
+            
+            {% elif foro.post_type == "video" and foro.video %}
+              <!-- Video moderado -->
+              <video 
+                controls 
+                class="w-full max-h-80 object-cover mb-2"
+              >
+                <source src="{{ foro.video.url }}" type="video/mp4">
+                {% trans "Tu navegador no soporta videos." %}
+              </video>
+            {% endif %}
+
+            <!-- Acciones: estrella y repost -->
+            <div class="flex items-center space-x-4 mb-4">
+              <!-- Botón Estrella -->
+              <form method="POST" action="{% url 'toggle_estrella' foro.pk %}">
+                {% csrf_token %}
+                <button class="flex items-center text-yellow-400 hover:text-yellow-300 transition">
+                  <span class="text-2xl">&#9733;</span>
+                  <span class="ml-1 text-sm">{{ foro.total_estrellas }}</span>
+                </button>
+              </form>
+
+              <!-- Botón Repost -->
+              <form method="POST" action="{% url 'repost_foro' foro.pk %}">
+                {% csrf_token %}
+                <button class="text-blue-400 hover:text-blue-300 transition">
+                  {% trans "Repostear" %}
+                </button>
+              </form>
+            </div>
+
+            <!-- Lista de comentarios -->
+            <div class="bg-gray-700 p-3 rounded">
+              <h3 class="text-lg font-semibold mb-2">{% trans "Comentarios" %}</h3>
+              {% if foro.comentarios.all %}
+                {% for comentario in foro.comentarios.all %}
+                  <div class="mb-2">
+                    <p class="text-gray-400 text-xs">
+                      {% trans "Por" %} {{ comentario.autor.username }} 
+                      - {{ comentario.created_at|date:"d/m/Y H:i" }}
+                    </p>
+                    <p>{{ comentario.contenido }}</p>
+                  </div>
+                {% endfor %}
+              {% else %}
+                <p class="text-gray-400 text-sm">{% trans "No hay comentarios aún." %}</p>
+              {% endif %}
+
+              <!-- Formulario para agregar un comentario -->
+              <form 
+                method="POST" 
+                action="{% url 'add_comentario' foro.pk %}" 
+                class="mt-3"
+              >
+                {% csrf_token %}
+                {{ comentario_form.contenido }}
+                <button 
+                  type="submit" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1 mt-2 rounded"
+                >
+                  {% trans "Comentar" %}
+                </button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-gray-400">{% trans "No hay foros creados aún." %}</p>
+      {% endif %}
+    </section>
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,93 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Vender Producto" %} - Marketplace Agrícola</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- TailwindCSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            background-color: #1a202c;
+            color: white;
+            border: 1px solid #2d3748;
+        }
+        input[type="text"]::placeholder,
+        input[type="number"]::placeholder,
+        textarea::placeholder {
+            color: #718096;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4a5568;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto p-4">
+        <!-- Enlace para regresar a la lista del Marketplace -->
+        <div class="mb-4">
+            <a href="{% url 'marketplace_list' %}" class="inline-flex items-center hover:text-blue-400 transition-colors">
+                <span class="text-2xl mr-2">&#8592;</span>
+                <span>{% trans "Regresar al Marketplace" %}</span>
+            </a>
+        </div>
+
+        <header class="mb-6">
+            <h1 class="text-3xl font-bold">{% trans "Vender Producto" %}</h1>
+        </header>
+
+        <!-- Formulario para subir producto -->
+        <section class="mb-8 bg-gray-800 shadow p-4 rounded">
+            <form method="post" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    {{ form.titulo.label_tag }}
+                    {{ form.titulo }}
+                    {% if form.titulo.errors %}
+                        <p class="text-red-400 text-sm">{{ form.titulo.errors }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.descripcion.label_tag }}
+                    {{ form.descripcion }}
+                    {% if form.descripcion.errors %}
+                        <p class="text-red-400 text-sm">{{ form.descripcion.errors }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.precio.label_tag }}
+                    {{ form.precio }}
+                    {% if form.precio.errors %}
+                        <p class="text-red-400 text-sm">{{ form.precio.errors }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.categoria.label_tag }}
+                    {{ form.categoria }}
+                    {% if form.categoria.errors %}
+                        <p class="text-red-400 text-sm">{{ form.categoria.errors }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.video_file.label_tag }}{# Se corrige si fuera video pero en este caso es imagen para el producto #}
+                    {{ form.imagen.label_tag }} 
+                    {{ form.imagen }}
+                    {% if form.imagen.errors %}
+                        <p class="text-red-400 text-sm">{{ form.imagen.errors }}</p>
+                    {% endif %}
+                </div>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded shadow transform hover:scale-105 transition duration-300">
+                    {% trans "Publicar Producto" %}
+                </button>
+            </form>
+        </section>
+    </div>
+</body>
+</html>

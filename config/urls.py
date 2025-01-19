@@ -24,6 +24,8 @@ urlpatterns += i18n_patterns(
     path('chats/', include('chats.urls')),
     path('opiniones/', include('opiniones.urls')),
     path('Medios/', include('Medios.urls')),
+    path('Marketplace/', include('Marketplace.urls')),
+    path('Foro/', include('Foro.urls')),
 )
 
 if settings.DEBUG:

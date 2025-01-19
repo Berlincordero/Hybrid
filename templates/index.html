@@ -1,9 +1,99 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %}{%
+trans "Inicio" %} - Mi Red Social{% endblock %} {% block content %}
+<!-- Header principal -->
+<!-- Bloque principal con estilo de tarjeta -->
+<div class="bg-gray-800 p-6 rounded-lg shadow mx-auto max-w-4xl mt-4">
+  <div class="flex items-center justify-start space-x-3">
+    <!-- Ícono/foto -->
+    <img
+    src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
+    alt="{% trans 'User Avatar' %}"
+    class="w-14 h-14 rounded-full border-2 border-white object-cover"
+  />
+    
+    <!-- Botón -->
+    <a href="{% url 'foro_list' %}">
+      <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Ir a mi Foro
+      </button>
+    </a>
+    
+  </div>
+</div>
 
-{% load static %}
+<!-- Contenedor principal -->
+<div class="container mx-auto px-4 py-6">
+  <!-- Lista de publicaciones en formato vertical -->
+  <main class="space-y-6">
+    <!-- Publicación ejemplo -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow mx-auto max-w-4xl">
+      <h3 class="text-xl font-bold">{% trans "Foro Posteado" %}</h3>
+      <p class="text-gray-300 mt-2">
+        {% trans "Contenido breve de una publicación o foro." %}
+      </p>
+      <div class="text-gray-500 text-sm mt-2">{% trans "Hace 2 horas" %}</div>
+    </div>
 
-{% block title %}Inicio{% endblock %}
+    <!-- Video ejemplo -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow mx-auto max-w-4xl">
+      <h3 class="text-xl font-bold">{% trans "Video Agropecuario Reciente" %}</h3>
+      <video
+        class="w-full h-auto sm:h-64 rounded-lg mt-4"
+        controls
+        poster="{% static 'medios/default-thumbnail.jpg' %}"
+      >
+        <source src="{% static 'videos/video1.mp4' %}" type="video/mp4" />
+        {% trans "Tu navegador no soporta video HTML5." %}
+      </video>
+    </div>
 
-{% block content %}
+    <!-- Publicidad del MarketPlace -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow mx-auto max-w-4xl">
+      <h3 class="text-xl font-bold">{% trans "MarketPlace Agropecuario Agregado Reciente" %}</h3>
+      <div class="flex flex-col sm:flex-row items-center mt-4">
+        <img
+          src="{% static 'marketplace/default-product.jpg' %}"
+          alt="{% trans 'Producto' %}"
+          class="w-24 h-24 object-cover rounded mr-0 sm:mr-4 mb-4 sm:mb-0"
+        />
+        <div>
+          <h4 class="font-bold">{% trans "Producto Destacado" %}</h4>
+          <p class="text-gray-300 text-sm">
+            {% trans "Descripción breve del producto." %}
+          </p>
+        </div>
+      </div>
+    </div>
 
+    <!-- Noticias recientes -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow mx-auto max-w-4xl">
+      <h3 class="text-xl font-bold">{% trans "Noticia Reciente Agropecuarias" %}</h3>
+      <p class="text-gray-300 mt-2">
+        {% trans "Resumen o extracto de la noticia publicada en la plataforma."
+        %}
+      </p>
+      <a
+        href="#"
+        class="text-blue-400 text-sm mt-2 inline-block hover:underline"
+        >{% trans "Leer más" %}</a
+      >
+    </div>
+
+    <!-- Cursos recientes -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow mx-auto max-w-4xl">
+      <h3 class="text-xl font-bold">
+        {% trans "Cursos Recientes Posteados" %}
+      </h3>
+      <p class="text-gray-300 mt-2">
+        {% trans "Cursos subidos por los usuarios para contribuir a la
+        comunidad." %}
+      </p>
+      <a
+        href="#"
+        class="text-blue-400 text-sm mt-2 inline-block hover:underline"
+        >{% trans "Leer más" %}</a
+      >
+    </div>
+  </main>
+</div>
 {% endblock %}

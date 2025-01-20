@@ -192,5 +192,3 @@ def lockout(request):
     return render(request, 'lockout.html')
 
 
-def index(request):
-    return render(request, 'index.html')

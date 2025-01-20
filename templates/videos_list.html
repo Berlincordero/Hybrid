@@ -11,6 +11,14 @@
 </head>
 <body class="bg-gray-900 text-white">
     <div class="container mx-auto p-4">
+
+          <!-- Enlace para volver al index -->
+          <div class="mb-4">
+            <a href="{% url 'index' %}" class="inline-flex items-center hover:text-blue-400 transition-colors">
+                <span class="text-2xl mr-2">&#8592;</span>
+                <span>{% trans "Volver al Inicio" %}</span>
+            </a>
+        </div>
         <!-- Encabezado -->
         <header class="flex items-center justify-between mb-6">
             <h1 class="text-3xl font-bold">{% trans "Videos Agropecuarios" %}</h1>
@@ -20,12 +28,12 @@
             </a>
         </header>
 
-        <!-- Listado de videos -->
-        <section class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {% if videos %}
-                {% for video in videos %}
+        <!-- NUEVO: Top 10 Videos más reproducidos -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Top 10 Videos más reproducidos</h2>
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {% for video in top_videos_reproducidos %}
                     <div class="bg-gray-800 shadow p-4 rounded">
-                        <!-- Miniatura del video (se recomienda generar una miniatura del video en producción) -->
                         <div class="mb-2">
                             <video controls class="w-full h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
                                 <source src="{{ video.video_file.url }}" type="video/mp4">
@@ -33,14 +41,184 @@
                             </video>
                         </div>
                         <h2 class="text-lg font-semibold mb-1">{{ video.titulo }}</h2>
-                        <p class="text-sm text-gray-400 mb-1">{% trans "Por" %} {{ video.autor.username }}</p>
-                        <p class="text-xs text-gray-500">{% trans "Subido el" %} {{ video.created_at|date:"d/m/Y H:i" }}</p>
+                        <p class="text-sm text-gray-400 mb-1">
+                            {% trans "Por" %} {{ video.autor.username }}<br>
+                            <strong>Vistas:</strong> {{ video.vistas }}
+                        </p>
+                        <a href="{% url 'video_detail' video.pk %}" class="text-blue-400 hover:underline">
+                            Ver Detalles
+                        </a>
                     </div>
+                {% empty %}
+                    <p class="text-gray-400">{% trans "No hay videos." %}</p>
                 {% endfor %}
-            {% else %}
-                <p class="text-gray-400">{% trans "No hay videos subidos." %}</p>
-            {% endif %}
+            </div>
         </section>
+
+        <!-- NUEVO: Top 10 Videos con más estrellas -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Top 10 Videos con más estrellas</h2>
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {% for video in top_videos_estrellas %}
+                    <div class="bg-gray-800 shadow p-4 rounded">
+                        <div class="mb-2">
+                            <video controls class="w-full h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+                                <source src="{{ video.video_file.url }}" type="video/mp4">
+                                {% trans "Tu navegador no soporta videos HTML5." %}
+                            </video>
+                        </div>
+                        <h2 class="text-lg font-semibold mb-1">{{ video.titulo }}</h2>
+                        <p class="text-sm text-gray-400 mb-1">
+                            {% trans "Por" %} {{ video.autor.username }}<br>
+                            <strong>Estrellas:</strong> {{ video.estrellas }}
+                        </p>
+                        <a href="{% url 'video_detail' video.pk %}" class="text-blue-400 hover:underline">
+                            Ver Detalles
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-gray-400">{% trans "No hay videos." %}</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- NUEVO: Mejores blogers (Top 10) -->
+<section class="mb-8">
+    <h2 class="text-2xl font-bold mb-4">Mejores Blogers (Top 10)</h2>
+    <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {% for video in top_bloger_videos %}
+            <div class="bg-gray-800 shadow p-4 rounded">
+                <div class="mb-2">
+                    <video controls class="w-full h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+                        <source src="{{ video.video_file.url }}" type="video/mp4">
+                        {% trans "Tu navegador no soporta videos HTML5." %}
+                    </video>
+                </div>
+                <h2 class="text-lg font-semibold mb-1">{{ video.titulo }}</h2>
+                <p class="text-sm text-gray-400 mb-1">
+                    {% trans "Por" %} {{ video.autor.username }}<br>
+                    <strong>Estrellas:</strong> {{ video.estrellas }}<br>
+                    <strong>Vistas:</strong> {{ video.vistas }}
+                </p>
+                <!-- Puedes opcionalmente mostrar la suma -->
+                {# <p>Puntaje total: {{ video.score }}</p> #}
+
+                <a href="{% url 'video_detail' video.pk %}" class="text-blue-400 hover:underline">
+                    Ver Detalles
+                </a>
+            </div>
+        {% empty %}
+            <p class="text-gray-400">{% trans "No hay videos de bloger." %}</p>
+        {% endfor %}
+    </div>
+</section>
+
+
+        <!-- NUEVO: Categorías agrupadas -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Noticias, Consejos y Cursos</h2>
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {% for video in noticias_consejos_cursos %}
+                    <div class="bg-gray-800 shadow p-4 rounded">
+                        <div class="mb-2">
+                            <video controls class="w-full h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+                                <source src="{{ video.video_file.url }}" type="video/mp4">
+                                {% trans "Tu navegador no soporta videos HTML5." %}
+                            </video>
+                        </div>
+                        <h2 class="text-lg font-semibold mb-1">{{ video.titulo }}</h2>
+                        <p class="text-sm text-gray-400 mb-1">
+                            {% trans "Por" %} {{ video.autor.username }}
+                        </p>
+                        <p class="text-xs text-gray-500">{% trans "Subido el" %} {{ video.created_at|date:"d/m/Y H:i" }}</p>
+                        <a href="{% url 'video_detail' video.pk %}" class="text-blue-400 hover:underline">
+                            Ver Detalles
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-gray-400">{% trans "No hay videos en estas categorías." %}</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Bloger</h2>
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {% for video in bloger %}
+                    <div class="bg-gray-800 shadow p-4 rounded">
+                        <div class="mb-2">
+                            <video controls class="w-full h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+                                <source src="{{ video.video_file.url }}" type="video/mp4">
+                                {% trans "Tu navegador no soporta videos HTML5." %}
+                            </video>
+                        </div>
+                        <h2 class="text-lg font-semibold mb-1">{{ video.titulo }}</h2>
+                        <p class="text-sm text-gray-400 mb-1">
+                            {% trans "Por" %} {{ video.autor.username }}
+                        </p>
+                        <p class="text-xs text-gray-500">{% trans "Subido el" %} {{ video.created_at|date:"d/m/Y H:i" }}</p>
+                        <a href="{% url 'video_detail' video.pk %}" class="text-blue-400 hover:underline">
+                            Ver Detalles
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-gray-400">{% trans "No hay videos bloger." %}</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Publicitario y Servicios Profesionales</h2>
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {% for video in publicitario_servprof %}
+                    <div class="bg-gray-800 shadow p-4 rounded">
+                        <div class="mb-2">
+                            <video controls class="w-full h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+                                <source src="{{ video.video_file.url }}" type="video/mp4">
+                                {% trans "Tu navegador no soporta videos HTML5." %}
+                            </video>
+                        </div>
+                        <h2 class="text-lg font-semibold mb-1">{{ video.titulo }}</h2>
+                        <p class="text-sm text-gray-400 mb-1">
+                            {% trans "Por" %} {{ video.autor.username }}
+                        </p>
+                        <p class="text-xs text-gray-500">{% trans "Subido el" %} {{ video.created_at|date:"d/m/Y H:i" }}</p>
+                        <a href="{% url 'video_detail' video.pk %}" class="text-blue-400 hover:underline">
+                            Ver Detalles
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-gray-400">{% trans "No hay videos publicitarios o de servicios profesionales." %}</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Personales</h2>
+            <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {% for video in personal %}
+                    <div class="bg-gray-800 shadow p-4 rounded">
+                        <div class="mb-2">
+                            <video controls class="w-full h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+                                <source src="{{ video.video_file.url }}" type="video/mp4">
+                                {% trans "Tu navegador no soporta videos HTML5." %}
+                            </video>
+                        </div>
+                        <h2 class="text-lg font-semibold mb-1">{{ video.titulo }}</h2>
+                        <p class="text-sm text-gray-400 mb-1">
+                            {% trans "Por" %} {{ video.autor.username }}
+                        </p>
+                        <p class="text-xs text-gray-500">{% trans "Subido el" %} {{ video.created_at|date:"d/m/Y H:i" }}</p>
+                        <a href="{% url 'video_detail' video.pk %}" class="text-blue-400 hover:underline">
+                            Ver Detalles
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-gray-400">{% trans "No hay videos personales." %}</p>
+                {% endfor %}
+            </div>
+        </section>
+
     </div>
 </body>
 </html>

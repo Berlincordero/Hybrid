@@ -13,5 +13,5 @@ urlpatterns = [
     path('politica-cookies/', views.politica_cookies, name='politica_cookies'),
     path('contacto/', views.enviar_contacto, name='enviar_contacto'),
     path('lockout/', views.lockout, name='lockout'),
-    path('', views.index, name='index'),  # Ruta para la página principal
+   
 ]

@@ -1,0 +1,83 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ video.titulo }} - Detalles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- TailwindCSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white">
+<div class="container mx-auto p-4">
+
+    <!-- Enlace para volver al listado -->
+    <div class="mb-4">
+        <a href="{% url 'videos_list' %}" class="inline-flex items-center hover:text-blue-400 transition-colors">
+            <span class="text-2xl mr-2">&#8592;</span>
+            <span>{% trans "Regresar al listado" %}</span>
+        </a>
+    </div>
+
+    <div class="bg-gray-800 p-4 rounded">
+        <h1 class="text-3xl font-bold mb-2">{{ video.titulo }}</h1>
+        <p class="text-sm text-gray-400 mb-4">
+            {% trans "Por" %} {{ video.autor.username }} | 
+            <strong>Vistas:</strong> {{ video.vistas }} | 
+            <strong>Estrellas:</strong> {{ video.estrellas }} | 
+            <strong>Categoría:</strong> {{ video.get_categoria_display }}
+        </p>
+        <video controls class="w-full h-auto mb-4">
+            <source src="{{ video.video_file.url }}" type="video/mp4">
+            {% trans "Tu navegador no soporta videos HTML5." %}
+        </video>
+        <p class="text-gray-200 mb-4">{{ video.descripcion }}</p>
+
+        <!-- Botón para dar like (estrella) -->
+        <a href="{% url 'video_like' video.pk %}"
+           class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition inline-block mb-4">
+            Dar estrella
+        </a>
+
+        <!-- Sección de comentarios -->
+        <div class="border-t border-gray-700 pt-4">
+            <h2 class="text-xl font-semibold mb-2">{% trans "Comentarios" %}</h2>
+
+            <!-- Lista de comentarios -->
+            <div class="space-y-4 mb-4">
+                {% for comment in comments %}
+                    <div class="bg-gray-700 p-3 rounded">
+                        <p class="text-sm text-gray-300 mb-1">
+                            <strong>{{ comment.user.username }}</strong>
+                            <span class="text-xs text-gray-500"> - {{ comment.created_at|date:"d/m/Y H:i" }}</span>
+                        </p>
+                        <p class="text-gray-100">{{ comment.text }}</p>
+                    </div>
+                {% empty %}
+                    <p class="text-gray-500">{% trans "No hay comentarios aún." %}</p>
+                {% endfor %}
+            </div>
+
+            <!-- Formulario para comentar -->
+            {% if request.user.is_authenticated %}
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    {{ comment_form.text }}
+                    {% if comment_form.text.errors %}
+                        <p class="text-red-400 text-sm">{{ comment_form.text.errors }}</p>
+                    {% endif %}
+                    <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition">
+                        Agregar comentario
+                    </button>
+                </form>
+            {% else %}
+                <p class="text-gray-400">{% trans "Debes iniciar sesión para comentar." %}</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

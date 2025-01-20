@@ -8,7 +8,7 @@ class ForoForm(forms.ModelForm):
         widgets = {
             'titulo': forms.TextInput(attrs={
                 'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Título del foro'
+                'placeholder': 'Titulo o Contenido del foro...'
             }),
             'contenido_texto': forms.Textarea(attrs={
                 'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',

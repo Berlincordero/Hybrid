@@ -2,14 +2,27 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Foro, Comentario
 from .forms import ForoForm, ComentarioForm
+# Foro/views.py
+from django.template.loader import render_to_string
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Foro
+from .forms import ForoForm, ComentarioForm
+from django.contrib.auth.decorators import login_required
+from .models import Foro
+from .forms import ComentarioForm
 
+@login_required
 def foro_list(request):
     """
-    Muestra todos los foros en una sola página (feed),
+    Muestra todos los foros de un usuario en una sola página (feed),
     con la información completa (texto, imagen o video),
     comentarios y acciones (estrella, repost).
     """
-    foros = Foro.objects.all().order_by('-created_at')
+    # Filtra solo foros cuyo autor sea el usuario actual
+    foros = Foro.objects.filter(autor=request.user).order_by('-created_at')
+
     # Formulario de comentario vacío (se usará para cada foro)
     comentario_form = ComentarioForm()
 
@@ -51,7 +64,7 @@ def add_comentario(request, pk):
             comentario.autor = request.user
             comentario.foro = foro
             comentario.save()
-    return redirect("foro_list")
+    return redirect("index")
 
 @login_required
 def toggle_estrella(request, pk):
@@ -65,7 +78,7 @@ def toggle_estrella(request, pk):
         foro.estrellas.remove(user)
     else:
         foro.estrellas.add(user)
-    return redirect("foro_list")
+    return redirect("index")
 
 @login_required
 def repost_foro(request, pk):
@@ -83,4 +96,23 @@ def repost_foro(request, pk):
         post_type=original.post_type,
         reposted=True,
     )
-    return redirect("foro_list")
+    return redirect("index")
+
+def foro_feed(request):
+    """
+    Retorna el HTML parcial (_foro_cards.html) dentro de un JSON
+    para refrescar dinámicamente el feed.
+    """
+    foros = Foro.objects.all().order_by('-created_at')
+    comentario_form = ComentarioForm()
+
+    html_cards = render_to_string(
+        '_foro_cards.html',
+        {
+            'foros': foros,
+            'comentario_form': comentario_form,
+        },
+        request=request
+    )
+    return JsonResponse({'html': html_cards})
+

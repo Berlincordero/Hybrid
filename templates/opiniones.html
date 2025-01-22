@@ -1,95 +1,92 @@
+{% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Opiniones y Retroalimentación</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        input[type="text"],
-        textarea {
-            background-color: #1a202c; /* Fondo oscuro absoluto */
-            color: white; /* Texto blanco */
-            border: 1px solid #2d3748; /* Borde más oscuro */
-        }
-        input[type="text"]::placeholder,
-        textarea::placeholder {
-            color: #718096; /* Color gris para el placeholder */
-        }
-        input[type="text"]:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #4a5568; /* Color de borde más claro al hacer focus */
-        }
-    </style>
-</head>
-<body class="bg-gray-900 text-white">
-    <div class="container mx-auto p-4">
-        <!-- Enlace para regresar al inicio -->
-        <div class="mb-4">
-            <a href="{% url 'index' %}" class="inline-flex items-center hover:text-blue-400 transition-colors">
-                <span class="text-2xl mr-2">&#8592;</span>
-                <span>{{ "Regresar al inicio"}}</span>
-            </a>
+
+{% block title %}
+  Opiniones y Retroalimentación
+{% endblock %}
+
+{% block extra_head %}
+  <!-- Enlace a TailwindCSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    input[type="text"],
+    textarea {
+      background-color: #1a202c; /* Fondo oscuro absoluto */
+      color: white; /* Texto blanco */
+      border: 1px solid #2d3748; /* Borde más oscuro */
+    }
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: #718096; /* Color gris para el placeholder */
+    }
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #4a5568; /* Color de borde más claro al hacer focus */
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="container mx-auto p-4">
+   
+    
+    <header class="mb-6">
+      <h1 class="text-3xl font-bold">Opiniones y Retroalimentación</h1>
+      <p class="text-gray-300 mt-2">
+        En FincaHub para nosotros es muy importante su opinión para mejorar esta plataforma y ofrecerle un servicio de calidad. 
+        Cada idea cuenta y nos ayuda a crecer. Una pequeña idea puede ser una gran mejora para nosotros. ¡Ayúdenos a ser mejores! 
+        Opina y danos tu retroalimentación para mejorar.
+      </p>
+    </header>
+    
+    <!-- Formulario para crear una opinión -->
+    <section class="mb-8 bg-gray-800 shadow p-4 rounded">
+      <h2 class="text-xl font-semibold mb-4">Postea tu opinión:</h2>
+      <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          {{ form.titulo.label_tag }}
+          {{ form.titulo }}
+          {% if form.titulo.errors %}
+            <p class="text-red-400 text-sm">{{ form.titulo.errors }}</p>
+          {% endif %}
         </div>
-        
-        <header class="mb-6">
-            <h1 class="text-3xl font-bold">Opiniones y Retroalimentación</h1>
-            <p class="text-gray-300 mt-2">
-                En FincaHub para nosotros es muy importante su opinión para mejorar esta plataforma y ofrecerle un servicio de calidad. 
-                Cada idea cuenta y nos ayuda a crecer. Una pequeña idea puede ser una gran mejora para nosotros. ¡Ayúdenos a ser mejores!
-                opina y danos tu retroalomentacion para mejorar.
-            </p>
-        </header>
-        
-        <!-- Formulario para crear una opinión -->
-        <section class="mb-8 bg-gray-800 shadow p-4 rounded">
-            <h2 class="text-xl font-semibold mb-4">Postea tu opinión:</h2>
-            <form method="post" class="space-y-4">
-                {% csrf_token %}
-                <div>
-                    {{ form.titulo.label_tag }}
-                    {{ form.titulo }}
-                    {% if form.titulo.errors %}
-                        <p class="text-red-400 text-sm">{{ form.titulo.errors }}</p>
-                    {% endif %}
-                </div>
-                <div>
-                    {{ form.contenido.label_tag }}
-                    {{ form.contenido }}
-                    {% if form.contenido.errors %}
-                        <p class="text-red-400 text-sm">{{ form.contenido.errors }}</p>
-                    {% endif %}
-                </div>
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded shadow transform hover:scale-105 transition duration-300">
-                    Enviar opinión
-                </button>
-            </form>
-        </section>
-        
-        <!-- Listado de Opiniones -->
-        <section>
-            {% if opiniones %}
-                {% for opinion in opiniones %}
-                <article class="mb-4 bg-gray-800 shadow p-4 rounded">
-                    <header class="mb-2">
-                        <h2 class="text-xl font-semibold">
-                            {{ opinion.titulo|default:"Sin título" }}
-                        </h2>
-                        <p class="text-sm text-gray-400">
-                            Por {{ opinion.autor.username }} el {{ opinion.created_at|date:"d/m/Y H:i" }}
-                        </p>
-                    </header>
-                    <div class="text-gray-200">
-                        <p>{{ opinion.contenido }}</p>
-                    </div>
-                </article>
-                {% endfor %}
-            {% else %}
-                <p class="text-gray-400">No hay opiniones publicadas.</p>
-            {% endif %}
-        </section>
-    </div>
-</body>
-</html>
+        <div>
+          {{ form.contenido.label_tag }}
+          {{ form.contenido }}
+          {% if form.contenido.errors %}
+            <p class="text-red-400 text-sm">{{ form.contenido.errors }}</p>
+          {% endif %}
+        </div>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded shadow transform hover:scale-105 transition duration-300">
+          Enviar opinión
+        </button>
+      </form>
+    </section>
+    
+    <!-- Listado de Opiniones -->
+    <section>
+      {% if opiniones %}
+        {% for opinion in opiniones %}
+          <article class="mb-4 bg-gray-800 shadow p-4 rounded">
+            <header class="mb-2">
+              <h2 class="text-xl font-semibold">
+                {{ opinion.titulo|default:"Sin título" }}
+              </h2>
+              <p class="text-sm text-gray-400">
+                Por {{ opinion.autor.username }} el {{ opinion.created_at|date:"d/m/Y H:i" }}
+              </p>
+            </header>
+            <div class="text-gray-200">
+              <p>{{ opinion.contenido }}</p>
+            </div>
+          </article>
+        {% endfor %}
+      {% else %}
+        <p class="text-gray-400">No hay opiniones publicadas.</p>
+      {% endif %}
+    </section>
+  </div>
+{% endblock %}

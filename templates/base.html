@@ -36,7 +36,9 @@
         <!-- Animaciones Lottie -->
         <div class="flex items-center space-x-4 mt-4 sm:mt-0">
           <!-- Lottie 1: Home -->
-          <div class="w-10 h-10" id="lottie-icon-home"></div>
+          <a href="{% url 'index' %}" class="cursor-pointer inline-block">
+            <div id="lottie-icon-home" class="w-12 h-12"></div>
+        </a>
 
           <!-- Lottie 2: Search -->
           <a href="{% url 'videos_list' %}" class="cursor-pointer inline-block">

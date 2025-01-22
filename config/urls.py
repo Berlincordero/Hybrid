@@ -26,6 +26,7 @@ urlpatterns += i18n_patterns(
     path('Medios/', include('Medios.urls')),
     path('Marketplace/', include('Marketplace.urls')),
     path('Foro/', include('Foro.urls')),
+    path('subasta/', include('subasta.urls')),
 )
 
 if settings.DEBUG:

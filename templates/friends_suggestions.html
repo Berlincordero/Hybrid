@@ -1,10 +1,12 @@
-{% load static i18n %}
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% trans "Sugerencias de Amistad" %}</title>
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+  {% trans "Sugerencias de Amistad" %}
+{% endblock %}
+
+{% block extra_head %}
   <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <!-- Lottie Player -->
@@ -28,122 +30,122 @@
       padding: 0 !important;
     }
   </style>
-</head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center space-y-6">
+{% endblock %}
 
-  <!-- Encabezado: Contenedor para "Volver al inicio" y "Amigos" en línea -->
-  <div class="w-full max-w-4xl px-6">
-    <div class="flex items-center justify-between">
-      <!-- Enlace Volver al inicio -->
-      <a href="{% url 'index' %}" target="_blank" class="flex items-center text-white hover:text-indigo-400">
-        <lottie-player
-          src="{% static 'animations/Inicio.json' %}"
-          background="transparent"
-          speed="1"
-          style="width: 50px; height: 50px;"
-          loop
-          autoplay>
-        </lottie-player>
-        <span class="ml-2">{% trans "Volver al inicio" %}</span>
-      </a>
-      <!-- Enlace Amigos -->
-      <a href="{% url 'friends_list' %}" class="flex items-center text-indigo-400 hover:text-indigo-500 font-semibold">
-        <lottie-player
-          src="{% static 'animations/contact.json' %}"
-          background="transparent"
-          speed="1"
-          style="width: 50px; height: 50px;"
-          loop
-          autoplay>
-        </lottie-player>
-        <span class="ml-2">{% trans "Mis Contactos" %}</span>
-      </a>
-    </div>
-  </div>
-
-  <!-- Contenedor Principal -->
-  <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-xl">
-    <!-- Título principal -->
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold">{% trans "Mi Comunidad Agropecuaria" %}</h1>
+{% block content %}
+  <div class="min-h-screen flex flex-col items-center justify-center space-y-6 bg-gray-900 text-white w-full py-8">
+    <!-- Encabezado: Contenedor para "Volver al perfil" y "Contactos Agregados" -->
+    <div class="w-full max-w-4xl px-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between">
+        <!-- Enlace Volver al perfil -->
+        <a href="{% url 'perfil' %}" target="_blank" class="flex items-center text-white hover:text-indigo-400">
+          <lottie-player
+            src="{% static 'animations/profile.json' %}"
+            background="transparent"
+            speed="1"
+            style="width: 50px; height: 50px;"
+            loop
+            autoplay>
+          </lottie-player>
+          <span class="ml-2">{% trans "Volver al perfil" %}</span>
+        </a>
+        <!-- Enlace Contactos Agregados -->
+        <a href="{% url 'friends_list' %}" class="flex items-center text-indigo-400 hover:text-indigo-500 font-semibold mt-4 sm:mt-0">
+          <lottie-player
+            src="{% static 'animations/contact.json' %}"
+            background="transparent"
+            speed="1"
+            style="width: 50px; height: 50px;"
+            loop
+            autoplay>
+          </lottie-player>
+          <span class="ml-2">{% trans "Contactos Agregados" %}</span>
+        </a>
+      </div>
     </div>
 
-    <!-- Sección de Solicitudes Recibidas -->
-    <section class="mb-8">
-      <h2 class="text-2xl font-semibold text-center mb-4">{% trans "Solicitudes Recibidas" %}</h2>
-      {% if pending_requests %}
-        <div class="space-y-6">
-          {% for fr in pending_requests %}
-            <div class="bg-gray-700 p-4 rounded flex flex-col items-center text-center">
-              {% if fr.from_user.perfil.foto_perfil %}
-                <img src="{{ fr.from_user.perfil.foto_perfil.url }}" alt="{{ fr.from_user.username }}" class="w-20 h-20 rounded-full object-cover mb-2">
-              {% else %}
-                <img src="{% static 'img/Embarque.jpg' %}" alt="{% trans 'Sin Foto' %}" class="w-20 h-20 rounded-full object-cover mb-2">
-              {% endif %}
-              <p class="text-gray-300 mb-2">
-                <strong>{{ fr.from_user.username }}</strong>
-                {% trans "te ha enviado una solicitud de amistad." %}
-              </p>
-              <div class="flex space-x-3">
-                <a href="{% url 'accept_friend_request' fr.id %}" class="px-4 py-2 bg-green-600 rounded hover:bg-green-700">
-                  {% trans "Aceptar" %}
-                </a>
-                <a href="{% url 'reject_friend_request' fr.id %}" class="px-4 py-2 bg-red-600 rounded hover:bg-red-700">
-                  {% trans "Eliminar" %}
-                </a>
+    <!-- Contenedor Principal -->
+    <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-xl">
+      <!-- Título principal -->
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold">{% trans "Mi Comunidad Agropecuaria" %}</h1>
+      </div>
+
+      <!-- Sección de Solicitudes Recibidas -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-center mb-4">{% trans "Solicitudes Recibidas" %}</h2>
+        {% if pending_requests %}
+          <div class="space-y-6">
+            {% for fr in pending_requests %}
+              <div class="bg-gray-700 p-4 rounded flex flex-col items-center text-center">
+                {% if fr.from_user.perfil.foto_perfil %}
+                  <img src="{{ fr.from_user.perfil.foto_perfil.url }}" alt="{{ fr.from_user.username }}" class="w-20 h-20 rounded-full object-cover mb-2">
+                {% else %}
+                  <img src="{% static 'img/Embarque.jpg' %}" alt="{% trans 'Sin Foto' %}" class="w-20 h-20 rounded-full object-cover mb-2">
+                {% endif %}
+                <p class="text-gray-300 mb-2">
+                  <strong>{{ fr.from_user.username }}</strong>
+                  {% trans "te ha enviado una solicitud de amistad." %}
+                </p>
+                <div class="flex space-x-3">
+                  <a href="{% url 'accept_friend_request' fr.id %}" class="px-4 py-2 bg-green-600 rounded hover:bg-green-700">
+                    {% trans "Aceptar" %}
+                  </a>
+                  <a href="{% url 'reject_friend_request' fr.id %}" class="px-4 py-2 bg-red-600 rounded hover:bg-red-700">
+                    {% trans "Eliminar" %}
+                  </a>
+                </div>
               </div>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p class="text-gray-400 text-center">{% trans "No tienes solicitudes pendientes." %}</p>
-      {% endif %}
-    </section>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-gray-400 text-center">{% trans "No tienes solicitudes pendientes." %}</p>
+        {% endif %}
+      </section>
 
-    <!-- Sección de Sugerencias de Amistad -->
-    <section>
-      <h2 class="text-2xl font-semibold text-center mb-4">{% trans "A quién puedes agregar" %}</h2>
-      {% if suggestions_with_requests %}
-        <div class="space-y-6">
-          {% for user_obj, existing_request in suggestions_with_requests %}
-            <div class="bg-gray-700 p-4 rounded flex flex-col items-center text-center">
-              {% if user_obj.perfil.foto_perfil %}
-                <img src="{{ user_obj.perfil.foto_perfil.url }}" alt="{{ user_obj.username }}" class="w-20 h-20 rounded-full object-cover mb-2">
-              {% else %}
-                <img src="{% static 'img/Embarque.jpg' %}" alt="{% trans 'Sin Foto' %}" class="w-20 h-20 rounded-full object-cover mb-2">
-              {% endif %}
-              <p class="font-semibold text-lg mb-1">{{ user_obj.username }}</p>
-              {% if user_obj.email %}
-                <p class="text-sm text-gray-300 mb-2">{{ user_obj.email }}</p>
-              {% endif %}
+      <!-- Sección de Sugerencias de Amistad -->
+      <section>
+        <h2 class="text-2xl font-semibold text-center mb-4">{% trans "A quién puedes agregar" %}</h2>
+        {% if suggestions_with_requests %}
+          <div class="space-y-6">
+            {% for user_obj, existing_request in suggestions_with_requests %}
+              <div class="bg-gray-700 p-4 rounded flex flex-col items-center text-center">
+                {% if user_obj.perfil.foto_perfil %}
+                  <img src="{{ user_obj.perfil.foto_perfil.url }}" alt="{{ user_obj.username }}" class="w-20 h-20 rounded-full object-cover mb-2">
+                {% else %}
+                  <img src="{% static 'img/Embarque.jpg' %}" alt="{% trans 'Sin Foto' %}" class="w-20 h-20 rounded-full object-cover mb-2">
+                {% endif %}
+                <p class="font-semibold text-lg mb-1">{{ user_obj.username }}</p>
+                {% if user_obj.email %}
+                  <p class="text-sm text-gray-300 mb-2">{{ user_obj.email }}</p>
+                {% endif %}
+                {% if existing_request %}
+                  <!-- Ya existe una solicitud pendiente -->
+                  <p class="mb-2 text-yellow-400 font-semibold">{% trans "Solicitud Enviada" %}</p>
+                  <a href="{% url 'cancel_friend_request' existing_request.id %}" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded">
+                    {% trans "Cancelar" %}
+                  </a>
+                {% else %}
+                  <!-- Posibilidad de enviar solicitud -->
+                  <a href="{% url 'send_friend_request' user_obj.id %}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded">
+                    {% trans "Enviar Solicitud" %}
+                  </a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-gray-400 text-center">{% trans "No hay sugerencias de amistad." %}</p>
+        {% endif %}
+      </section>
+    </div>
 
-              {% if existing_request %}
-                <!-- Ya existe una solicitud pendiente -->
-                <p class="mb-2 text-yellow-400 font-semibold">{% trans "Solicitud Enviada" %}</p>
-                <a href="{% url 'cancel_friend_request' existing_request.id %}" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded">
-                  {% trans "Cancelar" %}
-                </a>
-              {% else %}
-                <!-- Posibilidad de enviar solicitud -->
-                <a href="{% url 'send_friend_request' user_obj.id %}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded">
-                  {% trans "Enviar Solicitud" %}
-                </a>
-              {% endif %}
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p class="text-gray-400 text-center">{% trans "No hay sugerencias de amistad." %}</p>
-      {% endif %}
-    </section>
+    <!-- Scripts adicionales (ejemplo: inicialización de Flatpickr) -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Ejemplo: inicialización de flatpickr si se requiere
+        // flatpickr('#id_some_date_field', { dateFormat: "Y-m-d" });
+      });
+    </script>
   </div>
-
-  <!-- Scripts adicionales (por ejemplo, inicialización de flatpickr) -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Ejemplo: inicialización de flatpickr si es necesario
-      // flatpickr('#id_some_date_field', { dateFormat: "Y-m-d" });
-    });
-  </script>
-</body>
-</html>
+{% endblock %}

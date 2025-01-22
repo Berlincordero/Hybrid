@@ -3,54 +3,45 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Perfil
 from .forms import PerfilForm
-# Importa tu Profile desde la app Administrador
-from Administrador.models import Profile
-
-
-
+from Administrador.models import Profile  # Asegúrate de que la importación sea correcta
 
 @login_required
 def actualizar_foto_perfil(request):
     if request.method == 'POST' and request.FILES.get('foto_perfil'):
-        perfil = Perfil.objects.get(user=request.user)
+        # Usamos get_or_create para asegurar que existe el objeto Perfil
+        perfil, created = Perfil.objects.get_or_create(user=request.user)
         perfil.foto_perfil = request.FILES['foto_perfil']
         perfil.save()
-        return redirect('perfil')  # Redirige al perfil después de guardar
+        return redirect('perfil')  # Redirige a la vista de perfil después de guardar
     return redirect('perfil')
-
-
-
 
 
 @login_required
 def perfil_view(request):
-    # Obtenemos o creamos el Perfil (tu modelo "Perfil")
+    # Obtenemos o creamos el objeto del modelo "Perfil"
     perfil, created = Perfil.objects.get_or_create(user=request.user)
 
-    # Obtenemos el Profile (tu modelo "Profile" de la app Administrador)
-    # (Asumiendo que se crea automáticamente con tu señal post_save)
-    profile = request.user.profile
+    # Obtenemos o creamos el objeto "Profile" de la app Administrador
+    profile, created_profile = Profile.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
         form = PerfilForm(request.POST, request.FILES, instance=perfil)
         if form.is_valid():
             form.save()
-            return redirect('perfil')  # Ajusta el nombre de tu URL si es distinto
+            return redirect('perfil')  # Asegúrate de que el nombre de la URL sea el correcto
     else:
         form = PerfilForm(instance=perfil)
 
-    # Enviamos AMBOS objetos al template
-    return render(
-        request, 
-        'perfil.html', 
-        {
-            'form': form,    # El formulario para tu modelo "Perfil"
-            'perfil': perfil,      # El objeto "Perfil"
-            'profile': profile,    # El objeto "Profile" (app Administrador)
-        }
-    )
+    # Pasamos ambos objetos al template
+    context = {
+        'form': form,       # Formulario para el modelo "Perfil"
+        'perfil': perfil,   # Objeto "Perfil"
+        'profile': profile, # Objeto "Profile" (de la app Administrador)
+    }
+    return render(request, 'perfil.html', context)
+
 
 @login_required
 def links_empty_view(request):
-    # Solo renderiza tu HTML con el Lottie y mensaje
+    # Renderiza el HTML correspondiente sin lógica adicional
     return render(request, 'links_empty.html')

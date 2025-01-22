@@ -1,21 +1,18 @@
-
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from datetime import date
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_protect  # <--- Asegúrate de agregar esta línea
+from django.views.decorators.csrf import csrf_protect
 from django.core.mail import send_mail
-from .forms import LoginForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from axes.utils import reset
 from Administrador.utils import get_client_ip
-
+from .forms import LoginForm
 
 def mas_informacion(request):
     return render(request, 'mas_informacion.html')
-
 
 
 def login_view(request):
@@ -24,7 +21,6 @@ def login_view(request):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-
             try:
                 user = User.objects.get(email=email)
                 user = authenticate(request, username=user.username, password=password)
@@ -32,6 +28,7 @@ def login_view(request):
                     # Resetea intentos fallidos para el usuario
                     reset(username=user.username)
                     auth_login(request, user)
+                    # Redirige al index principal de la aplicación core
                     return redirect('index')
                 else:
                     messages.error(request, "Credenciales inválidas.")
@@ -42,12 +39,14 @@ def login_view(request):
 
     return render(request, 'login.html', {'form': form})
 
+
 def logout_view(request):
     """
     Vista para manejar el cierre de sesión.
     """
     logout(request)
     return redirect('login_view')  # Asegúrate de que 'login_view' esté correctamente configurada en URLs
+
 
 @csrf_protect
 def register(request):
@@ -64,7 +63,6 @@ def register(request):
 
         # Validaciones básicas
         errors = []
-
         if not first_name:
             errors.append("El campo Nombre es obligatorio.")
         if not last_name:
@@ -97,7 +95,7 @@ def register(request):
         else:
             errors.append("Todos los campos de Fecha de nacimiento son obligatorios.")
 
-        # Validar contraseña (puedes agregar más validaciones según tus necesidades)
+        # Validar contraseña (ejemplo: mínimo 8 caracteres)
         if len(password) < 8:
             errors.append("La contraseña debe tener al menos 8 caracteres.")
 
@@ -117,7 +115,7 @@ def register(request):
             }
             return render(request, 'register.html', context)
 
-        # Crear usuario
+        # Crear usuario con username único basado en first_name y last_name
         username_base = f"{first_name.lower()}.{last_name.lower()}"
         username = username_base
         counter = 1
@@ -130,20 +128,19 @@ def register(request):
         user.last_name = last_name
         user.save()
 
-        # Actualizar perfil
+        # Actualizar perfil (se asume que tienes un modelo Profile vinculado vía señal o OneToOneField)
         if birth_date:
             user.profile.birth_date = birth_date
         if gender:
             user.profile.gender = gender
         user.profile.save()
 
-        # **Asignar el backend antes de iniciar sesión**
+        # Asignar el backend y loguear automáticamente al usuario
         user.backend = 'django.contrib.auth.backends.ModelBackend'
-
-        # Iniciar sesión automáticamente después del registro
         auth_login(request, user)
         messages.success(request, "Registro exitoso. ¡Bienvenido(a)!")
-        return redirect('index')  # Asegúrate de tener una URL llamada 'index'
+        # Redirigir al index de la aplicación core sin afectar otras vistas
+        return redirect('index')
     else:
         context = {
             'days': range(1, 32),
@@ -155,14 +152,19 @@ def register(request):
             'years': range(1900, 2026)[::-1],
         }
         return render(request, 'register.html', context)
+
+
 def condiciones_uso(request):
     return render(request, 'condiciones_uso.html')
+
 
 def politica_privacidad(request):
     return render(request, 'politica_privacidad.html')
 
+
 def politica_cookies(request):
     return render(request, 'politica_cookies.html')
+
 
 def enviar_contacto(request):
     if request.method == 'POST':
@@ -170,25 +172,22 @@ def enviar_contacto(request):
         correo = request.POST.get('correo')
         asunto = request.POST.get('asunto')
         mensaje = request.POST.get('mensaje')
-
         mensaje_completo = f"Nombre: {nombre}\nCorreo: {correo}\n\nMensaje:\n{mensaje}"
 
         try:
-            # Envía un correo al administrador
             send_mail(
-                asunto,  # Asunto
-                mensaje_completo,  # Cuerpo del mensaje
-                'enriquecorderob33@gmail.com',  # Remitente (puede ser el correo del usuario o fijo)
-                ['enriquecorderob33@gmail.com'],  # Destinatario (tu correo de administrador)
+                asunto,                      # Asunto
+                mensaje_completo,            # Mensaje completo
+                'enriquecorderob33@gmail.com',   # Remitente
+                ['enriquecorderob33@gmail.com'], # Destinatario
             )
             messages.success(request, 'Tu mensaje ha sido enviado exitosamente.')
         except Exception as e:
             messages.error(request, f'Error al enviar el mensaje: {str(e)}')
-
-        return redirect('register')  # Redirige a la página principal o donde desees
+        # Redirige a la página deseada (puede ser el index u otra)
+        return redirect('register')
     return render(request, 'contacto.html')
+
 
 def lockout(request):
     return render(request, 'lockout.html')
-
-

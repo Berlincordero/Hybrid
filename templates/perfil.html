@@ -1,597 +1,469 @@
-{% load static %}
-{% load i18n %}
+{% extends 'base.html' %}
+{% load static i18n %}
 
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% trans "Perfil de Usuario" %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <style>
-        .circle-container {
-            width: 12rem; /* 192px */
-            height: 12rem; /* 192px */
-            position: relative;
-        }
+{% block title %}
+  {% trans "Perfil de Usuario" %}
+{% endblock %}
 
-        .lottie-icon {
-            position: absolute;
-            top: 0%; 
-            bottom: 10%; 
-            right: 2%; 
-            width: 100px; 
-            height: 100px; 
-        }
+{% block extra_head %}
+  <!-- TailwindCSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Lottie Player -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!-- Estilos personalizados -->
+  <style>
+    .circle-container {
+      width: 12rem; /* 192px */
+      height: 12rem; /* 192px */
+      position: relative;
+    }
 
-        @media (min-width: 768px) {
-            .circle-container {
-                width: 16rem; /* 256px */
-                height: 16rem; 
-            }
-            .lottie-icon {
-                width: 100px;
-                height: 100px;
-            }
-        }
+    .lottie-icon {
+      position: absolute;
+      top: 0%; 
+      bottom: 10%; 
+      right: 2%; 
+      width: 100px; 
+      height: 100px; 
+    }
 
-        @media (min-width: 1024px) {
-            .circle-container {
-                width: 20rem; /* 320px */
-                height: 20rem; 
-            }
-            .lottie-icon {
-                margin-top: 11rem;
-                width: 170px;
-                height: 170px;
-            }
-        }
+    @media (min-width: 768px) {
+      .circle-container {
+        width: 16rem; /* 256px */
+        height: 16rem; 
+      }
+      .lottie-icon {
+        width: 100px;
+        height: 100px;
+      }
+    }
 
-        /* === Campos como texto plano (sin caja ni sombreado) === */
-        input[type="text"],
-        input[type="date"],
-        input[type="email"],
-        input[type="password"],
-        textarea,
-        select {
-            background-color: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            outline: none !important;
-            color: inherit;
-            padding: 0 !important;
-        }
-    </style>
-</head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center space-y-6">
-    <!-- Enlace para regresar al inicio -->
-    <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center space-y-6">
+    @media (min-width: 1024px) {
+      .circle-container {
+        width: 20rem; /* 320px */
+        height: 20rem; 
+      }
+      .lottie-icon {
+        margin-top: 11rem;
+        width: 170px;
+        height: 170px;
+      }
+    }
 
-        <!-- Encabezado: Contenedor para "Volver al inicio" y "Amigos" en línea -->
-        <div class="w-full max-w-4xl px-6">
-          <div class="flex items-center justify-between">
-            <!-- Enlace Volver al inicio -->
-            <a href="{% url 'index' %}" target="_blank" class="flex items-center text-white hover:text-indigo-400">
-              <lottie-player
-                src="{% static 'animations/Inicio.json' %}"
-                background="transparent"
-                speed="1"
-                style="width: 50px; height: 50px;"
-                loop
-                autoplay>
-              </lottie-player>
-              <span class="ml-2">{% trans "Volver al inicio" %}</span>
-            </a>
-            <!-- Enlace Amigos -->
-            <a href="{%  url 'friends_suggestions' %}" class="flex items-center text-indigo-400 hover:text-indigo-500 font-semibold">
-              <lottie-player
-                src="{% static 'animations/contact.json' %}"
-                background="transparent"
-                speed="1"
-                style="width: 50px; height: 50px;"
-                loop
-                autoplay>
-              </lottie-player>
-              <span class="ml-2">{% trans "Contactos" %}</span>
-            </a>
-          </div>
-        </div>
+    /* === Campos como texto plano (sin caja ni sombreado) === */
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    input[type="password"],
+    textarea,
+    select {
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+      color: inherit;
+      padding: 0 !important;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <!-- Contenedor centrado de contenido -->
+  <div class="min-h-screen flex flex-col items-center justify-center space-y-6 bg-gray-900 text-white w-full py-8">
     
-
+    <!-- Enlaces de navegación (Volver al inicio y Contactos) -->
+    <div class="w-full max-w-4xl px-6">
+      <div class="flex items-center justify-between">
+       
+        <a href="{% url 'friends_suggestions' %}" class="flex items-center text-indigo-400 hover:text-indigo-500 font-semibold">
+          <lottie-player
+            src="{% static 'animations/contact.json' %}"
+            background="transparent"
+            speed="1"
+            style="width: 50px; height: 50px;"
+            loop
+            autoplay>
+          </lottie-player>
+          <span class="ml-2">{% trans "Contactos" %}</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Contenedor principal del Perfil centrado -->
     <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-xl shadow-md">
-        <!-- Sección de perfil -->
-        <div class="flex flex-col lg:flex-row lg:items-start lg:space-x-12">
-            <!-- Foto de perfil -->
-            <div class="flex flex-col items-center">
-                <div class="circle-container rounded-full bg-gray-600 flex items-center justify-center overflow-hidden">
-                    {% if perfil.foto_perfil %}
-                    <img src="{{ perfil.foto_perfil.url }}" alt="{% trans 'Foto de Perfil' %}" class="w-full h-full object-cover">
-                    {% else %}
-                    <span class="text-gray-400">{% trans "Sin Foto" %}</span>
-                    {% endif %}
-
-                    <!-- Lottie para subir la foto -->
-                    <label for="foto_perfil" class="lottie-icon cursor-pointer">
-                        <lottie-player
-                            src="{% static 'animations/foto.json' %}"
-                            background="transparent"
-                            speed="1"
-                            loop
-                            autoplay
-                        ></lottie-player>
-                    </label>
-                </div>
-                <form id="foto-perfil-form" method="post" enctype="multipart/form-data" action="{% url 'actualizar_foto_perfil' %}" class="mt-4">
-                    {% csrf_token %}
-                    <input type="file" name="foto_perfil" id="foto_perfil" class="hidden" onchange="guardarFoto()">
-                    <button type="button" onclick="document.getElementById('foto_perfil').click()" class="text-sm text-indigo-500 hover:underline">
-                    </button>
-                </form>
-            </div>
-
-            <!-- Formulario de perfil -->
-            <form method="post" class="space-y-4 flex-1" id="profileForm">
-                {% csrf_token %}
-                {{ form.non_field_errors }}
-
-                <!-- Encabezado con nombre y fecha de nacimiento -->
-                <div class="text-center mb-8">
-                    <p class="text-gray-300 text-lg mt-2">
-                        <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong>
-                    </p>
-                    <div class="mt-3">
-                        <p class="text-gray-400 text-sm font-semibold">
-                            {% trans "Fecha de nacimiento:" %}
-                        </p>
-                        <p class="text-gray-300 text-md">
-                            {{ profile.birth_date|date:"d/m/Y" }}
-                        </p>
-                    </div>
-                    <div class="mt-3">
-                        <p class="text-gray-400 text-sm font-semibold">
-                            {% trans "Género:" %}
-                        </p>
-                        <p class="text-gray-300 text-md">
-                            {{ profile.get_gender_display }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Campo: Biografía Personal -->
-                <div>
-                    <label for="{{ form.biografia.id_for_label }}" class="block font-medium text-gray-200">
-                        {% trans "Biografía Personal" %}
-                    </label>
-                    {{ form.biografia }}
-                    <div class="mt-2 space-x-2">
-                        <button 
-                            type="button" 
-                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-                            data-target="id_biografia"
-                        >
-                            {% trans "Editar" %}
-                        </button>
-                        <button 
-                            type="button" 
-                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-                            data-target="id_biografia"
-                        >
-                            {% trans "Guardar" %}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Campo: Dirección -->
-                <div>
-                    <label for="{{ form.direccion.id_for_label }}" class="block font-medium text-gray-200">
-                        {% trans "Dirección" %}
-                    </label>
-                    {{ form.direccion }}
-                    <div class="mt-2 space-x-2">
-                        <button 
-                            type="button" 
-                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-                            data-target="id_direccion"
-                        >
-                            {% trans "Editar" %}
-                        </button>
-                        <button 
-                            type="button" 
-                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-                            data-target="id_direccion"
-                        >
-                            {% trans "Guardar" %}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Campo: Nombre de la Empresa o Pymes -->
-                <div>
-                    <label for="{{ form.nombre_empresa.id_for_label }}" class="block font-medium text-gray-200">
-                        {% trans "Nombre de la Empresa o Pymes" %}
-                    </label>
-                    {{ form.nombre_empresa }}
-                    <div class="mt-2 space-x-2">
-                        <button 
-                            type="button" 
-                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-                            data-target="id_nombre_empresa"
-                        >
-                            {% trans "Editar" %}
-                        </button>
-                        <button 
-                            type="button" 
-                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-                            data-target="id_nombre_empresa"
-                        >
-                            {% trans "Guardar" %}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Campo: Año de Fundación -->
-                <div>
-                    <label for="{{ form.anio_fundacion.id_for_label }}" class="block font-medium text-gray-200">
-                        {% trans "Año de Fundación" %}
-                    </label>
-                    {{ form.anio_fundacion }}
-                    <div class="mt-2 space-x-2">
-                        <button 
-                            type="button" 
-                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-                            data-target="id_anio_fundacion"
-                        >
-                            {% trans "Editar" %}
-                        </button>
-                        <button 
-                            type="button" 
-                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-                            data-target="id_anio_fundacion"
-                        >
-                            {% trans "Guardar" %}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Campo: Actividad Económica -->
-                <div>
-                    <label for="{{ form.actividad_economica.id_for_label }}" class="block font-medium text-gray-200">
-                        {% trans "Actividad Económica" %}
-                    </label>
-                    {{ form.actividad_economica }}
-                    <div class="mt-2 space-x-2">
-                        <button 
-                            type="button" 
-                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-                            data-target="id_actividad_economica"
-                        >
-                            {% trans "Editar" %}
-                        </button>
-                        <button 
-                            type="button" 
-                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-                            data-target="id_actividad_economica"
-                        >
-                            {% trans "Guardar" %}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Campo: Preferencias Agropecuarias -->
-                <div>
-                    <label for="{{ form.preferencias_agropecuarias.id_for_label }}" class="block font-medium text-gray-200">
-                        {% trans "Preferencias Agropecuarias" %}
-                    </label>
-                    {{ form.preferencias_agropecuarias }}
-                    <div class="mt-2 space-x-2">
-                        <button 
-                            type="button" 
-                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-                            data-target="id_preferencias_agropecuarias"
-                        >
-                            {% trans "Editar" %}
-                        </button>
-                        <button 
-                            type="button" 
-                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-                            data-target="id_preferencias_agropecuarias"
-                        >
-                            {% trans "Guardar" %}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Campo: Preferencias Comerciales -->
-                <div>
-                    <label for="{{ form.preferencias_comerciales.id_for_label }}" class="block font-medium text-gray-200">
-                        {% trans "Preferencias Comerciales" %}
-                    </label>
-                    {{ form.preferencias_comerciales }}
-                    <div class="mt-2 space-x-2">
-                        <button 
-                            type="button" 
-                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-                            data-target="id_preferencias_comerciales"
-                        >
-                            {% trans "Editar" %}
-                        </button>
-                        <button 
-                            type="button" 
-                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-                            data-target="id_preferencias_comerciales"
-                        >
-                            {% trans "Guardar" %}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Contenedor de texto y Lotties -->
-<div class="mt-6 text-center">
-    <!-- Texto descriptivo -->
-    <p class="text-lg font-medium text-gray-200">
-        {% trans "Revisa tus otras apps sociales desde nuestra plataforma solo presiona el ícono correspondiente" %}
-    </p>
-
-    <!-- Contenedor flex para alinear íconos uno al lado del otro -->
-    <div class="mt-4 flex justify-center items-center space-x-4">
-        <!-- Primer Lottie (YouTube) -->
-        <lottie-player
-            id="lottieYoutube"
-            src="{% static 'animations/youtube.json' %}"
-            background="transparent"
-            speed="1"
-            style="width: 150px; height: 150px; cursor: pointer;"
-            loop
-            autoplay>
-        </lottie-player>
-
-        <!-- Segundo Lottie (Instagram) -->
-        <lottie-player
-            id="lottieInstagram"
-            src="{% static 'animations/instagram.json' %}"
-            background="transparent"
-            speed="1"
-            style="width: 130px; height: 130px; cursor: pointer;"
-            loop
-            autoplay>
-        </lottie-player>
-
-        <!-- Tercer Lottie (WhatsApp) -->
-        <lottie-player
-            id="lottieWhatsapp"
-            src="{% static 'animations/watsapp.json' %}"
-            background="transparent"
-            speed="1"
-            style="width: 100px; height: 100px; cursor: pointer;"
-            loop
-            autoplay>
-        </lottie-player>
-    </div>
-</div>
-
-
-                <!-- Campo: Enlace de YouTube, debajo del Lottie -->
-                <div class="mt-6">
-                    <label for="{{ form.youtube_link.id_for_label }}" class="block font-medium text-gray-200">
-                        {% trans "Mi Canal de YouTube" %}
-                    </label>
-
-                    <!-- Contenedor para el input -->
-                    <div class="w-full">
-                        {{ form.youtube_link }}
-                    </div>
-
-                    <div class="mt-2 space-x-2">
-                        <button 
-                            type="button" 
-                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-                            data-target="id_youtube_link"
-                        >
-                            {% trans "Editar" %}
-                        </button>
-                        <button 
-                            type="button" 
-                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-                            data-target="id_youtube_link"
-                        >
-                            {% trans "Guardar" %}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Campo: Enlace de Instagram, debajo del Lottie (por ejemplo) -->
-                <div class="mt-6">
-                    <label for="{{ form.instagram_link.id_for_label }}" class="block font-medium text-gray-200">
-                        {% trans "Mi Instagram" %}
-                    </label>
-
-                    <!-- Contenedor para el input -->
-                    <div class="w-full">
-                        {{ form.instagram_link }}
-                    </div>
-
-                    <div class="mt-2 space-x-2">
-                        <button
-                            type="button"
-                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-                            data-target="id_instagram_link"
-                        >
-                            {% trans "Editar" %}
-                        </button>
-                        <button
-                            type="button"
-                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-                            data-target="id_instagram_link"
-                        >
-                            {% trans "Guardar" %}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Campo: Enlace de WhatsApp (sin caja, solo texto) -->
-                <div class="mt-6">
-                    <label for="{{ form.whatsapp_link.id_for_label }}" class="block font-medium text-gray-200">
-                        {% trans "Mi WhatsApp" %}
-                    </label>
-                    
-                    <!-- Contenedor para el input con 100% de ancho -->
-                    <div class="w-full">
-                        {{ form.whatsapp_link }}
-                    </div>
-
-                    <!-- Botones de edición -->
-                    <div class="mt-2 space-x-2">
-                        <button 
-                            type="button" 
-                            class="editFieldBtn text-sm text-indigo-500 hover:underline"
-                            data-target="id_whatsapp_link"
-                        >
-                            {% trans "Editar" %}
-                        </button>
-                        <button 
-                            type="button" 
-                            class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden"
-                            data-target="id_whatsapp_link"
-                        >
-                            {% trans "Guardar" %}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Estilos extras para el campo, de modo que se vea como texto blanco sin borde -->
-                <style>
-                  #id_youtube_link {
-                    width: 100% !important;
-                    background-color: transparent !important;
-                    border: none !important;
-                    outline: none !important;
-                    color: white !important;       /* Para que el texto escrito se vea en blanco */
-                  }
-                  #id_instagram_link {
-                    width: 100% !important;
-                    background-color: transparent !important;
-                    border: none !important;
-                    outline: none !important;
-                    color: white !important;  /* Para ver el texto en blanco */
-                  }
-                  #id_whatsapp_link {
-                    width: 100% !important;
-                    background-color: transparent !important;
-                    border: none !important;
-                    outline: none !important;
-                    color: white !important;  /* Para ver el texto en blanco */
-                  }
-                </style>
-
-            </form>
+      <!-- Sección de perfil -->
+      <div class="flex flex-col lg:flex-row lg:items-start lg:space-x-12">
+        <!-- Foto de perfil -->
+        <div class="flex flex-col items-center">
+          <div class="circle-container rounded-full bg-gray-600 flex items-center justify-center overflow-hidden">
+            {% if perfil.foto_perfil %}
+              <img src="{{ perfil.foto_perfil.url }}" alt="{% trans 'Foto de Perfil' %}" class="w-full h-full object-cover">
+            {% else %}
+              <span class="text-gray-400">{% trans "Sin Foto" %}</span>
+            {% endif %}
+            <!-- Lottie para subir la foto -->
+            <label for="foto_perfil" class="lottie-icon cursor-pointer">
+              <lottie-player
+                src="{% static 'animations/foto.json' %}"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay>
+              </lottie-player>
+            </label>
+          </div>
+          <form id="foto-perfil-form" method="post" enctype="multipart/form-data" action="{% url 'actualizar_foto_perfil' %}" class="mt-4">
+            {% csrf_token %}
+            <input type="file" name="foto_perfil" id="foto_perfil" class="hidden" onchange="guardarFoto()">
+            <button type="button" onclick="document.getElementById('foto_perfil').click()" class="text-sm text-indigo-500 hover:underline">
+              {% trans "Cambiar foto" %}
+            </button>
+          </form>
         </div>
+
+        <!-- Formulario de perfil -->
+        <form method="post" class="space-y-4 flex-1" id="profileForm">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+          <!-- Encabezado: Nombre, Fecha de nacimiento y Género -->
+          <div class="text-center mb-8">
+            <p class="text-gray-300 text-lg mt-2">
+              <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong>
+            </p>
+            <div class="mt-3">
+              <p class="text-gray-400 text-sm font-semibold">
+                {% trans "Fecha de nacimiento:" %}
+              </p>
+              <p class="text-gray-300 text-md">
+                {{ profile.birth_date|date:"d/m/Y" }}
+              </p>
+            </div>
+            <div class="mt-3">
+              <p class="text-gray-400 text-sm font-semibold">
+                {% trans "Género:" %}
+              </p>
+              <p class="text-gray-300 text-md">
+                {{ profile.get_gender_display }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Campo: Biografía Personal -->
+          <div>
+            <label for="{{ form.biografia.id_for_label }}" class="block font-medium text-gray-200">
+              {% trans "Biografía Personal" %}
+            </label>
+            {{ form.biografia }}
+            <div class="mt-2 space-x-2">
+              <button type="button" class="editFieldBtn text-sm text-indigo-500 hover:underline" data-target="id_biografia">
+                {% trans "Editar" %}
+              </button>
+              <button type="button" class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden" data-target="id_biografia">
+                {% trans "Guardar" %}
+              </button>
+            </div>
+          </div>
+
+          <!-- Campo: Dirección -->
+          <div>
+            <label for="{{ form.direccion.id_for_label }}" class="block font-medium text-gray-200">
+              {% trans "Dirección" %}
+            </label>
+            {{ form.direccion }}
+            <div class="mt-2 space-x-2">
+              <button type="button" class="editFieldBtn text-sm text-indigo-500 hover:underline" data-target="id_direccion">
+                {% trans "Editar" %}
+              </button>
+              <button type="button" class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden" data-target="id_direccion">
+                {% trans "Guardar" %}
+              </button>
+            </div>
+          </div>
+
+          <!-- Campo: Nombre de la Empresa o Pymes -->
+          <div>
+            <label for="{{ form.nombre_empresa.id_for_label }}" class="block font-medium text-gray-200">
+              {% trans "Nombre de la Empresa o Pymes" %}
+            </label>
+            {{ form.nombre_empresa }}
+            <div class="mt-2 space-x-2">
+              <button type="button" class="editFieldBtn text-sm text-indigo-500 hover:underline" data-target="id_nombre_empresa">
+                {% trans "Editar" %}
+              </button>
+              <button type="button" class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden" data-target="id_nombre_empresa">
+                {% trans "Guardar" %}
+              </button>
+            </div>
+          </div>
+
+          <!-- Campo: Año de Fundación -->
+          <div>
+            <label for="{{ form.anio_fundacion.id_for_label }}" class="block font-medium text-gray-200">
+              {% trans "Año de Fundación" %}
+            </label>
+            {{ form.anio_fundacion }}
+            <div class="mt-2 space-x-2">
+              <button type="button" class="editFieldBtn text-sm text-indigo-500 hover:underline" data-target="id_anio_fundacion">
+                {% trans "Editar" %}
+              </button>
+              <button type="button" class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden" data-target="id_anio_fundacion">
+                {% trans "Guardar" %}
+              </button>
+            </div>
+          </div>
+
+          <!-- Campo: Actividad Económica -->
+          <div>
+            <label for="{{ form.actividad_economica.id_for_label }}" class="block font-medium text-gray-200">
+              {% trans "Actividad Económica" %}
+            </label>
+            {{ form.actividad_economica }}
+            <div class="mt-2 space-x-2">
+              <button type="button" class="editFieldBtn text-sm text-indigo-500 hover:underline" data-target="id_actividad_economica">
+                {% trans "Editar" %}
+              </button>
+              <button type="button" class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden" data-target="id_actividad_economica">
+                {% trans "Guardar" %}
+              </button>
+            </div>
+          </div>
+
+          <!-- Campo: Preferencias Agropecuarias -->
+          <div>
+            <label for="{{ form.preferencias_agropecuarias.id_for_label }}" class="block font-medium text-gray-200">
+              {% trans "Preferencias Agropecuarias" %}
+            </label>
+            {{ form.preferencias_agropecuarias }}
+            <div class="mt-2 space-x-2">
+              <button type="button" class="editFieldBtn text-sm text-indigo-500 hover:underline" data-target="id_preferencias_agropecuarias">
+                {% trans "Editar" %}
+              </button>
+              <button type="button" class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden" data-target="id_preferencias_agropecuarias">
+                {% trans "Guardar" %}
+              </button>
+            </div>
+          </div>
+
+          <!-- Campo: Preferencias Comerciales -->
+          <div>
+            <label for="{{ form.preferencias_comerciales.id_for_label }}" class="block font-medium text-gray-200">
+              {% trans "Preferencias Comerciales" %}
+            </label>
+            {{ form.preferencias_comerciales }}
+            <div class="mt-2 space-x-2">
+              <button type="button" class="editFieldBtn text-sm text-indigo-500 hover:underline" data-target="id_preferencias_comerciales">
+                {% trans "Editar" %}
+              </button>
+              <button type="button" class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden" data-target="id_preferencias_comerciales">
+                {% trans "Guardar" %}
+              </button>
+            </div>
+          </div>
+
+          <!-- Contenedor de texto y Lottie para redirección a otras apps -->
+          <div class="mt-6 text-center">
+            <p class="text-lg font-medium text-gray-200">
+              {% trans "Revisa tus otras apps sociales desde nuestra plataforma; solo presiona el ícono correspondiente" %}
+            </p>
+            <div class="mt-4 flex justify-center items-center space-x-4">
+              <!-- Lottie YouTube -->
+              <lottie-player
+                id="lottieYoutube"
+                src="{% static 'animations/youtube.json' %}"
+                background="transparent"
+                speed="1"
+                style="width: 150px; height: 150px; cursor: pointer;"
+                loop
+                autoplay>
+              </lottie-player>
+              <!-- Lottie Instagram -->
+              <lottie-player
+                id="lottieInstagram"
+                src="{% static 'animations/instagram.json' %}"
+                background="transparent"
+                speed="1"
+                style="width: 130px; height: 130px; cursor: pointer;"
+                loop
+                autoplay>
+              </lottie-player>
+              <!-- Lottie WhatsApp -->
+              <lottie-player
+                id="lottieWhatsapp"
+                src="{% static 'animations/watsapp.json' %}"
+                background="transparent"
+                speed="1"
+                style="width: 100px; height: 100px; cursor: pointer;"
+                loop
+                autoplay>
+              </lottie-player>
+            </div>
+          </div>
+
+          <!-- Campo: Enlace de YouTube -->
+          <div class="mt-6">
+            <label for="{{ form.youtube_link.id_for_label }}" class="block font-medium text-gray-200">
+              {% trans "Mi Canal de YouTube" %}
+            </label>
+            <div class="w-full">
+              {{ form.youtube_link }}
+            </div>
+            <div class="mt-2 space-x-2">
+              <button type="button" class="editFieldBtn text-sm text-indigo-500 hover:underline" data-target="id_youtube_link">
+                {% trans "Editar" %}
+              </button>
+              <button type="button" class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden" data-target="id_youtube_link">
+                {% trans "Guardar" %}
+              </button>
+            </div>
+          </div>
+
+          <!-- Campo: Enlace de Instagram -->
+          <div class="mt-6">
+            <label for="{{ form.instagram_link.id_for_label }}" class="block font-medium text-gray-200">
+              {% trans "Mi Instagram" %}
+            </label>
+            <div class="w-full">
+              {{ form.instagram_link }}
+            </div>
+            <div class="mt-2 space-x-2">
+              <button type="button" class="editFieldBtn text-sm text-indigo-500 hover:underline" data-target="id_instagram_link">
+                {% trans "Editar" %}
+              </button>
+              <button type="button" class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden" data-target="id_instagram_link">
+                {% trans "Guardar" %}
+              </button>
+            </div>
+          </div>
+
+          <!-- Campo: Enlace de WhatsApp -->
+          <div class="mt-6">
+            <label for="{{ form.whatsapp_link.id_for_label }}" class="block font-medium text-gray-200">
+              {% trans "Mi WhatsApp" %}
+            </label>
+            <div class="w-full">
+              {{ form.whatsapp_link }}
+            </div>
+            <div class="mt-2 space-x-2">
+              <button type="button" class="editFieldBtn text-sm text-indigo-500 hover:underline" data-target="id_whatsapp_link">
+                {% trans "Editar" %}
+              </button>
+              <button type="button" class="saveFieldBtn text-sm text-indigo-500 hover:underline hidden" data-target="id_whatsapp_link">
+                {% trans "Guardar" %}
+              </button>
+            </div>
+          </div>
+
+          <!-- Estilos extra para inputs (para texto blanco sin bordes) -->
+          <style>
+            #id_youtube_link,
+            #id_instagram_link,
+            #id_whatsapp_link {
+              width: 100% !important;
+              background-color: transparent !important;
+              border: none !important;
+              outline: none !important;
+              color: white !important;
+            }
+          </style>
+        </form>
+      </div>
     </div>
+  </div>
 
-    <!-- Script para envío automático de la foto -->
-    <script>
-        function guardarFoto() {
-            const form = document.getElementById('foto-perfil-form');
-            form.submit();
+  <!-- Scripts -->
+  <script>
+    function guardarFoto() {
+      document.getElementById('foto-perfil-form').submit();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Hacer readonly todos los campos al inicio
+      const allInputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
+      const editButtons = document.querySelectorAll('.editFieldBtn');
+      const saveButtons = document.querySelectorAll('.saveFieldBtn');
+
+      allInputs.forEach(input => {
+        if (input.type !== 'hidden' && input.name !== 'csrfmiddlewaretoken') {
+          input.setAttribute('readonly', true);
         }
-    </script>
+      });
 
-    <!-- Script para habilitar/deshabilitar cada campo y guardar -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // ========== EDICIÓN Y GUARDADO DE CAMPOS (lo de siempre) ==========
-            const allInputs = document.querySelectorAll('#profileForm input, #profileForm textarea, #profileForm select');
-            const editButtons = document.querySelectorAll('.editFieldBtn');
-            const saveButtons = document.querySelectorAll('.saveFieldBtn');
-
-            // 1. Marcar todos los campos como readonly al cargar
-            allInputs.forEach(input => {
-                if (input.type !== 'hidden' && input.name !== 'csrfmiddlewaretoken') {
-                    input.setAttribute('readonly', true);
-                }
-            });
-
-            // 2. Al hacer clic en "Editar"
-            editButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const targetId = this.getAttribute('data-target');
-                    const targetInput = document.getElementById(targetId);
-                    if (targetInput) {
-                        targetInput.removeAttribute('readonly');
-                        const saveBtn = this.parentNode.querySelector('.saveFieldBtn');
-                        this.classList.add('hidden');
-                        saveBtn.classList.remove('hidden');
-                    }
-                });
-            });
-
-            // 3. Al hacer clic en "Guardar"
-            saveButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const targetId = this.getAttribute('data-target');
-                    const targetInput = document.getElementById(targetId);
-                    if (targetInput) {
-                        targetInput.setAttribute('readonly', true);
-                        document.getElementById('profileForm').submit();
-                    }
-                });
-            });
-
-            // ========== LÓGICA PARA LOTTIES (YouTube/Instagram/WhatsApp) ==========
-
-            // Obtenemos los enlaces
-            const youtubeLink = "{{ perfil.youtube_link|default_if_none:'' }}";
-            const instagramLink = "{{ perfil.instagram_link|default_if_none:'' }}";
-            const whatsappLink = "{{ perfil.whatsapp_link|default_if_none:'' }}";
-
-            // Referencia a cada Lottie
-            const lottieYoutube = document.getElementById('lottieYoutube');
-            const lottieInstagram = document.getElementById('lottieInstagram');
-            const lottieWhatsapp = document.getElementById('lottieWhatsapp');
-
-            // CLICK EN Lottie (YouTube)
-            if (lottieYoutube) {
-                lottieYoutube.addEventListener('click', function() {
-                    // Si youtubeLink está vacío => links_empty
-                    if (!youtubeLink) {
-                        window.location.href = "{% url 'links_empty' %}";
-                    } else {
-                        window.open(youtubeLink, '_blank');
-                    }
-                });
+      // Botón Editar
+      editButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          const targetInput = document.getElementById(targetId);
+          if (targetInput) {
+            targetInput.removeAttribute('readonly');
+            this.classList.add('hidden');
+            const saveBtn = this.parentNode.querySelector('.saveFieldBtn');
+            if (saveBtn) {
+              saveBtn.classList.remove('hidden');
             }
-
-            // CLICK EN Lottie (Instagram)
-            if (lottieInstagram) {
-                lottieInstagram.addEventListener('click', function() {
-                    if (!instagramLink) {
-                        window.location.href = "{% url 'links_empty' %}";
-                    } else {
-                        window.open(instagramLink, '_blank');
-                    }
-                });
-            }
-
-            // CLICK EN Lottie (WhatsApp)
-            if (lottieWhatsapp) {
-                lottieWhatsapp.addEventListener('click', function() {
-                    if (!whatsappLink) {
-                        window.location.href = "{% url 'links_empty' %}";
-                    } else {
-                        window.open(whatsappLink, '_blank');
-                    }
-                });
-            }
+          }
         });
+      });
 
-        // Inicializar Flatpickr en el campo de Año de Fundación (si corresponde)
-        document.addEventListener('DOMContentLoaded', function () {
-            flatpickr('#id_anio_fundacion', {
-                dateFormat: "Y-m-d", // Formato de fecha
-            });
+      // Botón Guardar
+      saveButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          const targetInput = document.getElementById(targetId);
+          if (targetInput) {
+            targetInput.setAttribute('readonly', true);
+            document.getElementById('profileForm').submit();
+          }
         });
-    </script>
-</body>
-</html>
+      });
+
+      // Lógica para Lotties (YouTube, Instagram, WhatsApp)
+      const youtubeLink = "{{ perfil.youtube_link|default_if_none:'' }}";
+      const instagramLink = "{{ perfil.instagram_link|default_if_none:'' }}";
+      const whatsappLink = "{{ perfil.whatsapp_link|default_if_none:'' }}";
+
+      const lottieYoutube = document.getElementById('lottieYoutube');
+      const lottieInstagram = document.getElementById('lottieInstagram');
+      const lottieWhatsapp = document.getElementById('lottieWhatsapp');
+
+      if (lottieYoutube) {
+        lottieYoutube.addEventListener('click', function() {
+          if (!youtubeLink) {
+            window.location.href = "{% url 'links_empty' %}";
+          } else {
+            window.open(youtubeLink, '_blank');
+          }
+        });
+      }
+
+      if (lottieInstagram) {
+        lottieInstagram.addEventListener('click', function() {
+          if (!instagramLink) {
+            window.location.href = "{% url 'links_empty' %}";
+          } else {
+            window.open(instagramLink, '_blank');
+          }
+        });
+      }
+
+      if (lottieWhatsapp) {
+        lottieWhatsapp.addEventListener('click', function() {
+          if (!whatsappLink) {
+            window.location.href = "{% url 'links_empty' %}";
+          } else {
+            window.open(whatsappLink, '_blank');
+          }
+        });
+      }
+    });
+
+    // Inicializar Flatpickr en el campo Año de Fundación
+    document.addEventListener('DOMContentLoaded', function () {
+      flatpickr('#id_anio_fundacion', {
+        dateFormat: "Y-m-d",
+      });
+    });
+  </script>
+{% endblock %}

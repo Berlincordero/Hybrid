@@ -1,10 +1,12 @@
-{% load static i18n %}
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% trans "Mis Amigos" %}</title>
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+  {% trans "Mis Amigos" %}
+{% endblock %}
+
+{% block extra_head %}
   <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <!-- Lottie Player (opcional) -->
@@ -24,60 +26,57 @@
       padding: 0 !important;
     }
   </style>
-</head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center space-y-6">
+{% endblock %}
 
-  <!-- Encabezado de Navegación -->
-  <div class="w-full max-w-4xl px-6">
-    <div class="flex items-center justify-between">
-      <!-- Enlace a Sugerencias -->
-      <a href="{% url 'friends_suggestions' %}" class="flex items-center text-indigo-400 hover:text-indigo-500 font-semibold">
-        <lottie-player
-          src="{% static 'animations/contact.json' %}"
-          background="transparent"
-          speed="1"
-          style="width: 50px; height: 50px;"
-          loop
-          autoplay>
-        </lottie-player>
-        <span class="ml-2">{% trans "Volver a sugerencias" %}</span>
-      </a>
-    </div>
-  </div>
-
-  <!-- Contenedor Principal -->
-  <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-xl shadow-md">
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold">{% trans "Mis Amigos" %}</h1>
-    </div>
-
-    <!-- Lista de Amigos -->
-    {% if friends %}
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {% for friend in friends %}
-          <div class="bg-gray-700 p-4 rounded shadow flex flex-col items-center text-center">
-            {% if friend.profile.foto_perfil %}
-              <img src="{{ friend.profile.foto_perfil.url }}" alt="{{ friend.username }}" class="w-20 h-20 rounded-full object-cover mb-2">
-            {% else %}
-              <img src="{% static 'img/Embarque.jpg' %}" alt="{% trans 'Sin Foto' %}" class="w-20 h-20 rounded-full object-cover mb-2">
-            {% endif %}
-            <p class="text-lg font-semibold">{{ friend.username }}</p>
-            {% if friend.email %}
-              <p class="text-sm text-gray-300">{{ friend.email }}</p>
-            {% endif %}
-          </div>
-        {% endfor %}
+{% block content %}
+  <!-- Contenedor principal centrado en pantalla -->
+  <div class="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white py-8">
+    
+    <!-- Encabezado de navegación -->
+    <div class="w-full max-w-4xl px-6 mb-6">
+      <div class="flex items-center justify-between">
+        <!-- Enlace a Sugerencias -->
+        <a href="{% url 'friends_suggestions' %}" class="flex items-center text-indigo-400 hover:text-indigo-500 font-semibold">
+          <lottie-player
+            src="{% static 'animations/contact.json' %}"
+            background="transparent"
+            speed="1"
+            style="width: 50px; height: 50px;"
+            loop
+            autoplay>
+          </lottie-player>
+          <span class="ml-2">{% trans "Volver a sugerencias" %}</span>
+        </a>
       </div>
-    {% else %}
-      <p class="text-gray-400 text-center">{% trans "No tienes amigos agregados." %}</p>
-    {% endif %}
-  </div>
+    </div>
 
-  <!-- Scripts adicionales, si es necesario -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Inicializa librerías o realiza otras configuraciones
-    });
-  </script>
-</body>
-</html>
+    <!-- Contenedor principal de "Mis Amigos" -->
+    <div class="w-full max-w-4xl bg-gray-800 p-6 rounded-xl shadow-md">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold">{% trans "Mis Amigos" %}</h1>
+      </div>
+
+      <!-- Lista de Amigos -->
+      {% if friends %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {% for friend in friends %}
+            <div class="bg-gray-700 p-4 rounded shadow flex flex-col items-center text-center">
+              {% if friend.profile.foto_perfil %}
+                <img src="{{ friend.profile.foto_perfil.url }}" alt="{{ friend.username }}" class="w-20 h-20 rounded-full object-cover mb-2">
+              {% else %}
+                <img src="{% static 'img/Embarque.jpg' %}" alt="{% trans 'Sin Foto' %}" class="w-20 h-20 rounded-full object-cover mb-2">
+              {% endif %}
+              <p class="text-lg font-semibold">{{ friend.username }}</p>
+              {% if friend.email %}
+                <p class="text-sm text-gray-300">{{ friend.email }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-gray-400 text-center">{% trans "No tienes amigos agregados." %}</p>
+      {% endif %}
+    </div>
+    
+  </div>
+{% endblock %}

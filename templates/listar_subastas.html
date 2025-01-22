@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Subastas Disponibles</h1>
+<a href="{% url 'crear_subasta' %}" class="btn btn-primary">Crear Subasta</a>
+
+<ul>
+    {% for subasta in subastas %}
+    <li class="border rounded-lg p-4 mb-4 bg-white text-black">
+        <h3>{{ subasta.titulo }} ({{ subasta.get_tipo_display }})</h3>
+        <p><strong>Descripción:</strong> {{ subasta.descripcion }}</p>
+        <p><strong>Precio Inicial:</strong> ₡{{ subasta.precio_inicial }}</p>
+        <p><strong>Fecha de Finalización:</strong> {{ subasta.fecha_fin }}</p>
+        {% if subasta.imagen %}
+        <img src="{{ subasta.imagen.url }}" alt="Imagen de {{ subasta.titulo }}" class="w-32 h-32 object-cover">
+        {% endif %}
+
+        <h4>Ofertas</h4>
+        <ul>
+            {% for oferta in subasta.ofertas.all %}
+            <li>{{ oferta.comprador.username }}: ₡{{ oferta.monto }}</li>
+            {% empty %}
+            <p>No hay ofertas aún.</p>
+            {% endfor %}
+        </ul>
+
+        <h4>Hacer una oferta</h4>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="subasta_id" value="{{ subasta.id }}">
+            {{ oferta_forms.subasta.id.as_p }}
+            <button type="submit" class="btn btn-success">Ofertar</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

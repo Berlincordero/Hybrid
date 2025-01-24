@@ -119,8 +119,45 @@
             ></lottie-player>
         
             <!-- Texto de Chats -->
-            <span class="whitespace-nowrap"> {% trans "Chats" %} </span>
+            <span class="whitespace-nowrap"> {% trans "GreenChats" %} </span>
         </a>
+
+        <a
+        
+        class="flex items-center px-4 py-2 hover:bg-gray-700"
+    >
+        <!-- Ícono Lottie -->
+        <lottie-player
+            src="{% static 'animations/Vivero.json' %}"
+            background="transparent"
+            speed="1"
+            style="width: 54px; height: 54px; margin-right: 2px"
+            loop
+            autoplay
+        ></lottie-player>
+    
+        <!-- Texto de Opiniones -->
+        <span class="whitespace-nowrap">{% trans "Mi Vivero" %}</span>
+    </a>
+    
+    <a
+        
+    class="flex items-center px-4 py-2 hover:bg-gray-700"
+>
+    <!-- Ícono Lottie -->
+    <lottie-player
+        src="{% static 'animations/Mifinca.json' %}"
+        background="transparent"
+        speed="1"
+        style="width: 54px; height: 54px; margin-right: 2px"
+        loop
+        autoplay
+    ></lottie-player>
+
+    <!-- Texto de Opiniones -->
+    <span class="whitespace-nowrap">{% trans "Mi Finca" %}</span>
+</a>
+
 
         <a
         href="{% url 'opiniones' %}"
@@ -139,6 +176,8 @@
         <!-- Texto de Opiniones -->
         <span class="whitespace-nowrap">{% trans "opiniones!" %}</span>
     </a>
+
+    
     
 
             <!-- Enlace para "Configuraciones" con otro Lottie al lado -->

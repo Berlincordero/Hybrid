@@ -48,8 +48,11 @@
           <button data-tab="frutas-verduras" class="tab-button px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded shadow">
             {% trans "Frutas y Verduras" %}
           </button>
+          <button data-tab="animales" class="tab-button px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded shadow">
+            {% trans "Animales" %}
+          </button>
           <button data-tab="ganado" class="tab-button px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded shadow">
-            {% trans "Ganado" %}
+            {% trans "Ganado y Caballos" %}
           </button>
           <button data-tab="propiedades" class="tab-button px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded shadow">
             {% trans "Propiedades" %}
@@ -58,10 +61,7 @@
             {% trans "Vehículos" %}
           </button>
           <button data-tab="insumos" class="tab-button px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded shadow">
-            {% trans "Insumos" %}
-          </button>
-          <button data-tab="servicios" class="tab-button px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded shadow">
-            {% trans "Servicios Profesionales" %}
+            {% trans "Productos y Servicios" %}
           </button>
         </div>
 
@@ -70,6 +70,17 @@
           <form method="post" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
             <!-- Título del Producto -->
+            <div class="flex justify-center mb-6">
+              <lottie-player
+                  src="{% static 'animations/verduras.json' %}" 
+                  background="transparent"
+                  speed="1"
+                  class="w-56 h-56"
+                  loop
+                  autoplay
+              ></lottie-player>
+          </div>
+   
             <div class="mb-4">
               <label for="titulo">{% trans "Nombre del Producto" %}</label>
               <input type="text" id="titulo" name="titulo" placeholder="{% trans 'Ejemplo: Manzanas' %}" class="w-full p-2 rounded">
@@ -126,10 +137,123 @@
           </form>
         </div>
 
+        <!-- Contenido de la pestaña Animales -->
+        <div id="animales" class="tab-content hidden">
+          <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <div class="flex justify-center mb-6">
+              <lottie-player
+                  src="{% static 'animations/fish.json' %}" 
+                  background="transparent"
+                  speed="1"
+                  class="w-56 h-56"
+                  loop
+                  autoplay
+              ></lottie-player>
+          </div>
+   
+            <div class="mb-4">
+              <label for="tipo">{% trans "Tipo de Animal" %}</label>
+              <input type="text" id="tipo" name="tipo" placeholder="{% trans 'Ejemplo: Cerdos, Chompipes, Pescados, Gallinas' %}" class="w-full p-2 rounded">
+            </div>
+            <!-- Descripción -->
+            <div class="mb-4">
+              <label for="descripcion">{% trans "Descripción" %}</label>
+              <textarea id="descripcion" name="descripcion" rows="4" placeholder="{% trans 'Descripción detallada...' %}" class="w-full p-2 rounded"></textarea>
+            </div>
+            <div class="mb-4">
+              <label for="cantidad">{% trans "Cantidad" %}</label>
+              <input type="number" id="cantidad" name="cantidad" placeholder="{% trans 'Ejemplo: 50 cerdos' %}" class="w-full p-2 rounded">
+            </div>
+            <div class="mb-4">
+              <label for="edad">{% trans "Edad Promedio" %}</label>
+              <input type="text" id="edad" name="edad" placeholder="{% trans 'Ejemplo: 1 años' %}" class="w-full p-2 rounded">
+            </div>
+            <div class="mb-4">
+              <label for="enfermedades">{% trans "Control de Enfermedades" %}</label>
+              <input type="text" id="enfermedades" name="enfermedades" placeholder="{% trans 'Mencione si tiene o está libre de enfermedades' %}" class="w-full p-2 rounded">
+            </div>
+            <div class="mb-4">
+              <label for="raza">{% trans "Raza" %}</label>
+              <input type="text" id="raza" name="raza" placeholder="{% trans 'Raza del animal, especifique' %}" class="w-full p-2 rounded">
+            </div>
+            <div class="mb-4">
+              <label for="genetica">{% trans "Genética" %}</label>
+              <input type="text" id="genetica" name="genetica" placeholder="{% trans 'Genética del animal, especifique' %}" class="w-full p-2 rounded">
+            </div>
+            <div class="mb-4">
+              <label for="pureza">{% trans "Pureza" %}</label>
+              <input type="text" id="pureza" name="pureza" placeholder="{% trans 'Pureza del animal, especifique' %}" class="w-full p-2 rounded">
+            </div>
+            <div class="mb-4">
+              <label for="raza_padres">{% trans "Raza de padres" %}</label>
+              <input type="text" id="raza_padres" name="raza_padres" placeholder="{% trans 'Raza de los padres del animal, especifique' %}" class="w-full p-2 rounded">
+            </div>
+            <div class="mb-4">
+              <label for="peso">{% trans "Peso del animal" %}</label>
+              <input type="text" id="peso" name="peso" placeholder="{% trans 'Peso del animal, especifique' %}" class="w-full p-2 rounded">
+            </div>
+            <div class="mb-4">
+              <label for="moneda">{% trans "Tipo de Moneda" %}</label>
+              <select id="moneda" name="moneda" class="w-full p-2 bg-gray-800 text-white border border-gray-700 rounded">
+                <option value="colones">{% trans "Colones" %}</option>
+                <option value="pesos">{% trans "Pesos" %}</option>
+                <option value="euros">{% trans "Euros" %}</option>
+                <option value="dolares">{% trans "Dólares" %}</option>
+              </select>
+            </div>
+            <!-- Precio -->
+            <div class="mb-4">
+              <label for="precio">{% trans "Precio" %}</label>
+              <input type="number" id="precio" name="precio" placeholder="{% trans 'Precio en moneda seleccionada' %}" class="w-full p-2 rounded">
+            </div>
+            <!-- Ubicación -->
+            <div class="mb-4">
+              <label for="ubicacion">{% trans "Ubicación" %}</label>
+              <input type="text" id="ubicacion" name="ubicacion" placeholder="{% trans 'Ejemplo: Dirección o Región' %}" class="w-full p-2 rounded">
+            </div>
+            <!-- Teléfono -->
+            <div class="mb-4">
+              <label for="telefono">{% trans "Teléfono" %}</label>
+              <input type="text" id="telefono" name="telefono" placeholder="{% trans 'Número de contacto' %}" class="w-full p-2 rounded">
+            </div>
+            <!-- Whatsapp -->
+            <div class="mb-4">
+              <label for="whatsapp">{% trans "Whatsapp" %}</label>
+              <input type="text" id="whatsapp" name="whatsapp" placeholder="{% trans 'Número de Whatsapp' %}" class="w-full p-2 rounded">
+            </div>
+            <!-- Imágenes -->
+            <div class="mb-4">
+              <label for="actas_venta_nacimiento">{% trans "Imágenes" %}</label>
+              <input type="file" id="actas_venta_nacimiento" name="actas_venta_nacimiento" accept="image/*" class="w-full p-2 bg-gray-700 rounded">
+            </div>
+            <!-- Videos -->
+            <div class="mb-4">
+              <label for="video">{% trans "Video" %}</label>
+              <input type="file" id="video" name="video" accept="video/*" class="w-full p-2 bg-gray-700 rounded">
+            </div>
+            <!-- Botón de envío -->
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+              {% trans "Publicar" %}
+            </button>
+          </form>
+        </div>
+
+
         <!-- Contenido de la pestaña Ganado -->
         <div id="ganado" class="tab-content hidden">
           <form method="post" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
+            <div class="flex justify-center mb-6">
+              <lottie-player
+                  src="{% static 'animations/cow.json' %}" 
+                  background="transparent"
+                  speed="1"
+                  class="w-56 h-56"
+                  loop
+                  autoplay
+              ></lottie-player>
+          </div>
             <div class="mb-4">
               <label for="tipo">{% trans "Tipo de Ganado" %}</label>
               <input type="text" id="tipo" name="tipo" placeholder="{% trans 'Ejemplo: Vacas' %}" class="w-full p-2 rounded">
@@ -148,8 +272,8 @@
               <input type="text" id="edad" name="edad" placeholder="{% trans 'Ejemplo: 2 años' %}" class="w-full p-2 rounded">
             </div>
             <div class="mb-4">
-              <label for="enfermedades">{% trans "Enfermedades Vacunas" %}</label>
-              <input type="text" id="enfermedades" name="enfermedades" placeholder="{% trans 'Mencione si tiene o está libre de enfermedades' %}" class="w-full p-2 rounded">
+              <label for="enfermedades">{% trans "Enfermedades Vacunas (HALO)" %}</label>
+              <input type="text" id="enfermedades" name="enfermedades" placeholder="{% trans 'Mencione si tiene o está libre de enfermedades y parasitos' %}" class="w-full p-2 rounded">
             </div>
             <div class="mb-4">
               <label for="raza">{% trans "Raza" %}</label>
@@ -221,11 +345,168 @@
           </form>
         </div>
 
+         <!-- Contenido de la pestaña Propiedades -->
+         <div id="propiedades" class="tab-content hidden">
+          <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <div class="flex justify-center mb-6">
+              <lottie-player
+                  src="{% static 'animations/House.json' %}" 
+                  background="transparent"
+                  speed="1"
+                  class="w-56 h-56"
+                  loop
+                  autoplay
+              ></lottie-player>
+          </div>
+            <div class="mb-4">
+              <label for="titulo">{% trans "Título" %}</label>
+              <input
+                type="text"
+                id="titulo"
+                name="titulo"
+                placeholder="{% trans 'Nombre' %}"
+                class="w-full p-2 rounded"
+              />
+            </div>
+            <!-- Descripción -->
+            <div class="mb-4">
+              <label for="descripcion">{% trans "Descripción" %}</label>
+              <textarea
+                id="descripcion"
+                name="descripcion"
+                rows="4"
+                placeholder="{% trans 'Descripción detallada...' %}"
+                class="w-full p-2 rounded"
+              ></textarea>
+            </div>
+            <div class="mb-4">
+              <label for="tipo_propiedad">{% trans "Tipo de Propiedad" %}</label>
+              <select
+                id="tipo_propiedad"
+                name="tipo_propiedad"
+                class="w-full p-2 bg-gray-800 text-white border border-gray-700 rounded"
+              >
+                <option value="finca">{% trans "Finca" %}</option>
+                <option value="quinta">{% trans "Quinta" %}</option>
+                <option value="lote">{% trans "Lote" %}</option>
+                <option value="casa">{% trans "Casa" %}</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label for="moneda">{% trans "Tipo de Moneda" %}</label>
+              <select
+                id="moneda"
+                name="moneda"
+                class="w-full p-2 bg-gray-800 text-white border border-gray-700 rounded"
+              >
+                <option value="colones">{% trans "Colones" %}</option>
+                <option value="pesos">{% trans "Pesos" %}</option>
+                <option value="euros">{% trans "Euros" %}</option>
+                <option value="dolares">{% trans "Dólares" %}</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label for="precio_por_metro_cuadrado">{% trans "Precio del metro cuadrado" %}</label>
+              <input
+                type="number"
+                id="precio_por_metro_cuadrado"
+                name="precio_por_metro_cuadrado"
+                placeholder="{% trans 'Ejemplo: $100,000' %}"
+                class="w-full p-2 rounded"
+              />
+            </div>
+            <div class="mb-4">
+              <label for="precio">{% trans "Precio" %}</label>
+              <input
+                type="number"
+                id="precio"
+                name="precio"
+                placeholder="{% trans 'Ejemplo: $100,000' %}"
+                class="w-full p-2 rounded"
+              />
+            </div>
+            <!-- Ubicación -->
+            <div class="mb-4">
+              <label for="ubicacion">{% trans "Ubicación" %}</label>
+              <input
+                type="text"
+                id="ubicacion"
+                name="ubicacion"
+                placeholder="{% trans 'Ejemplo: Dirección o Región' %}"
+                class="w-full p-2 rounded"
+              />
+            </div>
+            <!-- Teléfono -->
+            <div class="mb-4">
+              <label for="telefono">{% trans "Teléfono" %}</label>
+              <input
+                type="text"
+                id="telefono"
+                name="telefono"
+                placeholder="{% trans 'Número de contacto' %}"
+                class="w-full p-2 rounded"
+              />
+            </div>
+            <!-- Whatsapp -->
+            <div class="mb-4">
+              <label for="whatsapp">{% trans "Whatsapp" %}</label>
+              <input
+                type="text"
+                id="whatsapp"
+                name="whatsapp"
+                placeholder="{% trans 'Número de Whatsapp' %}"
+                class="w-full p-2 rounded"
+              />
+            </div>
+            <!-- Imágenes -->
+            <div class="mb-4">
+              <label for="actas_venta_nacimiento">{% trans "Imágenes" %}</label>
+              <input
+                type="file"
+                id="actas_venta_nacimiento"
+                name="actas_venta_nacimiento"
+                accept="image/*"
+                class="w-full p-2 bg-gray-700 rounded"
+              />
+            </div>
+            <!-- Videos -->
+            <div class="mb-4">
+              <label for="video">{% trans "Video" %}</label>
+              <input
+                type="file"
+                id="video"
+                name="video"
+                accept="video/*"
+                class="w-full p-2 bg-gray-700 rounded"
+              />
+            </div>
+            <!-- Botón de envío -->
+            <button
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+            >
+              {% trans "Publicar" %}
+            </button>
+          </form>
+        </div>
+
+
         <!-- Contenido para Vehículos, Insumos y Servicios Profesionales se repite con estructura similar -->
         <div id="vehiculos" class="tab-content hidden">
           <form method="post" class="space-y-4">
             {% csrf_token %}
             <div class="mb-4">
+              <div class="flex justify-center mb-6">
+                <lottie-player
+                    src="{% static 'animations/carros.json' %}" 
+                    background="transparent"
+                    speed="1"
+                    class="w-56 h-56"
+                    loop
+                    autoplay
+                ></lottie-player>
+            </div>
               <label for="titulo">{% trans "Titulo" %}</label>
               <input type="text" id="titulo" name="titulo" placeholder="{% trans 'Nombre' %}" class="w-full p-2 rounded">
             </div>
@@ -280,8 +561,19 @@
           <form method="post" class="space-y-4">
             {% csrf_token %}
             <div class="mb-4">
-              <label for="titulo">{% trans "Nombre del Producto o Insumo" %}</label>
-              <input type="text" id="titulo" name="titulo" placeholder="{% trans 'Ejemplo: Alimento' %}" class="w-full p-2 rounded">
+              <div class="flex justify-center mb-6">
+                <lottie-player
+                    src="{% static 'animations/insumos.json' %}" 
+                    background="transparent"
+                    speed="1"
+                    class="w-56 h-56"
+                    loop
+                    autoplay
+                ></lottie-player>
+            </div>
+            <div class="mb-4">
+              <label for="titulo">{% trans "Nombre del Producto, Insumo ó Servicio" %}</label>
+              <input type="text" id="titulo" name="titulo" placeholder="{% trans 'Ejemplo: Alimento , Servicios Veterinario' %}" class="w-full p-2 rounded">
             </div>
             <!-- Descripción -->
             <div class="mb-4">
@@ -335,54 +627,6 @@
           </form>
         </div>
 
-        <div id="servicios" class="tab-content hidden">
-          <form method="post" class="space-y-4">
-            {% csrf_token %}
-            <div class="mb-4">
-              <label for="titulo">{% trans "Titulo" %}</label>
-              <input type="text" id="titulo" name="titulo" placeholder="{% trans 'Nombre' %}" class="w-full p-2 rounded">
-            </div>
-            <!-- Descripción -->
-            <div class="mb-4">
-              <label for="descripcion">{% trans "Descripción" %}</label>
-              <textarea id="descripcion" name="descripcion" rows="4" placeholder="{% trans 'Descripción detallada...' %}" class="w-full p-2 rounded"></textarea>
-            </div>
-            <div class="mb-4">
-              <label for="ubicacion">{% trans "Ubicación" %}</label>
-              <input type="text" id="ubicacion" name="ubicacion" placeholder="{% trans 'Ejemplo: Ciudad, País' %}" class="w-full p-2 rounded">
-            </div>
-            <!-- Teléfono -->
-            <div class="mb-4">
-              <label for="telefono">{% trans "Teléfono" %}</label>
-              <input type="text" id="telefono" name="telefono" placeholder="{% trans 'Número de contacto' %}" class="w-full p-2 rounded">
-            </div>
-            <!-- Whatsapp -->
-            <div class="mb-4">
-              <label for="whatsapp">{% trans "Whatsapp" %}</label>
-              <input type="text" id="whatsapp" name="whatsapp" placeholder="{% trans 'Número de Whatsapp' %}" class="w-full p-2 rounded">
-            </div>
-            <!-- Imágenes -->
-            <div class="mb-4">
-              <label for="actas_venta_nacimiento">{% trans "Imágenes" %}</label>
-              <input type="file" id="actas_venta_nacimiento" name="actas_venta_nacimiento" accept="image/*" class="w-full p-2 bg-gray-700 rounded">
-            </div>
-            <!-- Videos -->
-            <div class="mb-4">
-              <label for="video">{% trans "Video" %}</label>
-              <input type="file" id="video" name="video" accept="video/*" class="w-full p-2 bg-gray-700 rounded">
-            </div>
-            <div class="mb-4">
-              <label for="precio">{% trans "Precio" %}</label>
-              <input type="number" id="precio" name="precio" placeholder="{% trans 'Ejemplo: $100,000' %}" class="w-full p-2 rounded">
-            </div>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-              {% trans "Publicar" %}
-            </button>
-          </form>
-        </div>
-      </div>
-    </section>
-  </div>
 
   <!-- JavaScript para el manejo de pestañas -->
   <script>

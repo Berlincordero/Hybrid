@@ -9,18 +9,71 @@
 {% block extra_head %}
   <!-- TailwindCSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  
 {% endblock %}
 
 {% block content %}
   <div class="container mx-auto px-4 py-4 max-w-5xl">
-    
-    <!-- Enlace para crear un foro -->
-    <div class="mb-8">
-      <a href="{% url 'foro_create' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition">
-        {% trans "Crear Foro" %}
-      </a>
-    </div>
+   <!-- Card para el botón de crear foro ajustado -->
+<!-- Card para el botón de crear foro con botones adicionales y ajustes -->
+<div class="bg-gray-800 p-6 rounded-lg shadow mb-8 max-w-3xl mx-auto flex items-center justify-start space-x-3">
+  <button id="openModal" class="focus:outline-none">
+    <img
+      src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
+      alt="{% trans 'User Avatar' %}"
+      class="w-16 h-16 rounded-full border-2 border-white object-cover flex-shrink-0"
+    />
+  </button>
+  
+  <!-- Grupo de Botones -->
+  <div class="flex items-end px-4 py-2  ml-12">
+    <!-- Botón "Crear Foro" -->
+    <a href="{% url 'foro_create' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition">
+      {% trans "Crear Foro" %}
+    </a>
+    <!-- Botón "Noticia" (Rojo) -->
+    <a
+      class="flex items-end px-4 py-2 hover:bg-gray-700 ml-12" 
+      href="{% url 'perfil' %}"  
+    >
+      <!-- Ícono Lottie -->
+      <lottie-player
+        src="{% static 'animations/gallery.json' %}"
+        background="transparent"
+        speed="1"
+        class="w-14 h-14 mr-4"  
+        loop
+        autoplay
+      >
+      </lottie-player>
 
+      <!-- Texto de Perfil -->
+      <span class="whitespace-nowrap text-white"> {% trans "Galeria" %} </span>  <!-- Asegura que el texto sea visible -->
+    </a>
+    
+   
+  </div>
+</div>
+
+<!-- Modal para mostrar la imagen ampliada -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="relative">
+    <!-- Imagen Ampliada -->
+    <img
+      src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
+      alt="{% trans 'User Avatar Enlarged' %}"
+      class="max-w-full max-h-screen rounded-lg"
+    />
+    <!-- Botón de Cierre -->
+    <button id="closeModal" class="absolute top-0 right-0 mt-4 mr-4 text-white text-3xl font-bold focus:outline-none">
+      &times;
+    </button>
+  </div>
+</div>
+
+
+ 
+   
     <!-- Lista de foros (feed) -->
     <section class="space-y-8">
       {% if foros %}
@@ -28,7 +81,7 @@
           <div class="bg-gray-800 p-4 rounded shadow mx-auto max-w-2xl">
             <h2 class="text-xl font-bold mb-2">{{ foro.titulo }}</h2>
             
-            <p class="text-sm text-gray-400 mb-2">
+            <p class="text-sm text-green-400 mb-2">
               {% trans "Por" %} {{ foro.autor.username }} 
               - {{ foro.created_at|date:"d/m/Y H:i" }}
               {% if foro.reposted %}
@@ -131,6 +184,40 @@
         // Centra la imagen horizontalmente (display block + margin 0 auto)
         img.style.display = 'block';
         img.style.margin = '0 auto';
+      });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+      // Obtener elementos del DOM
+      const openModalButton = document.getElementById('openModal');
+      const closeModalButton = document.getElementById('closeModal');
+      const imageModal = document.getElementById('imageModal');
+
+      // Función para abrir el modal
+      openModalButton.addEventListener('click', function() {
+        imageModal.classList.remove('hidden');
+        imageModal.classList.add('flex');
+      });
+
+      // Función para cerrar el modal al hacer clic en el botón de cierre
+      closeModalButton.addEventListener('click', function() {
+        imageModal.classList.remove('flex');
+        imageModal.classList.add('hidden');
+      });
+
+      // Función para cerrar el modal al hacer clic fuera de la imagen
+      imageModal.addEventListener('click', function(event) {
+        if (event.target === imageModal) {
+          imageModal.classList.remove('flex');
+          imageModal.classList.add('hidden');
+        }
+      });
+
+      // Opcional: Cerrar el modal al presionar la tecla Esc
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && !imageModal.classList.contains('hidden')) {
+          imageModal.classList.remove('flex');
+          imageModal.classList.add('hidden');
+        }
       });
     });
   </script>

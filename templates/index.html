@@ -11,18 +11,41 @@
 <div class="bg-gray-800 p-6 rounded-lg shadow mx-auto max-w-4xl mt-4">
   <div class="flex items-center justify-start space-x-3">
     <!-- Ícono/foto -->
-    <img
-      src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
-      alt="{% trans 'User Avatar' %}"
-      class="w-14 h-14 rounded-full border-2 border-white object-cover"
-    />
+    <a href="{% url 'perfil' %}" class="transform hover:scale-105 transition-transform">
+      <img
+        src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
+        alt="{% trans 'User Avatar' %}"
+        class="w-16 h-16 rounded-full border-2 border-white object-cover flex-shrink-0"
+      />
+    </a>
     
     <a href="{% url 'foro_list' %}">
       <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2
                      rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-        Ir a mi Foro
+        {% trans "Ir a mi Foro" %}
       </button>
     </a>
+    
+    <!-- Enlace con Animación Lottie -->
+    <a
+      class="flex items-center px-4 py-2 hover:bg-gray-700 ml-12" 
+      href="{% url 'perfil' %}"  
+    >
+      <!-- Ícono Lottie -->
+      <lottie-player
+        src="{% static 'animations/Comunidad_foros.json' %}"
+        background="transparent"
+        speed="1"
+        class="w-14 h-14 mr-4"  
+        loop
+        autoplay
+      >
+      </lottie-player>
+
+      <!-- Texto de Perfil -->
+      <span class="whitespace-nowrap text-white"> {% trans "Comunidad de Foros" %} </span>  <!-- Asegura que el texto sea visible -->
+    </a>
+    
   </div>
 </div>
 
@@ -34,9 +57,6 @@
     <div id="feed-container">
       {% include '_foro_cards.html' with foros=foros_context comentario_form=comentario_form_context %}
     </div>
-
- 
-
   </main>
 </div>
 {% endblock %}
@@ -46,7 +66,42 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // URL que devolverá el HTML parcial (en JSON) para refrescar
+  // Funcionalidad para el Modal de la Imagen
+  const openModalButton = document.getElementById('openModal');
+  const closeModalButton = document.getElementById('closeModal');
+  const imageModal = document.getElementById('imageModal');
+
+  if (openModalButton && closeModalButton && imageModal) {
+    // Función para abrir el modal
+    openModalButton.addEventListener('click', function() {
+      imageModal.classList.remove('hidden');
+      imageModal.classList.add('flex');
+    });
+
+    // Función para cerrar el modal al hacer clic en el botón de cierre
+    closeModalButton.addEventListener('click', function() {
+      imageModal.classList.remove('flex');
+      imageModal.classList.add('hidden');
+    });
+
+    // Función para cerrar el modal al hacer clic fuera de la imagen
+    imageModal.addEventListener('click', function(event) {
+      if (event.target === imageModal) {
+        imageModal.classList.remove('flex');
+        imageModal.classList.add('hidden');
+      }
+    });
+
+    // Opcional: Cerrar el modal al presionar la tecla Esc
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' && !imageModal.classList.contains('hidden')) {
+        imageModal.classList.remove('flex');
+        imageModal.classList.add('hidden');
+      }
+    });
+  }
+
+  // Funcionalidad de Refresh del Feed
   const feedUrl = "{% url 'foro_feed' %}";
   const feedContainer = document.getElementById('feed-container');
 

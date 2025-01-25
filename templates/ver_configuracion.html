@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Configuración de la Plataforma</h1>
+<ul class="space-y-4">
+    <li><strong>Tema:</strong> {{ configuracion.get_tema_display }}</li>
+    <li><strong>Idioma:</strong> {{ configuracion.get_idioma_display }}</li>
+    <li><strong>Notificaciones:</strong> {{ configuracion.notificaciones|yesno:"Activadas,Desactivadas" }}</li>
+    <li><strong>Actualizaciones Automáticas:</strong> {{ configuracion.actualizaciones_automaticas|yesno:"Habilitadas,Deshabilitadas" }}</li>
+</ul>
+<a href="{% url 'actualizar_configuracion' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mt-4 inline-block">
+    Editar Configuración
+</a>
+{% endblock %}

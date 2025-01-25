@@ -30,6 +30,7 @@ urlpatterns += i18n_patterns(
     path('Notificacion/', include('Notificacion.urls')),
     path('viveros/', include('viveros.urls')),
     path('Fincas/', include('Fincas.urls')),
+    path('panel/', include('panel.urls')),
 )
 
 if settings.DEBUG:

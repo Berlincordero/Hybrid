@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'Notificacion',
     'viveros',
     'Fincas',
+    'panel',
 ]
 
 # Middleware

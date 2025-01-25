@@ -31,6 +31,7 @@ urlpatterns += i18n_patterns(
     path('viveros/', include('viveros.urls')),
     path('Fincas/', include('Fincas.urls')),
     path('panel/', include('panel.urls')),
+    path('comunity/', include('comunity.urls')),
 )
 
 if settings.DEBUG:

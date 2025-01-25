@@ -7,14 +7,14 @@ from .forms import GrupoForm, PublicacionForm, ComentarioForm
 def listar_grupos(request):
     """Lista todos los grupos disponibles."""
     grupos = Grupo.objects.all()
-    return render(request, 'community/listar_grupos.html', {'grupos': grupos})
+    return render(request, 'listar_grupos.html', {'grupos': grupos})
 
 @login_required
 def detalle_grupo(request, grupo_id):
     """Muestra el detalle de un grupo específico."""
     grupo = get_object_or_404(Grupo, id=grupo_id)
     publicaciones = grupo.publicaciones.all()
-    return render(request, 'community/detalle_grupo.html', {'grupo': grupo, 'publicaciones': publicaciones})
+    return render(request, 'detalle_grupo.html', {'grupo': grupo, 'publicaciones': publicaciones})
 
 @login_required
 def crear_grupo(request):
@@ -29,7 +29,7 @@ def crear_grupo(request):
             return redirect('listar_grupos')
     else:
         form = GrupoForm()
-    return render(request, 'community/crear_grupo.html', {'form': form})
+    return render(request, 'crear_grupo.html', {'form': form})
 
 @login_required
 def crear_publicacion(request, grupo_id):
@@ -45,7 +45,7 @@ def crear_publicacion(request, grupo_id):
             return redirect('detalle_grupo', grupo_id=grupo.id)
     else:
         form = PublicacionForm()
-    return render(request, 'community/crear_publicacion.html', {'form': form, 'grupo': grupo})
+    return render(request, 'crear_publicacion.html', {'form': form, 'grupo': grupo})
 
 @login_required
 def agregar_comentario(request, publicacion_id):
@@ -61,4 +61,4 @@ def agregar_comentario(request, publicacion_id):
             return redirect('detalle_grupo', grupo_id=publicacion.grupo.id)
     else:
         form = ComentarioForm()
-    return render(request, 'community/agregar_comentario.html', {'form': form, 'publicacion': publicacion})
+    return render(request, 'agregar_comentario.html', {'form': form, 'publicacion': publicacion})

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'viveros',
     'Fincas',
     'panel',
+    'comunity',
 ]
 
 # Middleware

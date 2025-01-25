@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{{ grupo.nombre }}</h1>
+<p>{{ grupo.descripcion }}</p>
+<a href="{% url 'crear_publicacion' grupo.id %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+    Crear Publicación
+</a>
+<h2 class="text-xl font-bold mt-6">Publicaciones</h2>
+<ul class="space-y-4">
+    {% for publicacion in publicaciones %}
+    <li class="p-4 bg-white text-black rounded shadow">
+        <h3 class="text-lg font-bold">{{ publicacion.titulo }}</h3>
+        <p>{{ publicacion.contenido }}</p>
+        <a href="{% url 'agregar_comentario' publicacion.id %}" class="text-blue-600 hover:underline">Comentar</a>
+    </li>
+    {% empty %}
+    <p>No hay publicaciones en este grupo.</p>
+    {% endfor %}
+</ul>
+{% endblock %}

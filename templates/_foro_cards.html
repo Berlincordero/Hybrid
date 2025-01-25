@@ -1,10 +1,13 @@
-{# _foro_cards.html #} {% load i18n %} {% if foros %} {% for foro in foros %}
+{% load i18n %}
+ {% if foros %} 
+ {% for foro in foros %}
 <div class="bg-gray-800 p-6 rounded shadow mx-auto max-w-3xl mb-8">
   <h2 class="text-2xl font-bold mb-4">{{ foro.titulo }}</h2>
-  <p class="text-xl text-green-400 mb-4">
-    {% trans "Por" %} {{ foro.autor.username }} - {{ foro.created_at|date:"d/m/Y
-    H:i" }} {% if foro.reposted %}
-    <span class="text-xs text-red-400 ml-2">({% trans "Repost" %})</span>
+  <p class="text-xl text-green-400 mb-2">
+    {% trans "Por" %} {{ foro.autor.username }}
+    - {{ foro.created_at|date:"d/m/Y H:i" }}
+    {% if foro.reposted %}
+      <span class="text-xs text-red-400 ml-2">({% trans "Repost" %})</span>
     {% endif %}
   </p>
 

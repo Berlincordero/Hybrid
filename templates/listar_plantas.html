@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Mis Plantas</h1>
+<a href="{% url 'crear_planta' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
+    Añadir Planta
+</a>
+
+<ul class="space-y-4">
+    {% for planta in plantas %}
+    <li class="p-4 rounded border bg-white text-black">
+        <h2 class="text-lg font-bold">{{ planta.nombre }}</h2>
+        <p class="text-sm text-gray-600">{{ planta.descripcion }}</p>
+        <p class="text-xs text-gray-500">Adquirida el: {{ planta.fecha_adquisicion }}</p>
+        <p class="text-sm font-medium">Tipo: {{ planta.get_tipo_display }}</p>
+        {% if planta.imagen %}
+        <img src="{{ planta.imagen.url }}" alt="{{ planta.nombre }}" class="w-32 h-32 object-cover">
+        {% endif %}
+        <form method="post" action="{% url 'eliminar_planta' planta.id %}" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+                Eliminar
+            </button>
+        </form>
+    </li>
+    {% empty %}
+    <p>No tienes plantas registradas.</p>
+    {% endfor %}
+</ul>
+{% endblock %}

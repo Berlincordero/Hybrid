@@ -48,9 +48,10 @@
           <a href="{% url 'marketplace_list' %}" class="cursor-pointer inline-block">
             <div class="w-10 h-10" id="lottie-icon-Marketplace"></div>
         </a>
-        
-
-          <div class="w-12 h-12" id="lottie-icon-notification"></div>
+        <!-- Lottie 4: Notification -->
+<a href="{% url 'listar_notificaciones' %}" class="cursor-pointer inline-block">
+  <div id="lottie-icon-notification" class="w-12 h-12"></div>
+</a>
           <!-- Lottie 4: Cart -->
          
           
@@ -123,7 +124,7 @@
         </a>
 
         <a
-        
+         href="{% url 'listar_plantas' %}"
         class="flex items-center px-4 py-2 hover:bg-gray-700"
     >
         <!-- Ícono Lottie -->
@@ -141,7 +142,7 @@
     </a>
     
     <a
-        
+    href="{% url 'listar_fincas' %}"  
     class="flex items-center px-4 py-2 hover:bg-gray-700"
 >
     <!-- Ícono Lottie -->

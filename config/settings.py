@@ -35,6 +35,9 @@ INSTALLED_APPS = [
     'Marketplace',
     'Foro',
     'subasta',
+    'Notificacion',
+    'viveros',
+    'Fincas',
 ]
 
 # Middleware

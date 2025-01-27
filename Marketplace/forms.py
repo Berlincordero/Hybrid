@@ -9,7 +9,9 @@ class ProductoForm(forms.ModelForm):
             'ubicacion', 'telefono', 'whatsapp',
             'tipo_ganado', 'enfermedades', 'raza', 'edad', 'genetica',
             'pureza', 'razas_padres', 'numero_areteo', 'actas_venta_nacimiento',
-            'marca_propiedad', 'peso',
+            'marca_propiedad', 'peso', 'tipo_propiedad', 'precio_por_metro_cuadrado',
+            'modelo', 'tipo_vehiculo', 'titulo_de_propiedad', 'tipo_transmision',
+            'kilometraje',
         ]
         widgets = {
             'titulo': forms.TextInput(attrs={
@@ -97,15 +99,15 @@ class ProductoForm(forms.ModelForm):
             }),
             'modelo': forms.TextInput(attrs={
                 'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Información genética'
+                'placeholder': 'Modelo / Año'
             }),
             'tipo_vehiculo': forms.Select(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',   
+                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
             }),
             'titulo_de_propiedad': forms.TextInput(attrs={
                 'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
                 'placeholder': 'Título de propiedad'
-        }),
+            }),
             'tipo_transmision': forms.Select(attrs={
                 'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
             }),
@@ -114,21 +116,19 @@ class ProductoForm(forms.ModelForm):
                 'placeholder': 'Kilometraje'
             }),
         }
-            
 
 
 class ImagenProductoForm(forms.ModelForm):
     class Meta:
         model = ImagenProducto
         fields = ['imagen']
-        # Se remueve "multiple": True del widget, pues el widget
-        # ClearableFileInput no lo admite.
         widgets = {
             'imagen': forms.ClearableFileInput(attrs={
                 'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
                 'accept': 'image/*'
             }),
         }
+
 
 class VideoProductoForm(forms.ModelForm):
     class Meta:

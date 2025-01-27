@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # Opciones para campo categoría y tipo de ganado
 CATEGORIAS = (
     ('frutas_verduras', 'Frutas y Verduras'),
+    ('animales', 'Animales'),
     ('ganado', 'Ganado'),
     ('propiedades', 'Propiedades'),
     ('vehiculos', 'Vehículos'),
@@ -45,7 +46,8 @@ class Producto(models.Model):
             ('lote', 'Lote'),
             ('Casa', 'Casa'),
         ),
-        default='finca'
+        blank=True,
+        null=True
     )
     tipo_vehiculo = models.CharField(
         max_length=20,
@@ -55,7 +57,8 @@ class Producto(models.Model):
             ('camion', 'Camión'),
             ('trabajo', 'Trabajo'),
         ),
-        default='sedan'
+        blank=True,
+        null=True
     )
     tipo_transmision = models.CharField(
         max_length=20,
@@ -63,7 +66,8 @@ class Producto(models.Model):
             ('manual', 'Manual'),
             ('automatica', 'Automática'),
         ),
-        default='manual'
+        blank=True,
+        null=True
     )
     kilometraje = models.IntegerField(blank=True, null=True)
     titulo_de_propiedad = models.CharField(max_length=50, blank=True, null=True)
@@ -83,6 +87,7 @@ class Producto(models.Model):
     marca_propiedad = models.ImageField(upload_to='productos/marca_propiedad/', blank=True, null=True)
     peso = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
 
     class Meta:
         ordering = ['-created_at']

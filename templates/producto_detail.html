@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+  <h2 class="text-3xl font-bold text-white mb-4">{{ producto.titulo }}</h2>
+
+  <!-- Galería de imágenes -->
+  <div class="flex flex-wrap space-x-4 space-y-4">
+    {% for img in producto.imagenes.all %}
+      <img
+        src="{{ img.imagen.url }}"
+        alt="{{ producto.titulo }}"
+        class="w-48 h-48 object-cover"
+      />
+    {% endfor %}
+  </div>
+
+  <!-- Descripción -->
+  <p class="text-gray-200 mt-4">{{ producto.descripcion }}</p>
+
+  <!-- Videos -->
+  {% for vid in producto.videos.all %}
+    <video controls class="mt-4 w-full max-w-md">
+      <source src="{{ vid.video.url }}" type="video/mp4">
+      {% trans "Tu navegador no soporta video." %}
+    </video>
+  {% endfor %}
+
+  <!-- Datos adicionales... -->
+  <p class="text-gray-200 mt-4">
+    <strong>{% trans "Precio:" %}</strong> {{ producto.moneda }} {{ producto.precio }}
+  </p>
+  <p class="text-gray-200">
+    <strong>{% trans "Vendedor:" %}</strong> {{ producto.vendedor.username }}
+  </p>
+  <p class="text-gray-200">
+    <strong>{% trans "Ubicación:" %}</strong> {{ producto.ubicacion }}
+  </p>
+  <p class="text-gray-200">
+    <strong>{% trans "Teléfono:" %}</strong> {{ producto.telefono }}
+  </p>
+  <p class="text-gray-200">
+    <strong>{% trans "Whatsapp:" %}</strong> {{ producto.whatsapp }}
+  </p>
+
+  <!-- Botones Editar/Borrar si es propietario -->
+  {% if request.user == producto.vendedor %}
+    <div class="mt-4 flex space-x-2">
+      <a href="{% url 'producto_edit' producto.pk %}"
+         class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+        {% trans "Editar" %}
+      </a>
+      <a href="{% url 'producto_delete' producto.pk %}"
+         class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
+        {% trans "Borrar" %}
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -32,6 +32,7 @@ urlpatterns += i18n_patterns(
     path('Fincas/', include('Fincas.urls')),
     path('panel/', include('panel.urls')),
     path('comunity/', include('comunity.urls')),
+    path('galeria/', include('galeria.urls')),
 )
 
 if settings.DEBUG:

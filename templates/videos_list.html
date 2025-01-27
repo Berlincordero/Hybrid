@@ -32,12 +32,12 @@
         en mediano (md) en 3 columnas,
         en grande (lg) en 4 columnas.
       -->
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         {% for video in top_videos_reproducidos %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="mb-2">
               <!-- Ajustamos la altura del video: h-56 en móvil y h-48 para pantallas sm en adelante -->
-              <video controls class="w-full h-56 sm:h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+              <video controls class="w-full h-80 sm:h-64 md:h-56 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -60,7 +60,7 @@
     <!-- NUEVO: Top 10 Videos con más estrellas -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Top 10 Videos con más estrellas</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         {% for video in top_videos_estrellas %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="mb-2">
@@ -87,7 +87,7 @@
     <!-- NUEVO: Mejores blogers (Top 10) -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Mejores Blogers (Top 10)</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         {% for video in top_bloger_videos %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="mb-2">
@@ -115,7 +115,7 @@
     <!-- NUEVO: Categorías agrupadas -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Noticias, Consejos y Cursos</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         {% for video in noticias_consejos_cursos %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="mb-2">
@@ -142,7 +142,7 @@
     <!-- Bloger -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Bloger</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         {% for video in bloger %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="mb-2">
@@ -169,7 +169,7 @@
     <!-- Publicitario y Servicios Profesionales -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Publicitario y Servicios Profesionales</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         {% for video in publicitario_servprof %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="mb-2">
@@ -196,7 +196,7 @@
     <!-- Personales -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Personales</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
         {% for video in personal %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="mb-2">

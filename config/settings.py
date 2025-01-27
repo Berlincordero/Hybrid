@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Fincas',
     'panel',
     'comunity',
+    'galeria',
 ]
 
 # Middleware

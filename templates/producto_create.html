@@ -69,6 +69,9 @@
         <div id="frutas-verduras" class="tab-content">
           <form method="post" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
+            <!-- Campo oculto para que sepas que es frutas_verduras -->
+            <input type="hidden" name="categoria" value="frutas_verduras">
+
             <!-- Título del Producto -->
             <div class="flex justify-center mb-6">
               <lottie-player
@@ -79,7 +82,7 @@
                   loop
                   autoplay
               ></lottie-player>
-          </div>
+            </div>
    
             <div class="mb-4">
               <label for="titulo">{% trans "Nombre del Producto" %}</label>
@@ -141,6 +144,9 @@
         <div id="animales" class="tab-content hidden">
           <form method="post" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
+            <!-- Campo oculto para animales -->
+            <input type="hidden" name="categoria" value="animales">
+
             <div class="flex justify-center mb-6">
               <lottie-player
                   src="{% static 'animations/fish.json' %}" 
@@ -150,7 +156,7 @@
                   loop
                   autoplay
               ></lottie-player>
-          </div>
+            </div>
    
             <div class="mb-4">
               <label for="tipo">{% trans "Tipo de Animal" %}</label>
@@ -244,6 +250,9 @@
         <div id="ganado" class="tab-content hidden">
           <form method="post" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
+            <!-- Campo oculto ganado -->
+            <input type="hidden" name="categoria" value="ganado">
+
             <div class="flex justify-center mb-6">
               <lottie-player
                   src="{% static 'animations/cow.json' %}" 
@@ -253,7 +262,7 @@
                   loop
                   autoplay
               ></lottie-player>
-          </div>
+            </div>
             <div class="mb-4">
               <label for="tipo">{% trans "Tipo de Ganado" %}</label>
               <input type="text" id="tipo" name="tipo" placeholder="{% trans 'Ejemplo: Vacas' %}" class="w-full p-2 rounded">
@@ -349,6 +358,9 @@
          <div id="propiedades" class="tab-content hidden">
           <form method="post" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
+            <!-- Campo oculto propiedades -->
+            <input type="hidden" name="categoria" value="propiedades">
+
             <div class="flex justify-center mb-6">
               <lottie-player
                   src="{% static 'animations/House.json' %}" 
@@ -358,7 +370,7 @@
                   loop
                   autoplay
               ></lottie-player>
-          </div>
+            </div>
             <div class="mb-4">
               <label for="titulo">{% trans "Título" %}</label>
               <input
@@ -494,8 +506,14 @@
 
         <!-- Contenido para Vehículos, Insumos y Servicios Profesionales se repite con estructura similar -->
         <div id="vehiculos" class="tab-content hidden">
+          <!-- OJO: aquí no tienes enctype="multipart/form-data", 
+               si planeas subir imágenes o videos deberías incluirlo. 
+               Pero lo dejo INTACTO como pediste. -->
           <form method="post" class="space-y-4">
             {% csrf_token %}
+            <!-- Campo oculto vehiculos -->
+            <input type="hidden" name="categoria" value="vehiculos">
+
             <div class="mb-4">
               <div class="flex justify-center mb-6">
                 <lottie-player
@@ -506,7 +524,7 @@
                     loop
                     autoplay
                 ></lottie-player>
-            </div>
+              </div>
               <label for="titulo">{% trans "Titulo" %}</label>
               <input type="text" id="titulo" name="titulo" placeholder="{% trans 'Nombre' %}" class="w-full p-2 rounded">
             </div>
@@ -560,6 +578,9 @@
         <div id="insumos" class="tab-content hidden">
           <form method="post" class="space-y-4">
             {% csrf_token %}
+            <!-- Campo oculto insumos -->
+            <input type="hidden" name="categoria" value="insumos">
+
             <div class="mb-4">
               <div class="flex justify-center mb-6">
                 <lottie-player
@@ -570,7 +591,7 @@
                     loop
                     autoplay
                 ></lottie-player>
-            </div>
+              </div>
             <div class="mb-4">
               <label for="titulo">{% trans "Nombre del Producto, Insumo ó Servicio" %}</label>
               <input type="text" id="titulo" name="titulo" placeholder="{% trans 'Ejemplo: Alimento , Servicios Veterinario' %}" class="w-full p-2 rounded">

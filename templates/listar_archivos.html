@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Galería</h1>
+<a href="{% url 'subir_archivo' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
+    Subir Nuevo Archivo
+</a>
+<ul class="space-y-4">
+    {% for archivo in archivos %}
+    <li class="p-4 bg-white text-black rounded shadow">
+        <h2 class="text-lg font-bold">{{ archivo.titulo }}</h2>
+        <p class="text-sm text-gray-600">{{ archivo.descripcion }}</p>
+        <a href="{{ archivo.archivo.url }}" target="_blank" class="text-blue-600 hover:underline">Ver Archivo</a>
+        <a href="{% url 'detalle_archivo' archivo.id %}" class="ml-4 text-blue-600 hover:underline">Ver Detalles</a>
+    </li>
+    {% empty %}
+    <p>No hay archivos en tu galería.</p>
+    {% endfor %}
+</ul>
+{% endblock %}

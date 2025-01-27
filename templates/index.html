@@ -1,124 +1,122 @@
-{% extends 'base.html' %}
-{% load static %}
-{% load i18n %}
-
-{% block title %}
-{% trans "Inicio" %} - Mi Red Social
-{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %} 
+{%trans "Inicio" %} - FincaHub{% endblock %} {% block content %}
 <!-- Header principal -->
 <div class="bg-gray-800 p-6 rounded-lg shadow mx-auto max-w-4xl mt-4">
   <div class="flex items-center justify-start space-x-3">
     <!-- Ícono/foto -->
-    <a href="{% url 'perfil' %}" class="transform hover:scale-105 transition-transform">
+    <a
+      href="{% url 'perfil' %}"
+      class="transform hover:scale-105 transition-transform"
+    >
       <img
         src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
         alt="{% trans 'User Avatar' %}"
         class="w-16 h-16 rounded-full border-2 border-white object-cover flex-shrink-0"
       />
     </a>
-    
+
     <a href="{% url 'foro_list' %}">
-      <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2
-                     rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <button
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
         {% trans "Ir a mi Foro" %}
       </button>
     </a>
-    
+
     <!-- Enlace con Animación Lottie -->
     <a
-      class="flex items-center px-4 py-2 hover:bg-gray-700 ml-12" 
-      href="{% url 'listar_grupos' %}"  
+      class="flex items-center px-4 py-2 hover:bg-gray-700 ml-12"
+      href="{% url 'listar_grupos' %}"
     >
       <!-- Ícono Lottie -->
       <lottie-player
         src="{% static 'animations/Comunidad_foros.json' %}"
         background="transparent"
         speed="1"
-        class="w-14 h-14 mr-4"  
+        class="w-14 h-14 mr-4"
         loop
         autoplay
       >
       </lottie-player>
 
       <!-- Texto de Perfil -->
-      <span class="whitespace-nowrap text-white"> {% trans "Comunidad de Foros" %} </span>  <!-- Asegura que el texto sea visible -->
+      <span class="whitespace-nowrap text-white">
+        {% trans "Comunidad de Foros" %}
+      </span>
+      <!-- Asegura que el texto sea visible -->
     </a>
-    
   </div>
 </div>
 
 <!-- Contenedor principal -->
 <div class="container mx-auto px-4 py-6">
   <main class="space-y-6">
-
     <!-- 1) CARGA INICIAL de foros via context processor -->
     <div id="feed-container">
       {% include '_foro_cards.html' with foros=foros_context comentario_form=comentario_form_context %}
     </div>
   </main>
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-{{ block.super }}
+{% endblock %} {% block extra_scripts %} {{ block.super }}
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Funcionalidad para el Modal de la Imagen
-  const openModalButton = document.getElementById('openModal');
-  const closeModalButton = document.getElementById('closeModal');
-  const imageModal = document.getElementById('imageModal');
+  document.addEventListener("DOMContentLoaded", function () {
+    // Funcionalidad para el Modal de la Imagen
+    const openModalButton = document.getElementById("openModal");
+    const closeModalButton = document.getElementById("closeModal");
+    const imageModal = document.getElementById("imageModal");
 
-  if (openModalButton && closeModalButton && imageModal) {
-    // Función para abrir el modal
-    openModalButton.addEventListener('click', function() {
-      imageModal.classList.remove('hidden');
-      imageModal.classList.add('flex');
-    });
-
-    // Función para cerrar el modal al hacer clic en el botón de cierre
-    closeModalButton.addEventListener('click', function() {
-      imageModal.classList.remove('flex');
-      imageModal.classList.add('hidden');
-    });
-
-    // Función para cerrar el modal al hacer clic fuera de la imagen
-    imageModal.addEventListener('click', function(event) {
-      if (event.target === imageModal) {
-        imageModal.classList.remove('flex');
-        imageModal.classList.add('hidden');
-      }
-    });
-
-    // Opcional: Cerrar el modal al presionar la tecla Esc
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape' && !imageModal.classList.contains('hidden')) {
-        imageModal.classList.remove('flex');
-        imageModal.classList.add('hidden');
-      }
-    });
-  }
-
-  // Funcionalidad de Refresh del Feed
-  const feedUrl = "{% url 'foro_feed' %}";
-  const feedContainer = document.getElementById('feed-container');
-
-  function refreshFeed() {
-    fetch(feedUrl)
-      .then(response => response.json())
-      .then(data => {
-        // Reemplaza el contenido con el nuevo HTML
-        feedContainer.innerHTML = data.html;
-      })
-      .catch(error => {
-        console.error("Error al refrescar el feed:", error);
+    if (openModalButton && closeModalButton && imageModal) {
+      // Función para abrir el modal
+      openModalButton.addEventListener("click", function () {
+        imageModal.classList.remove("hidden");
+        imageModal.classList.add("flex");
       });
-  }
 
-  // Cada 30 segundos, refrescamos la lista de foros
-  setInterval(refreshFeed, 30000);
-});
+      // Función para cerrar el modal al hacer clic en el botón de cierre
+      closeModalButton.addEventListener("click", function () {
+        imageModal.classList.remove("flex");
+        imageModal.classList.add("hidden");
+      });
+
+      // Función para cerrar el modal al hacer clic fuera de la imagen
+      imageModal.addEventListener("click", function (event) {
+        if (event.target === imageModal) {
+          imageModal.classList.remove("flex");
+          imageModal.classList.add("hidden");
+        }
+      });
+
+      // Opcional: Cerrar el modal al presionar la tecla Esc
+      document.addEventListener("keydown", function (event) {
+        if (
+          event.key === "Escape" &&
+          !imageModal.classList.contains("hidden")
+        ) {
+          imageModal.classList.remove("flex");
+          imageModal.classList.add("hidden");
+        }
+      });
+    }
+
+    // Funcionalidad de Refresh del Feed
+    const feedUrl = "{% url 'foro_feed' %}";
+    const feedContainer = document.getElementById("feed-container");
+
+    function refreshFeed() {
+      fetch(feedUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          // Reemplaza el contenido con el nuevo HTML
+          feedContainer.innerHTML = data.html;
+        })
+        .catch((error) => {
+          console.error("Error al refrescar el feed:", error);
+        });
+    }
+
+    // Cada 30 segundos, refrescamos la lista de foros
+    setInterval(refreshFeed, 30000);
+  });
 </script>
 {% endblock %}

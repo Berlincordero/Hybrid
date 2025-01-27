@@ -4,7 +4,7 @@
 <div class="bg-gray-800 p-6 rounded shadow mx-auto max-w-3xl mb-8">
   <h2 class="text-2xl font-bold mb-4">{{ foro.titulo }}</h2>
   <p class="text-xl text-green-400 mb-2">
-    {% trans "Por" %} {{ foro.autor.username }}
+    {% trans "@" %} {{ foro.autor.username }}
     - {{ foro.created_at|date:"d/m/Y H:i" }}
     {% if foro.reposted %}
       <span class="text-xs text-red-400 ml-2">({% trans "Repost" %})</span>
@@ -47,20 +47,22 @@
     </form>
   </div>
 
-  <!-- Comentarios -->
-  <div class="bg-gray-700 p-3 rounded">
-    <h3 class="text-lg font-semibold mb-2">{% trans "Comentarios" %}</h3>
-    {% if foro.comentarios.all %} {% for comentario in foro.comentarios.all %}
-    <div class="mb-2">
-      <p class="text-blue-400 text-xs">
-        {% trans "Por" %} {{ comentario.autor.username }} - {{
-        comentario.created_at|date:"d/m/Y H:i" }}
-      </p>
-      <p>{{ comentario.contenido }}</p>
-    </div>
-    {% endfor %} {% else %}
-    <p class="text-gray-400 text-sm">{% trans "No hay comentarios aún." %}</p>
-    {% endif %}
+    <!-- Comentarios -->
+    <div class="bg-gray-700 p-3 rounded">
+      <h3 class="text-lg font-semibold mb-2">{% trans "Comentarios" %}</h3>
+      {% if foro.comentarios.all %}
+        {% for comentario in foro.comentarios.all %}
+          <div class="mb-2">
+            <p class="text-green-400 text-ls">
+              {% trans "Por @" %} {{ comentario.autor.username }}
+              - {{ comentario.created_at|date:"d/m/Y H:i" }}
+            </p>
+            <p>{{ comentario.contenido }}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-green-400 text-sm">{% trans "No hay comentarios aún." %}</p>
+      {% endif %}
 
     <!-- Formulario para comentar -->
     <form

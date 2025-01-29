@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'axes',
+    'widget_tweaks',
     'config',          # Asegúrate de que 'config' esté incluido
     'Administrador',
     'Perfiles',

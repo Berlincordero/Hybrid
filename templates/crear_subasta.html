@@ -1,10 +1,146 @@
 {% extends 'base.html' %}
+{% load i18n %}
+{% load subasta_filters %}
 
 {% block content %}
-<h1>Crear Subasta</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Crear</button>
-</form>
+<style>
+    /* Modo oscuro de inputs */
+    input[type="text"],
+    input[type="datetime-local"],
+    input[type="number"],
+    select,
+    textarea {
+        background-color: #1a202c;
+        color: white;
+        border: 1px solid #2d3748; 
+        border-radius: 0.375rem; 
+        padding: 0.5rem 0.75rem;
+        width: 100%;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input[type="text"]::placeholder,
+    input[type="number"]::placeholder,
+    textarea::placeholder {
+        color: #718096; 
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #4a5568;
+        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+    }
+
+    /* input[type="file"] personalizado */
+    input[type="file"] {
+        background-color: transparent;
+        color: #10b981;
+        border: 2px solid #10b981;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+        display: inline-block;
+    }
+    input[type="file"]::-webkit-file-upload-button {
+        visibility: hidden;
+    }
+    input[type="file"]::before {
+        content: "Elegir archivo(s)";
+        display: inline-block;
+        background-color: transparent;
+        color: #10b981;
+        border: 2px solid #10b981;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    }
+    input[type="file"]:hover::before {
+        background-color: #10b981; 
+        color: white;
+        border-color: #059669; 
+        transform: scale(1.05);
+    }
+
+    label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #d1d5db;
+        margin-bottom: 0.25rem;
+    }
+
+    .card {
+        background-color: #2d3748; 
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .submit-button {
+        background-color: transparent; 
+        border: 2px solidrgb(244, 5, 5); 
+        color:rgb(185, 16, 16);
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgb(232, 10, 10);
+        transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+        cursor: pointer;
+    }
+    .submit-button:hover {
+        background-color:rgb(255, 8, 8); 
+        color: white;
+        border-color:rgb(255, 10, 10); 
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="container mx-auto mt-8 px-4 max-w-2xl">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-white">Crear Subasta</h1>
+        <a href="{% url 'listar_subastas' %}" class="submit-button">
+            Regresar al listado
+        </a>
+    </div>
+
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+        
+        {% if form.non_field_errors %}
+            <div class="mb-4 text-red-400">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+
+            {% for field in form.visible_fields %}
+                <div>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="text-red-400 text-sm mt-1">
+                            {{ field.errors.as_text }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="pt-4">
+                <button type="submit" class="submit-button">
+                    Subir Subasta
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
+

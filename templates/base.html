@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}{% trans "Ferretería" %}{% endblock %}</title>
+    <title>{% block title %}{% trans "Mi red social" %}{% endblock %}</title>
     <!-- Tailwind CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
@@ -30,7 +30,7 @@
       >
         <!-- Logo y Título -->
         <a href="{% url 'index' %}" class="text-white text-2xl font-bold"
-          >{% trans "FincaHub" %}</a
+          >{% trans "@Hub" %}</a
         >
 
         <!-- Animaciones Lottie -->
@@ -44,11 +44,16 @@
           <a href="{% url 'videos_list' %}" class="cursor-pointer inline-block">
             <div id="lottie-icon-video" class="w-12 h-12"></div>
         </a>
-          <!-- Lottie 3: User -->
+
+        <a href="{% url 'listar_subastas' %}" class="cursor-pointer inline-block">
+          <div class="w-12 h-12" id="lottie-icon-auction"></div>
+      </a>
+      
           <a href="{% url 'marketplace_list' %}" class="cursor-pointer inline-block">
             <div class="w-10 h-10" id="lottie-icon-Marketplace"></div>
         </a>
-        <!-- Lottie 4: Notification -->
+
+      
 <a href="{% url 'listar_notificaciones' %}" class="cursor-pointer inline-block">
   <div id="lottie-icon-notification" class="w-12 h-12"></div>
 </a>
@@ -261,7 +266,16 @@
         renderer: "svg",
         loop: true,
         autoplay: true,
-        path: '{% static "animations/Marketplace.json" %}',
+        path: '{% static "animations/tomate.json" %}',
+      });
+
+      
+      lottie.loadAnimation({
+        container: document.getElementById("lottie-icon-auction"),
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        path: '{% static "animations/auction.json" %}',
       });
 
       lottie.loadAnimation({

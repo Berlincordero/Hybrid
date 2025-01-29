@@ -1,142 +1,140 @@
-from django import forms
-from .models import Producto, ImagenProducto, VideoProducto
+# marketplace/forms.py
 
-class ProductoForm(forms.ModelForm):
+from django import forms
+from .models import (
+    FrutasVerduras,
+    Animales,
+    Ganado,
+    Propiedades,
+    Vehiculos,
+    Insumos,
+)
+
+class FrutasVerdurasForm(forms.ModelForm):
     class Meta:
-        model = Producto
+        model = FrutasVerduras
         fields = [
-            'titulo', 'descripcion', 'precio', 'moneda', 'categoria',
-            'ubicacion', 'telefono', 'whatsapp',
-            'tipo_ganado', 'enfermedades', 'raza', 'edad', 'genetica',
-            'pureza', 'razas_padres', 'numero_areteo', 'actas_venta_nacimiento',
-            'marca_propiedad', 'peso', 'tipo_propiedad', 'precio_por_metro_cuadrado',
-            'modelo', 'tipo_vehiculo', 'titulo_de_propiedad', 'tipo_transmision',
-            'kilometraje',
+            'categoria',
+            'titulo',
+            'descripcion',
+            'precio',
+            'moneda',
+            'ubicacion',
+            'telefono',
+            'whatsapp',
+            'actas_venta_nacimiento',
+            'video',
         ]
         widgets = {
-            'titulo': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Título del producto',
-                'autofocus': True
-            }),
-            'descripcion': forms.Textarea(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Descripción detallada...',
-                'rows': 5
-            }),
-            'precio': forms.NumberInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Precio en moneda seleccionada'
-            }),
-            'moneda': forms.Select(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-            }),
-            'categoria': forms.Select(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-            }),
-            'ubicacion': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Ubicación específica'
-            }),
-            'telefono': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Teléfono de contacto'
-            }),
-            'whatsapp': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Número de Whatsapp'
-            }),
-            'tipo_ganado': forms.Select(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-            }),
-            'enfermedades': forms.Textarea(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Detalles sobre enfermedades (opcional)',
-                'rows': 3
-            }),
-            'raza': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Raza del ganado'
-            }),
-            'edad': forms.NumberInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Edad en meses o años'
-            }),
-            'genetica': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Información genética'
-            }),
-            'pureza': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Pureza del animal (opcional)'
-            }),
-            'razas_padres': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Razas de los padres (opcional)'
-            }),
-            'numero_areteo': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Número de arete del ganado'
-            }),
-            'actas_venta_nacimiento': forms.ClearableFileInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'accept': 'image/*'
-            }),
-            'marca_propiedad': forms.ClearableFileInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'accept': 'image/*'
-            }),
-            'peso': forms.NumberInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Peso (kg)'
-            }),
-            'tipo_propiedad': forms.Select(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-            }),
-            'precio_por_metro_cuadrado': forms.NumberInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Precio por metro cuadrado'
-            }),
-            'modelo': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Modelo / Año'
-            }),
-            'tipo_vehiculo': forms.Select(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-            }),
-            'titulo_de_propiedad': forms.TextInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Título de propiedad'
-            }),
-            'tipo_transmision': forms.Select(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-            }),
-            'kilometraje': forms.NumberInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'placeholder': 'Kilometraje'
-            }),
+            'categoria': forms.HiddenInput(),
         }
 
-
-class ImagenProductoForm(forms.ModelForm):
+class AnimalesForm(forms.ModelForm):
     class Meta:
-        model = ImagenProducto
-        fields = ['imagen']
+        model = Animales
+        fields = [
+            'categoria',
+            'titulo',     # Tipo de Animal
+            'descripcion',
+            'edad',       # Cantidad
+            'raza',
+            'moneda',
+            'precio',
+            'ubicacion',
+            'telefono',
+            'whatsapp',
+            'actas_venta_nacimiento',
+            'video',
+        ]
         widgets = {
-            'imagen': forms.ClearableFileInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'accept': 'image/*'
-            }),
+            'categoria': forms.HiddenInput(),
         }
 
-
-class VideoProductoForm(forms.ModelForm):
+class GanadoForm(forms.ModelForm):
     class Meta:
-        model = VideoProducto
-        fields = ['video']
+        model = Ganado
+        fields = [
+            'categoria',
+            'tipo',
+            'descripcion',
+            'cantidad',
+            'edad',
+            'enfermedades',
+            'raza',
+            'genetica',
+            'pureza',
+            'raza_padres',
+            'numero_areteo',
+            'peso',
+            'moneda',
+            'precio',
+            'ubicacion',
+            'telefono',
+            'whatsapp',
+            'actas_venta_nacimiento',
+            'video',
+        ]
         widgets = {
-            'video': forms.ClearableFileInput(attrs={
-                'class': 'w-full p-2 bg-gray-800 text-white border border-gray-700 rounded',
-                'accept': 'video/*'
-            }),
+            'categoria': forms.HiddenInput(),
+        }
+
+class PropiedadesForm(forms.ModelForm):
+    class Meta:
+        model = Propiedades
+        fields = [
+            'categoria',
+            'titulo',
+            'descripcion',
+            'tipo_propiedad',
+            'moneda',
+            'precio_por_metro_cuadrado',
+            'precio',
+            'ubicacion',
+            'telefono',
+            'whatsapp',
+            'actas_venta_nacimiento',
+            'video',
+        ]
+        widgets = {
+            'categoria': forms.HiddenInput(),
+        }
+
+class VehiculosForm(forms.ModelForm):
+    class Meta:
+        model = Vehiculos
+        fields = [
+            'categoria',
+            'titulo',
+            'descripcion',
+            'tipo_vehiculo',
+            'tipo_transmision',
+            'kilometraje',
+            'titulo_de_propiedad',
+            'modelo',
+            'ubicacion',
+            'precio',
+            'actas_venta_nacimiento',
+            'video',
+        ]
+        widgets = {
+            'categoria': forms.HiddenInput(),
+        }
+
+class InsumosForm(forms.ModelForm):
+    class Meta:
+        model = Insumos
+        fields = [
+            'categoria',
+            'titulo',
+            'descripcion',
+            'precio',
+            'moneda',
+            'ubicacion',
+            'telefono',
+            'whatsapp',
+            'actas_venta_nacimiento',
+            'video',
+        ]
+        widgets = {
+            'categoria': forms.HiddenInput(),
         }

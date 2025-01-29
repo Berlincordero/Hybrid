@@ -1,13 +1,42 @@
-{% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %} 
-{%trans "Inicio" %} - FincaHub{% endblock %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+  {% trans "Inicio" %} - FincaHub
+{% endblock %}
+
+{% block content %}
+<!-- Estilos en la sección adecuada -->
+<style>
+  /* Botón verde */
+  .submit-button {
+    background-color: transparent;
+    border: 2px solidrgb(185, 16, 16);
+    color:rgb(254, 7, 7);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(24, 184, 27, 0.73);
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .submit-button:hover {
+    background-color: #10b981;
+    color: white;
+    border-color:rgb(110, 254, 78);
+    transform: scale(1.05);
+  }
+</style>
+
 <!-- Header principal -->
 <div class="bg-gray-800 p-6 rounded-lg shadow mx-auto max-w-4xl mt-4">
   <div class="flex items-center justify-start space-x-3">
     <!-- Ícono/foto -->
-    <a
-      href="{% url 'perfil' %}"
-      class="transform hover:scale-105 transition-transform"
-    >
+    <a href="{% url 'perfil' %}" class="transform hover:scale-105 transition-transform">
       <img
         src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
         alt="{% trans 'User Avatar' %}"
@@ -15,20 +44,12 @@
       />
     </a>
 
-    <a href="{% url 'foro_list' %}">
-      <button
-        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        {% trans "Ir a mi Foro" %}
-      </button>
+    <a href="{% url 'foro_list' %}" class="submit-button">
+      {% trans "Ir a mi Foro" %}
     </a>
 
     <!-- Enlace con Animación Lottie -->
-    <a
-      class="flex items-center px-4 py-2 hover:bg-gray-700 ml-12"
-      href="{% url 'listar_grupos' %}"
-    >
-      <!-- Ícono Lottie -->
+    <a class="flex items-center px-4 py-2 hover:bg-gray-700 ml-12" href="{% url 'listar_grupos' %}">
       <lottie-player
         src="{% static 'animations/Comunidad_foros.json' %}"
         background="transparent"
@@ -40,10 +61,9 @@
       </lottie-player>
 
       <!-- Texto de Perfil -->
-      <span class="whitespace-nowrap text-white">
+      <span class="submit-button">
         {% trans "Comunidad de Foros" %}
       </span>
-      <!-- Asegura que el texto sea visible -->
     </a>
   </div>
 </div>
@@ -57,8 +77,10 @@
     </div>
   </main>
 </div>
-{% endblock %} {% block extra_scripts %} {{ block.super }}
+{% endblock %}
 
+{% block extra_scripts %}
+{{ block.super }}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     // Funcionalidad para el Modal de la Imagen
@@ -67,19 +89,16 @@
     const imageModal = document.getElementById("imageModal");
 
     if (openModalButton && closeModalButton && imageModal) {
-      // Función para abrir el modal
       openModalButton.addEventListener("click", function () {
         imageModal.classList.remove("hidden");
         imageModal.classList.add("flex");
       });
 
-      // Función para cerrar el modal al hacer clic en el botón de cierre
       closeModalButton.addEventListener("click", function () {
         imageModal.classList.remove("flex");
         imageModal.classList.add("hidden");
       });
 
-      // Función para cerrar el modal al hacer clic fuera de la imagen
       imageModal.addEventListener("click", function (event) {
         if (event.target === imageModal) {
           imageModal.classList.remove("flex");
@@ -87,12 +106,8 @@
         }
       });
 
-      // Opcional: Cerrar el modal al presionar la tecla Esc
       document.addEventListener("keydown", function (event) {
-        if (
-          event.key === "Escape" &&
-          !imageModal.classList.contains("hidden")
-        ) {
+        if (event.key === "Escape" && !imageModal.classList.contains("hidden")) {
           imageModal.classList.remove("flex");
           imageModal.classList.add("hidden");
         }
@@ -107,7 +122,6 @@
       fetch(feedUrl)
         .then((response) => response.json())
         .then((data) => {
-          // Reemplaza el contenido con el nuevo HTML
           feedContainer.innerHTML = data.html;
         })
         .catch((error) => {
@@ -115,7 +129,6 @@
         });
     }
 
-    // Cada 30 segundos, refrescamos la lista de foros
     setInterval(refreshFeed, 30000);
   });
 </script>

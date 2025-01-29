@@ -1,5 +1,5 @@
-from django.urls import path
-from . import views
+# subasta/urls.py
+
 from django.urls import path
 from . import views
 

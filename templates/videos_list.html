@@ -9,6 +9,28 @@
 {% block extra_head %}
   <!-- Incluye los estilos de TailwindCSS u otros elementos necesarios en el head -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .submit-button-rojo {
+      background-color: transparent; /* Sin fondo */
+        border: 2px solidrgb(185, 16, 16);     /* Verde-500 */
+      color:rgb(196, 10, 10);                /* Verde-500 */
+      font-weight: 600;              /* font-semibold */
+      padding: 0.75rem 1.5rem;       /* Tailwind py-3 px-6 */
+      border-radius: 0.5rem;         /* rounded-lg */
+      box-shadow: 0 4px 6px rgb(243, 16, 16);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+      /* Para anclas, a menudo conviene usar display inline-block */
+      display: inline-block;
+      text-align: center;
+    }
+    .submit-button-rojo:hover {
+      background-color:rgb(198, 6, 6);  /* Verde-500 */
+      color: white;
+      border-color:rgb(150, 5, 5);      /* Verde-600 */
+      transform: scale(1.05);
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -18,7 +40,7 @@
     <header class="flex flex-col sm:flex-row items-center justify-between mb-6 space-y-4 sm:space-y-0">
       <h1 class="text-3xl font-bold">{% trans "VideoPlaces" %}</h1>
       <!-- Enlace para subir video -->
-      <a href="{% url 'video_upload' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition">
+      <a href="{% url 'video_upload' %}" class="submit-button-rojo">
         {% trans "Subir Video" %}
       </a>
     </header>

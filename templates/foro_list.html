@@ -9,110 +9,110 @@
 {% block extra_head %}
   <!-- TailwindCSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  
+
+  <style>
+    /* Botón verde */
+    .submit-button {
+      background-color: transparent;
+      border: 2px solid rgb(16, 185, 50);
+      color: rgb(254, 7, 7);
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(69, 253, 72, 0.73);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .submit-button:hover {
+      background-color: #10b981;
+      color: white;
+      border-color: rgb(110, 254, 78);
+      transform: scale(1.05);
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
   <div class="container mx-auto px-4 py-4 max-w-5xl">
-   <!-- Card para el botón de crear foro ajustado -->
-<!-- Card para el botón de crear foro con botones adicionales y ajustes -->
-<div class="bg-gray-800 p-6 rounded-lg shadow mb-8 max-w-3xl mx-auto flex items-center justify-start space-x-3">
-  <button id="openModal" class="focus:outline-none">
-    <img
-      src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
-      alt="{% trans 'User Avatar' %}"
-      class="w-16 h-16 rounded-full border-2 border-white object-cover flex-shrink-0"
-    />
-  </button>
-  
-  <!-- Grupo de Botones -->
-  <div class="flex items-end px-4 py-2  ml-12">
-    <!-- Botón "Crear Foro" -->
-    <a href="{% url 'foro_create' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition">
-      {% trans "Crear Foro" %}
-    </a>
-    <!-- Botón "Noticia" (Rojo) -->
-    <a
-      class="flex items-end px-4 py-2 hover:bg-gray-700 ml-12" 
-      href="{% url 'listar_archivos' %}"  
-    >
-      <!-- Ícono Lottie -->
-      <lottie-player
-        src="{% static 'animations/gallery.json' %}"
-        background="transparent"
-        speed="1"
-        class="w-14 h-14 mr-4"  
-        loop
-        autoplay
-      >
-      </lottie-player>
+    <!-- Card para el botón de crear foro con botones adicionales y ajustes -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow mb-8 max-w-3xl mx-auto flex items-center justify-start space-x-3">
+      <button id="openModal" class="focus:outline-none">
+        <img
+          src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
+          alt="{% trans 'User Avatar' %}"
+          class="w-16 h-16 rounded-full border-2 border-white object-cover flex-shrink-0"
+        />
+      </button>
 
-      <!-- Texto de Perfil -->
-      <span class="whitespace-nowrap text-white"> {% trans "Galeria" %} </span>  <!-- Asegura que el texto sea visible -->
-    </a>
-    
-   
-  </div>
-</div>
+      <!-- Grupo de Botones -->
+      <div class="flex items-end px-4 py-2 ml-12">
+        <!-- Botón "Crear Foro" -->
+        <a href="{% url 'foro_create' %}" class="submit-button">
+          {% trans "Crear Foro" %}
+        </a>
 
-<!-- Modal para mostrar la imagen ampliada -->
-<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-  <div class="relative">
-    <!-- Imagen Ampliada -->
-    <img
-      src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
-      alt="{% trans 'User Avatar Enlarged' %}"
-      class="max-w-full max-h-screen rounded-lg"
-    />
-    <!-- Botón de Cierre -->
-    <button id="closeModal" class="absolute top-0 right-0 mt-4 mr-4 text-white text-3xl font-bold focus:outline-none">
-      &times;
-    </button>
-  </div>
-</div>
+        <!-- Botón "Galería" -->
+        <a class="flex items-end px-4 py-2 hover:bg-gray-700 ml-12" href="{% url 'listar_archivos' %}">
+          <lottie-player
+            src="{% static 'animations/gallery.json' %}"
+            background="transparent"
+            speed="1"
+            class="w-14 h-14 mr-4"
+            loop
+            autoplay
+          >
+          </lottie-player>
+          <span class="submit-button">{% trans "Galeria" %}</span>
+        </a>
+      </div>
+    </div>
 
+    <!-- Modal para mostrar la imagen ampliada -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+      <div class="relative">
+        <img
+          src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
+          alt="{% trans 'User Avatar Enlarged' %}"
+          class="max-w-full max-h-screen rounded-lg"
+        />
+        <button id="closeModal" class="absolute top-0 right-0 mt-4 mr-4 text-white text-3xl font-bold focus:outline-none">
+          &times;
+        </button>
+      </div>
+    </div>
 
- 
-   
-    <!-- Lista de foros (feed) -->
+    <!-- Lista de foros -->
     <section class="space-y-8">
       {% if foros %}
         {% for foro in foros %}
           <div class="bg-gray-800 p-4 rounded shadow mx-auto max-w-2xl">
             <h2 class="text-xl font-bold mb-2">{{ foro.titulo }}</h2>
-            
             <p class="text-sm text-green-400 mb-2">
-              {% trans "Por" %} {{ foro.autor.username }} 
-              - {{ foro.created_at|date:"d/m/Y H:i" }}
+              {% trans "Por" %} {{ foro.autor.username }} - {{ foro.created_at|date:"d/m/Y H:i" }}
               {% if foro.reposted %}
                 <span class="text-xs text-red-400 ml-2">({% trans "Repost" %})</span>
               {% endif %}
             </p>
 
-            <!-- Mostrar texto, imagen y/o video si existen -->
             {% if foro.contenido_texto %}
               <p class="mb-2">{{ foro.contenido_texto }}</p>
             {% endif %}
 
             {% if foro.imagen %}
-              <img 
-                src="{{ foro.imagen.url }}" 
-                alt="{{ foro.titulo }}"
-                class="foro-image w-full h-auto max-h-80 mb-2"
-              >
+              <img src="{{ foro.imagen.url }}" alt="{{ foro.titulo }}" class="foro-image w-full h-auto max-h-80 mb-2">
             {% endif %}
 
             {% if foro.video %}
-              <video 
-                controls 
-                class="w-full max-h-80 object-cover mb-2"
-              >
+              <video controls class="w-full max-h-80 object-cover mb-2">
                 <source src="{{ foro.video.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos." %}
               </video>
             {% endif %}
 
-            <!-- Acciones: estrella y repost -->
+            <!-- Acciones -->
             <div class="flex items-center space-x-4 mb-4">
               <form method="POST" action="{% url 'toggle_estrella' foro.pk %}">
                 {% csrf_token %}
@@ -137,8 +137,7 @@
                 {% for comentario in foro.comentarios.all %}
                   <div class="mb-2">
                     <p class="text-gray-400 text-xs">
-                      {% trans "Por" %} {{ comentario.autor.username }} 
-                      - {{ comentario.created_at|date:"d/m/Y H:i" }}
+                      {% trans "Por" %} {{ comentario.autor.username }} - {{ comentario.created_at|date:"d/m/Y H:i" }}
                     </p>
                     <p>{{ comentario.contenido }}</p>
                   </div>
@@ -147,18 +146,10 @@
                 <p class="text-gray-400 text-sm">{% trans "No hay comentarios aún." %}</p>
               {% endif %}
 
-              <!-- Formulario para agregar un comentario -->
-              <form 
-                method="POST" 
-                action="{% url 'add_comentario' foro.pk %}" 
-                class="mt-3"
-              >
+              <form method="POST" action="{% url 'add_comentario' foro.pk %}" class="mt-3">
                 {% csrf_token %}
                 {{ comentario_form.contenido }}
-                <button 
-                  type="submit" 
-                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1 mt-2 rounded"
-                >
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1 mt-2 rounded">
                   {% trans "Comentar" %}
                 </button>
               </form>
@@ -171,40 +162,22 @@
     </section>
   </div>
 
-  <!-- Script para ajustar las imágenes vía JavaScript -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Selecciona todas las imágenes con clase 'foro-image'
-      const images = document.querySelectorAll('.foro-image');
-      images.forEach((img) => {
-        // Ajusta el modo de encaje para que no se corte
-        img.style.objectFit = 'contain';
-        // Asegura que ocupe todo el ancho del contenedor
-        img.style.width = '100%';
-        // Centra la imagen horizontalmente (display block + margin 0 auto)
-        img.style.display = 'block';
-        img.style.margin = '0 auto';
-      });
-    });
-    document.addEventListener('DOMContentLoaded', function() {
-      // Obtener elementos del DOM
       const openModalButton = document.getElementById('openModal');
       const closeModalButton = document.getElementById('closeModal');
       const imageModal = document.getElementById('imageModal');
 
-      // Función para abrir el modal
       openModalButton.addEventListener('click', function() {
         imageModal.classList.remove('hidden');
         imageModal.classList.add('flex');
       });
 
-      // Función para cerrar el modal al hacer clic en el botón de cierre
       closeModalButton.addEventListener('click', function() {
         imageModal.classList.remove('flex');
         imageModal.classList.add('hidden');
       });
 
-      // Función para cerrar el modal al hacer clic fuera de la imagen
       imageModal.addEventListener('click', function(event) {
         if (event.target === imageModal) {
           imageModal.classList.remove('flex');
@@ -212,7 +185,6 @@
         }
       });
 
-      // Opcional: Cerrar el modal al presionar la tecla Esc
       document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape' && !imageModal.classList.contains('hidden')) {
           imageModal.classList.remove('flex');
@@ -222,3 +194,4 @@
     });
   </script>
 {% endblock %}
+

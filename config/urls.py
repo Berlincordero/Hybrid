@@ -28,11 +28,11 @@ urlpatterns += i18n_patterns(
     path('Foro/', include('Foro.urls')),
     path('subasta/', include('subasta.urls')),
     path('Notificacion/', include('Notificacion.urls')),
-    path('viveros/', include('viveros.urls')),
     path('Fincas/', include('Fincas.urls')),
     path('panel/', include('panel.urls')),
     path('comunity/', include('comunity.urls')),
     path('galeria/', include('galeria.urls')),
+    path('vivero/', include('vivero.urls')),
 )
 
 if settings.DEBUG:

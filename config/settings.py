@@ -37,11 +37,11 @@ INSTALLED_APPS = [
     'Foro',
     'subasta',
     'Notificacion',
-    'viveros',
     'Fincas',
     'panel',
     'comunity',
     'galeria',
+    'vivero',
 ]
 
 # Middleware

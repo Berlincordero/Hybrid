@@ -16,6 +16,7 @@ class Subasta(models.Model):
 
     precio_inicial = models.DecimalField(max_digits=10, decimal_places=2)
     precio_reserva = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    imagen = models.ImageField(upload_to='subastas/', blank=True, null=True)
 
     video = models.FileField(upload_to='subastas/videos/', blank=True, null=True)
     document = models.FileField(upload_to='subastas/docs/', blank=True, null=True)

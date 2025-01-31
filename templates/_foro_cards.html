@@ -1,102 +1,141 @@
 {% load i18n %}
- {% if foros %} 
- {% for foro in foros %}
-<div class="bg-gray-800 p-6 rounded shadow mx-auto max-w-3xl mb-8">
-  <h2 class="text-2xl font-bold mb-4">{{ foro.titulo }}</h2>
-  <p class="text-xl text-green-400 mb-2">
-    {% trans "@" %} {{ foro.autor.username }}
-    - {{ foro.created_at|date:"d/m/Y H:i" }}
-    {% if foro.reposted %}
-      <span class="text-xs text-red-400 ml-2">({% trans "Repost" %})</span>
-    {% endif %}
-  </p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Foros</title>
+    <!-- Tus otros enlaces de CSS o meta etiquetas -->
 
-  <!-- Mostrar texto, imagen y/o video si existen -->
-  {% if foro.contenido_texto %}
-  <p class="mb-2">{{ foro.contenido_texto }}</p>
-  {% endif %} {% if foro.imagen %}
-  <!-- Imagen con clase especial para JS -->
-  <img
-    src="{{ foro.imagen.url }}"
-    alt="{{ foro.titulo }}"
-    class="foro-image w-full h-auto max-h-80 mb-2"
-  />
-  {% endif %} {% if foro.video %}
-  <video controls class="w-full max-h-80 object-cover mb-2">
-    <source src="{{ foro.video.url }}" type="video/mp4" />
-    {% trans "Tu navegador no soporta videos." %}
-  </video>
-  {% endif %}
+    <!-- Estilos personalizados -->
+    <style>
+      /* Botón verde */
+      .submit-button {
+        background-color: transparent;
+        border: 2px solid rgb(107, 248, 68); /* Añadido espacio después de 'solid' */
+        color: rgb(254, 7, 7);
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgb(34, 254, 38);
+        transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+      }
 
-  <!-- Botones Estrella / Repost -->
-  <div class="flex items-center space-x-4 mb-4">
-    <form method="POST" action="{% url 'toggle_estrella' foro.pk %}">
-      {% csrf_token %}
-      <button
-        class="flex items-center text-yellow-400 hover:text-yellow-300 transition"
-      >
-        <span class="text-2xl">&#9733;</span>
-        <span class="ml-1 text-sm">{{ foro.total_estrellas }}</span>
-      </button>
-    </form>
-    <form method="POST" action="{% url 'repost_foro' foro.pk %}">
-      {% csrf_token %}
-      <button class="text-blue-400 hover:text-blue-300 transition">
-        {% trans "Repostear" %}
-      </button>
-    </form>
-  </div>
+      .submit-button:hover {
+        background-color: #10b981;
+        color: white;
+        border-color: rgb(110, 254, 78);
+        transform: scale(1.05);
+      }
+    </style>
+</head>
+<body>
+    {% if foros %} 
+        {% for foro in foros %}
+            <div class="bg-gray-800 p-6 rounded shadow mx-auto max-w-3xl mb-8">
+                <h2 class="text-2xl font-bold mb-4">{{ foro.titulo }}</h2>
+                <p class="text-xl text-green-400 mb-2">
+                    {% trans "@" %} {{ foro.autor.username }}
+                    - {{ foro.created_at|date:"d/m/Y H:i" }}
+                    {% if foro.reposted %}
+                        <span class="text-xs text-red-400 ml-2">({% trans "Repost" %})</span>
+                    {% endif %}
+                </p>
 
-    <!-- Comentarios -->
-    <div class="bg-gray-700 p-3 rounded">
-      <h3 class="text-lg font-semibold mb-2">{% trans "Comentarios" %}</h3>
-      {% if foro.comentarios.all %}
-        {% for comentario in foro.comentarios.all %}
-          <div class="mb-2">
-            <p class="text-green-400 text-ls">
-              {% trans "Por @" %} {{ comentario.autor.username }}
-              - {{ comentario.created_at|date:"d/m/Y H:i" }}
-            </p>
-            <p>{{ comentario.contenido }}</p>
-          </div>
+                <!-- Mostrar texto, imagen y/o video si existen -->
+                {% if foro.contenido_texto %}
+                    <p class="mb-2">{{ foro.contenido_texto }}</p>
+                {% endif %} 
+                {% if foro.imagen %}
+                    <!-- Imagen con clase especial para JS -->
+                    <img
+                        src="{{ foro.imagen.url }}"
+                        alt="{{ foro.titulo }}"
+                        class="foro-image w-full h-auto max-h-80 mb-2"
+                    />
+                {% endif %} 
+                {% if foro.video %}
+                    <video controls class="w-full max-h-80 object-cover mb-2">
+                        <source src="{{ foro.video.url }}" type="video/mp4" />
+                        {% trans "Tu navegador no soporta videos." %}
+                    </video>
+                {% endif %}
+
+                <!-- Botones Estrella / Repost -->
+                <div class="flex items-center space-x-4 mb-4">
+                    <form method="POST" action="{% url 'toggle_estrella' foro.pk %}">
+                        {% csrf_token %}
+                        <button
+                            class="flex items-center text-yellow-400 hover:text-yellow-300 transition"
+                        >
+                            <span class="text-2xl">&#9733;</span>
+                            <span class="ml-1 text-sm">{{ foro.total_estrellas }}</span>
+                        </button>
+                    </form>
+                    <form method="POST" action="{% url 'repost_foro' foro.pk %}">
+                        {% csrf_token %}
+                        <button class="text-blue-400 hover:text-blue-300 transition">
+                            {% trans "Repostear" %}
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Comentarios -->
+                <div class="bg-gray-700 p-3 rounded">
+                    <h3 class="text-lg font-semibold mb-2">{% trans "Comentarios" %}</h3>
+                    {% if foro.comentarios.all %}
+                        {% for comentario in foro.comentarios.all %}
+                            <div class="mb-2">
+                                <p class="text-green-400 text-ls">
+                                    {% trans "Por @" %} {{ comentario.autor.username }}
+                                    - {{ comentario.created_at|date:"d/m/Y H:i" }}
+                                </p>
+                                <p>{{ comentario.contenido }}</p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-green-400 text-sm">{% trans "No hay comentarios aún." %}</p>
+                    {% endif %}
+
+                    <!-- Formulario para comentar -->
+                    <form
+                        method="POST"
+                        action="{% url 'add_comentario' foro.pk %}"
+                        class="mt-3"
+                    >
+                        {% csrf_token %}
+                        {{ comentario_form.contenido }}
+                        <button
+                            type="submit"
+                            class="submit-button"
+                        >
+                            {% trans "Comentar" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
         {% endfor %}
-      {% else %}
-        <p class="text-green-400 text-sm">{% trans "No hay comentarios aún." %}</p>
-      {% endif %}
+    {% else %}
+        <p class="text-gray-400">{% trans "No hay foros creados aún." %}</p>
+    {% endif %}
 
-    <!-- Formulario para comentar -->
-    <form
-      method="POST"
-      action="{% url 'add_comentario' foro.pk %}"
-      class="mt-3"
-    >
-      {% csrf_token %} {{ comentario_form.contenido }}
-      <button
-        type="submit"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 py-1 mt-2 rounded"
-      >
-        {% trans "Comentar" %}
-      </button>
-    </form>
-  </div>
-</div>
-{% endfor %} {% else %}
-<p class="text-gray-400">{% trans "No hay foros creados aún." %}</p>
-{% endif %}
-
-<!-- Script para ajustar las imágenes vía JavaScript -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Seleccionamos todas las imágenes con la clase 'foro-image'
-    const images = document.querySelectorAll(".foro-image");
-    images.forEach((img) => {
-      // Evita que la imagen se corte
-      img.style.objectFit = "contain";
-      // Asegura que ocupe todo el ancho del contenedor
-      img.style.width = "100%";
-      // Centra la imagen horizontalmente
-      img.style.display = "block";
-      img.style.margin = "0 auto";
-    });
-  });
-</script>
+    <!-- Script para ajustar las imágenes vía JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Seleccionamos todas las imágenes con la clase 'foro-image'
+            const images = document.querySelectorAll(".foro-image");
+            images.forEach((img) => {
+                // Evita que la imagen se corte
+                img.style.objectFit = "contain";
+                // Asegura que ocupe todo el ancho del contenedor
+                img.style.width = "100%";
+                // Centra la imagen horizontalmente
+                img.style.display = "block";
+                img.style.margin = "0 auto";
+            });
+        });
+    </script>
+</body>
+</html>

@@ -12,6 +12,53 @@
     rel="stylesheet"
   />
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  
+  <!-- Estilos personalizados -->
+  <style>
+    /* Botón verde */
+    .submit-button {
+      background-color: transparent;
+      border: 2px solid rgb(56, 54, 54); /* Añadido espacio después de 'solid' */
+      color: rgb(254, 7, 7);
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgb(255, 0, 0);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .submit-button:hover {
+      background-color:rgb(247, 2, 2);
+      color: white;
+      border-color: rgb(236, 11, 11);
+      transform: scale(1.05);
+    }
+
+    /* Botón verde */
+    .submit-button-Azul{
+      background-color: transparent;
+      border: 2px solid rgb(56, 54, 54); /* Añadido espacio después de 'solid' */
+      color: rgb(32, 207, 230);
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgb(0, 106, 255);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .submit-button-Azul:hover {
+      background-color:rgb(16, 103, 185);
+      color: white;
+      border-color: rgb(40, 88, 234);
+      transform: scale(1.05);
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -23,14 +70,14 @@
       <!-- Botón Vender Producto -->
       <a
         href="{% url 'producto_create' %}"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition"
+        class="submit-button"
       >
         {% trans "Vender Producto" %}
       </a>
       
       <a
         href="{% url 'my_products' %}"
-        class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded transition"
+        class="submit-button-Azul"
       >
         {% trans "Mis Productos" %}
       </a>

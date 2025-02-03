@@ -38,7 +38,7 @@
 {% block content %}
   <div class="container mx-auto px-4 py-4 max-w-5xl">
     <!-- Card para el botón de crear foro con botones adicionales y ajustes -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow mb-8 max-w-3xl mx-auto flex items-center justify-start space-x-3">
+    <div class="bg-gray-800 p-6 rounded-lg shadow mb-8 max-w-4xl mx-auto flex items-center justify-start space-x-3">
       <button id="openModal" class="focus:outline-none">
         <img
           src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
@@ -88,7 +88,7 @@
     <section class="space-y-8">
       {% if foros %}
         {% for foro in foros %}
-          <div class="bg-gray-800 p-4 rounded shadow mx-auto max-w-2xl">
+          <div class="bg-gray-800 p-4 rounded shadow mx-auto max-w-4xl">
             <h2 class="text-xl font-bold mb-2">{{ foro.titulo }}</h2>
             <p class="text-sm text-green-400 mb-2">
               {% trans "Por" %} {{ foro.autor.username }} - {{ foro.created_at|date:"d/m/Y H:i" }}
@@ -106,7 +106,7 @@
             {% endif %}
 
             {% if foro.video %}
-              <video controls class="w-full max-h-80 object-cover mb-2">
+            <video controls class="w-full max-h-96 object-cover mb-2">
                 <source src="{{ foro.video.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos." %}
               </video>

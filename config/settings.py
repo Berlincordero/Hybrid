@@ -120,7 +120,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'fincahub',  # Nombre de la base de datos
+        'NAME': 'Hybrid',  # Nombre de la base de datos
         'USER': 'postgres',
         'PASSWORD': 'kik301',
         'HOST': 'localhost',  # o la dirección de tu servidor PostgreSQL

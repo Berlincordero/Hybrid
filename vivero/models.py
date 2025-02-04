@@ -110,8 +110,6 @@ class Planta(models.Model):
         null=True,
         blank=True
     )
-
-    # Días estimados para que la planta esté “lista”
     dias_cosecha = models.IntegerField(
         default=120,
         help_text="Días estimados para que la planta esté lista"
@@ -121,23 +119,23 @@ class Planta(models.Model):
         return f"{self.nombre} ({self.usuario.username})"
 
     def dias_transcurridos(self):
-        """
-        Retorna cuántos días han pasado desde fecha_adquisicion hasta la fecha actual.
-        """
         return (localdate() - self.fecha_adquisicion).days
 
     def dias_restantes(self):
-        """
-        Retorna cuántos días faltan para que la planta esté lista (basado en dias_cosecha).
-        Si es negativo o cero, significa que ya está lista.
-        """
         restantes = self.dias_cosecha - self.dias_transcurridos()
         return 0 if restantes < 0 else restantes
 
+    @property
+    def necesita_actualizacion_foto(self):
+        """
+        Retorna True si han pasado al menos 7 días desde la fecha de adquisición
+        y el número de días transcurridos es múltiplo de 7, indicando que es
+        momento de actualizar la foto para monitorear el progreso.
+        """
+        dias = self.dias_transcurridos()
+        return dias >= 7 and dias % 7 == 0
+
 class Monitoreo(models.Model):
-    """
-    Registra observaciones semanales o periódicas de cada planta.
-    """
     planta = models.ForeignKey(Planta, on_delete=models.CASCADE, related_name='monitoreos')
     fecha = models.DateField(auto_now_add=True)
     observacion = models.TextField(help_text="Observaciones semanales")

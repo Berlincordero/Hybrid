@@ -61,6 +61,13 @@
           <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></lottie-player>
         </div>
       </div>
+      <!-- Mensaje debajo de la imagen para actualización (en rojo) -->
+      {% if planta.necesita_actualizacion_foto %}
+        <p class="text-red-500 text-sm mt-1">
+          La foto debe ser actualizada cada 7 días para monitorear el progreso.
+        </p>
+      {% endif %}
+      
       <!-- Formulario oculto para editar la imagen -->
       <form id="image-edit-form-{{ planta.id }}" method="post" action="{% url 'listar_plantas' %}" enctype="multipart/form-data" class="hidden">
         {% csrf_token %}
@@ -145,7 +152,7 @@
           </button>
         </form>
         {% if planta.monitoreos.all %}
-          <ul class="mt-2 text-ls">
+          <ul class="mt-2 text-xs">
             {% for monitoreo in planta.monitoreos.all %}
               <li>{{ monitoreo.fecha }}: {{ monitoreo.observacion }}</li>
             {% endfor %}

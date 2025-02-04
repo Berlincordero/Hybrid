@@ -102,14 +102,10 @@ def panel_vivero(request):
 
 
 
+
 @login_required
 def listar_plantas(request):
-    """
-    Lista plantas/cultivos, recomendaciones, agrupa por variedad, asigna 'sembradio',
-    permite editar el nombre del vivero, registrar monitoreos y ahora también editar la imagen
-    desde el mismo template.
-    """
-    # Vivero
+    # Obtener o crear el vivero del usuario
     vivero, _ = Vivero.objects.get_or_create(
         usuario=request.user,
         defaults={'espacio_total': 100}
@@ -117,7 +113,7 @@ def listar_plantas(request):
     
     if request.method == 'POST':
         action = request.POST.get('action')
-        # Procesa el formulario de monitoreo
+        # Procesar formulario de monitoreo
         if action == 'monitoreo':
             plant_id = request.POST.get('plant_id')
             planta = get_object_or_404(Planta, id=plant_id, usuario=request.user)
@@ -127,7 +123,7 @@ def listar_plantas(request):
                 monitoreo.planta = planta
                 monitoreo.save()
                 return redirect('listar_plantas')
-        # Procesa la edición de la imagen
+        # Procesar formulario de edición de imagen
         elif action == 'editar_imagen':
             plant_id = request.POST.get('plant_id')
             planta = get_object_or_404(Planta, id=plant_id, usuario=request.user)
@@ -135,7 +131,7 @@ def listar_plantas(request):
             if imagen_form.is_valid():
                 imagen_form.save()
                 return redirect('listar_plantas')
-        # Procesa la edición del nombre del vivero
+        # Procesar edición del nombre del vivero
         elif 'vivero_name' in request.POST:
             nuevo_nombre = request.POST.get('vivero_name', '').strip()
             if nuevo_nombre:
@@ -182,7 +178,6 @@ def listar_plantas(request):
         'plant_block_info': plant_block_info,
     }
     return render(request, 'listar_plantas.html', context)
-
 @login_required
 def crear_planta(request):
     """

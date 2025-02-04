@@ -2,50 +2,34 @@
 {% load my_filters %}
 {% block content %}
 <div class="container mx-auto px-4 py-4">
+  
+  <!-- Título principal -->
+  <h1 class="text-2xl font-bold text-bg-green-700 mb-4">
+    Bienvenido a mi Vivero Virtual
+  </h1>
 
   <!-- Sección con el nombre de la empresa y el enlace "Editar" -->
   <div id="vivero-display" class="mb-4 text-white">
     <h2 class="text-xl font-semibold">Nombre de la Empresa o Pymes</h2>
-    <p class="text-3xl mt-1 font-semibold text-white" id="nombre-empresa">{{ vivero.nombre }}</p>
-
-    <a
-      href="#"
-      class="text-blue-400 underline text-sm mt-1 inline-block"
-      onclick="
-        document.getElementById('vivero-edit-form').classList.remove('hidden');
-        document.getElementById('vivero-display').classList.add('hidden');
-      "
-    >
+    <p class="text-3xl mt-1 font-semibold text-white" id="nombre-empresa">
+      {{ vivero.nombre }}
+    </p>
+    <a href="#" class="text-blue-400 underline text-sm mt-1 inline-block"
+       onclick="document.getElementById('vivero-edit-form').classList.remove('hidden');document.getElementById('vivero-display').classList.add('hidden');">
       Editar
     </a>
   </div>
 
   <!-- Formulario oculto para editar el nombre de la empresa -->
-  <form
-    method="POST"
-    id="vivero-edit-form"
-    class="hidden flex flex-col sm:flex-row items-start sm:items-end space-y-2 sm:space-y-0 sm:space-x-2 mb-6"
-  >
+  <form method="POST" id="vivero-edit-form" class="hidden flex flex-col sm:flex-row items-start sm:items-end space-y-2 sm:space-y-0 sm:space-x-2 mb-6">
     {% csrf_token %}
     <div>
-      <label for="vivero_name" class="block text-white mb-1">
-        Nuevo Nombre
-      </label>
-      <input
-        type="text"
-        name="vivero_name"
-        id="vivero_name"
-        value="{{ vivero.nombre }}"
-        class="px-3 py-2 rounded text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+      <label for="vivero_name" class="block text-white mb-1">Nuevo Nombre</label>
+      <input type="text" name="vivero_name" id="vivero_name" value="{{ vivero.nombre }}"
+             class="px-3 py-2 rounded text-black focus:outline-none focus:ring-2 focus:ring-blue-500" />
     </div>
     <div>
-      <button
-        type="submit"
-        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-      >
-        Guardar
-      </button>
+      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Guardar</button>
     </div>
   </form>
 
@@ -55,7 +39,7 @@
     Añadir Planta
   </a>
 
-  <!-- Ajusta la grid para tener hasta 5 columnas en pantallas xl -->
+  <!-- Grid para las plantas -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     {% for planta in plantas %}
     <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
@@ -64,10 +48,28 @@
       <p class="text-xs text-gray-400">Adquirida el: {{ planta.fecha_adquisicion }}</p>
       <p class="text-sm font-medium">Tipo: {{ planta.get_tipo_display }}</p>
       
-      {% if planta.imagen %}
-         <img src="{{ planta.imagen.url }}" alt="{{ planta.nombre }}" class="w-full h-auto object-cover mt-2 rounded">
-      {% endif %}
+      <!-- Bloque de edición de imagen integrado -->
+      <div class="relative mt-2">
+        {% if planta.imagen %}
+          <img src="{{ planta.imagen.url }}" alt="{{ planta.nombre }}" class="w-full h-auto object-cover rounded">
+        {% else %}
+          <img src="URL_DE_IMAGEN_DEFAULT" alt="{{ planta.nombre }}" class="w-full h-auto object-cover rounded">
+        {% endif %}
+        <!-- Overlay con ícono Lottie; al hacer clic se dispara el input file -->
+        <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 cursor-pointer"
+             onclick="document.getElementById('file-input-{{ planta.id }}').click()">
+          <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></lottie-player>
+        </div>
+      </div>
+      <!-- Formulario oculto para editar la imagen -->
+      <form id="image-edit-form-{{ planta.id }}" method="post" action="{% url 'listar_plantas' %}" enctype="multipart/form-data" class="hidden">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="editar_imagen">
+        <input type="hidden" name="plant_id" value="{{ planta.id }}">
+        <input type="file" name="imagen" id="file-input-{{ planta.id }}" class="hidden" accept="image/*" onchange="this.form.submit()">
+      </form>
 
+      <!-- Datos adicionales del cultivo -->
       {% if planta.variedad %}
       <div class="mt-2 p-2 bg-gray-700 text-sm rounded">
          <p><strong>Variedad:</strong> {{ planta.get_variedad_display }}</p>
@@ -80,6 +82,7 @@
       </div>
       {% endif %}
 
+      <!-- Información de Sembradio -->
       {% with info=plant_block_info|get_item:planta.id %}
         <p class="mt-2">
           <strong>Sembradio {{ info.block_num }}:</strong>
@@ -89,31 +92,66 @@
         </p>
       {% endwith %}
 
+      <!-- Recomendaciones calculadas si existen -->
       {% with rec=recomendaciones|get_item:planta.id %}
         {% if rec %}
-          <div class="mt-2 p-2 bg-blue-900 text-sm rounded">
-            <p><strong>Recomendaciones para {{ planta.get_variedad_display }}:</strong></p>
-            <ul class="list-disc ml-4">
-              <li>Distancia entre plantas: {{ rec.recomendacion.distancia_entre_plantas.0 }} – {{ rec.recomendacion.distancia_entre_plantas.1 }} m</li>
-              <li>Distancia entre filas: {{ rec.recomendacion.distancia_entre_filas.0 }} – {{ rec.recomendacion.distancia_entre_filas.1 }} m</li>
-              <li>Área aproximada por planta: {{ rec.recomendacion.area_por_planta.0 }} – {{ rec.recomendacion.area_por_planta.1 }} m²</li>
-              <li>Consumo de agua recomendado: {{ rec.recomendacion.consumo_agua_recomendado }}</li>
-              <li>Consumo de fertilizante recomendado: {{ rec.recomendacion.consumo_fertilizante_recomendado }}</li>
-              <li>Observaciones: {{ rec.recomendacion.observaciones }}</li>
-              <li>Área efectiva para siembra: {{ rec.area_efectiva|floatformat:2 }} m²</li>
-              <li>Número de plantas posibles: {{ rec.num_plantas_posibles }}</li>
-              <li>Probabilidad de éxito: {{ rec.probabilidad_exito }}%</li>
-            </ul>
-          </div>
+        <div class="mt-2 p-2 bg-blue-900 text-sm rounded">
+          <p><strong>Recomendaciones para {{ planta.get_variedad_display }}:</strong></p>
+          <ul class="list-disc ml-4">
+            <li>Distancia entre plantas: {{ rec.recomendacion.distancia_entre_plantas.0 }} – {{ rec.recomendacion.distancia_entre_plantas.1 }} m</li>
+            <li>Distancia entre filas: {{ rec.recomendacion.distancia_entre_filas.0 }} – {{ rec.recomendacion.distancia_entre_filas.1 }} m</li>
+            <li>Área aproximada por planta: {{ rec.recomendacion.area_por_planta.0 }} – {{ rec.recomendacion.area_por_planta.1 }} m²</li>
+            <li>Consumo de agua recomendado: {{ rec.recomendacion.consumo_agua_recomendado }}</li>
+            <li>Consumo de fertilizante recomendado: {{ rec.recomendacion.consumo_fertilizante_recomendado }}</li>
+            <li>Observaciones: {{ rec.recomendacion.observaciones }}</li>
+            <li>Área efectiva para siembra: {{ rec.area_efectiva|floatformat:2 }} m²</li>
+            <li>Número de plantas posibles: {{ rec.num_plantas_posibles }}</li>
+            <li>Probabilidad de éxito: {{ rec.probabilidad_exito }}%</li>
+          </ul>
+        </div>
         {% endif %}
       {% endwith %}
 
-      <form method="post" action="{% url 'eliminar_planta' planta.id %}" class="mt-2">
-        {% csrf_token %}
-        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
-          Eliminar
-        </button>
-      </form>
+      <!-- Tiempo transcurrido y restante -->
+      <p class="text-sm mt-2">
+        <strong>Días transcurridos:</strong> {{ planta.dias_transcurridos }}<br>
+        {% if planta.dias_restantes == 0 %}
+          <strong class="text-green-400">¡Esta planta ya está lista!</strong>
+        {% else %}
+          <strong>Días restantes para cosecha:</strong> {{ planta.dias_restantes }}
+        {% endif %}
+      </p>
+
+      <!-- Botón: Descartar Planta -->
+      <div class="mt-2">
+        <form method="post" action="{% url 'eliminar_planta' planta.id %}" class="inline-block">
+          {% csrf_token %}
+          <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+            Descartar Planta
+          </button>
+        </form>
+      </div>
+
+      <!-- Bloque de Monitoreo Integrado -->
+      <div class="mt-4 border-t border-gray-700 pt-2">
+        <h3 class="text-sm font-semibold">Monitoreo:</h3>
+        <form method="post" action="{% url 'listar_plantas' %}" class="mt-1">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="monitoreo">
+          <input type="hidden" name="plant_id" value="{{ planta.id }}">
+          <textarea name="observacion" class="w-full p-2 rounded bg-gray-700 text-white" placeholder="Escribe tu observación..." rows="2"></textarea>
+          <button type="submit" class="mt-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+            Guardar Monitoreo
+          </button>
+        </form>
+        {% if planta.monitoreos.all %}
+          <ul class="mt-2 text-ls">
+            {% for monitoreo in planta.monitoreos.all %}
+              <li>{{ monitoreo.fecha }}: {{ monitoreo.observacion }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
     </div>
     {% empty %}
       <p class="text-white">No tienes plantas registradas.</p>
@@ -121,4 +159,3 @@
   </div>
 </div>
 {% endblock %}
-

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load my_filters %}
+{% block content %}
+<div class="container mx-auto px-4 py-4">
+  <!-- Título para el Sembradio específico -->
+  <h1 class="text-2xl font-bold text-white mb-4">Sembradio {{ block_num }}</h1>
+
+  <!-- Enlace para volver a la lista general de todos los sembradios -->
+  <a href="{% url 'listar_plantas' %}"
+     class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
+    Ver Todos los Sembradios
+  </a>
+
+  <!-- Aquí utilizamos la misma cuadrícula responsiva de Tailwind que en listar_plantas.html -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    {% for planta in plantas %}
+    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+      <h2 class="text-lg font-bold">{{ planta.nombre }}</h2>
+      <p class="text-sm text-gray-300">{{ planta.descripcion }}</p>
+      <p class="text-xs text-gray-400">Adquirida el: {{ planta.fecha_adquisicion }}</p>
+      <p class="text-sm font-medium">Tipo: {{ planta.get_tipo_display }}</p>
+
+      {% if planta.imagen %}
+      <img src="{{ planta.imagen.url }}" alt="{{ planta.nombre }}" class="w-full h-auto object-cover mt-2 rounded">
+      {% endif %}
+
+      <!-- Bloque con los datos adicionales (variedad, riego, etc.) -->
+      {% if planta.variedad %}
+      <div class="mt-2 p-2 bg-gray-700 text-sm rounded">
+        <p><strong>Variedad:</strong> {{ planta.get_variedad_display }}</p>
+        <p><strong>Sistema de Cultivo:</strong> {{ planta.get_sistema_cultivo_display }}</p>
+        <p><strong>Calidad del Suelo:</strong> {{ planta.get_calidad_suelo_display }}</p>
+        <p><strong>Sistema de Riego:</strong> {{ planta.get_sistema_riego_display }}</p>
+        <p><strong>Tipo de Poda:</strong> {{ planta.get_tipo_poda_display }}</p>
+        <p><strong>Exposición:</strong> {{ planta.get_exposicion_display }}</p>
+        <p><strong>Área a Sembrar:</strong> {{ planta.area_sembrar }} m²</p>
+      </div>
+      {% endif %}
+
+      <!-- Información sobre el bloque actual (número de sembradio, etc.) -->
+      {% with info=plant_block_info|get_item:planta.id %}
+        <p class="mt-2">
+          <strong>Sembradio {{ info.block_num }}:</strong>
+          ({{ info.count_in_block }} planta{{ info.count_in_block|pluralize }} en este bloque,
+          capacidad: {{ info.capacity }},
+          restantes: {{ info.remaining }})
+        </p>
+      {% endwith %}
+
+      <!-- Recomendaciones calculadas (espaciamiento, agua, etc.) -->
+      {% with rec=recomendaciones|get_item:planta.id %}
+        {% if rec %}
+        <div class="mt-2 p-2 bg-blue-900 text-sm rounded">
+          <p><strong>Recomendaciones para {{ planta.get_variedad_display }}:</strong></p>
+          <ul class="list-disc ml-4">
+            <li>Distancia entre plantas: {{ rec.recomendacion.distancia_entre_plantas.0 }} – {{ rec.recomendacion.distancia_entre_plantas.1 }} m</li>
+            <li>Distancia entre filas: {{ rec.recomendacion.distancia_entre_filas.0 }} – {{ rec.recomendacion.distancia_entre_filas.1 }} m</li>
+            <li>Área aproximada por planta: {{ rec.recomendacion.area_por_planta.0 }} – {{ rec.recomendacion.area_por_planta.1 }} m²</li>
+            <li>Consumo de agua recomendado: {{ rec.recomendacion.consumo_agua_recomendado }}</li>
+            <li>Consumo de fertilizante recomendado: {{ rec.recomendacion.consumo_fertilizante_recomendado }}</li>
+            <li>Observaciones: {{ rec.recomendacion.observaciones }}</li>
+            <li>Área efectiva para siembra: {{ rec.area_efectiva|floatformat:2 }} m²</li>
+            <li>Número de plantas posibles: {{ rec.num_plantas_posibles }}</li>
+            <li>Probabilidad de éxito: {{ rec.probabilidad_exito }}%</li>
+          </ul>
+        </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- Botón para eliminar la planta -->
+      <form method="post" action="{% url 'eliminar_planta' planta.id %}" class="mt-2">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+          Eliminar
+        </button>
+      </form>
+    </div>
+    {% empty %}
+      <p class="text-white">No hay plantas en el Sembradio {{ block_num }}.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

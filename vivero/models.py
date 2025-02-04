@@ -1,7 +1,7 @@
 # models.py
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.timezone import now
+from django.utils.timezone import now, localdate
 
 class Vivero(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='vivero')
@@ -20,7 +20,7 @@ class Planta(models.Model):
     vivero = models.ForeignKey(Vivero, on_delete=models.CASCADE, related_name='plantas', null=True, blank=True)
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True, null=True)
-    fecha_adquisicion = models.DateField(default=now)
+    fecha_adquisicion = models.DateField(default=now)  # Fecha de siembra
     tipo = models.CharField(
         max_length=50,
         choices=[
@@ -35,7 +35,7 @@ class Planta(models.Model):
     consumo_agua = models.FloatField(help_text="Consumo de agua semanal en litros")
     consumo_fertilizante = models.FloatField(help_text="Consumo de fertilizante mensual en gramos")
 
-    # Nuevos campos para el cultivo virtual
+    # Campos para el cultivo virtual
     variedad = models.CharField(
         max_length=50,
         choices=[
@@ -44,7 +44,6 @@ class Planta(models.Model):
             ('zanahoria', 'Zanahoria'),
             ('ejote', 'Ejote'),
             ('calabaza', 'Calabaza'),
-            # Agrega más variedades según necesites
         ],
         null=True,
         blank=True,
@@ -112,6 +111,36 @@ class Planta(models.Model):
         blank=True
     )
 
+    # Días estimados para que la planta esté “lista”
+    dias_cosecha = models.IntegerField(
+        default=120,
+        help_text="Días estimados para que la planta esté lista"
+    )
+
     def __str__(self):
         return f"{self.nombre} ({self.usuario.username})"
 
+    def dias_transcurridos(self):
+        """
+        Retorna cuántos días han pasado desde fecha_adquisicion hasta la fecha actual.
+        """
+        return (localdate() - self.fecha_adquisicion).days
+
+    def dias_restantes(self):
+        """
+        Retorna cuántos días faltan para que la planta esté lista (basado en dias_cosecha).
+        Si es negativo o cero, significa que ya está lista.
+        """
+        restantes = self.dias_cosecha - self.dias_transcurridos()
+        return 0 if restantes < 0 else restantes
+
+class Monitoreo(models.Model):
+    """
+    Registra observaciones semanales o periódicas de cada planta.
+    """
+    planta = models.ForeignKey(Planta, on_delete=models.CASCADE, related_name='monitoreos')
+    fecha = models.DateField(auto_now_add=True)
+    observacion = models.TextField(help_text="Observaciones semanales")
+
+    def __str__(self):
+        return f"Monitoreo {self.id} - {self.planta.nombre} ({self.fecha})"

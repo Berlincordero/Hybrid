@@ -1,6 +1,6 @@
 # forms.py
 from django import forms
-from .models import Planta, Vivero
+from .models import Planta, Vivero, Monitoreo
 
 class ViveroForm(forms.ModelForm):
     class Meta:
@@ -13,18 +13,18 @@ class PlantaForm(forms.ModelForm):
         fields = [
             'nombre', 
             'descripcion', 
-            'fecha_adquisicion',  # Este campo mostrará "Fecha de siembra"
+            'fecha_adquisicion',  
             'tipo',
             'variedad', 
             'sistema_cultivo', 
             'calidad_suelo', 
             'sistema_riego',
             'tipo_poda', 
-            'exposicion',         # Este campo mostrará "Exposición solar"
-            'area_sembrar',       # Este campo mostrará "Área de siembra por metro cuadrado"
-            'espacio_requerido',  # Este campo mostrará "Espacio requerido metro cuadrado"
-            'consumo_agua',       # Este campo mostrará "Consumo de agua por litro por día"
-            'consumo_fertilizante',  # Este campo mostrará "Consumo de fertilizante por gramos"
+            'exposicion',
+            'area_sembrar',
+            'espacio_requerido', 
+            'consumo_agua', 
+            'consumo_fertilizante',  
             'imagen'
         ]
         labels = {
@@ -34,6 +34,7 @@ class PlantaForm(forms.ModelForm):
             'espacio_requerido': 'Espacio requerido metro cuadrado',
             'consumo_agua': 'Consumo de agua por litro por día Calculado',
             'consumo_fertilizante': 'Consumo de fertilizante por gramos',
+            'dias_cosecha': 'Días estimados para cosecha',
         }
         widgets = {
             'fecha_adquisicion': forms.DateInput(attrs={'type': 'date', 'class': 'form-input'}),
@@ -42,4 +43,25 @@ class PlantaForm(forms.ModelForm):
             'espacio_requerido': forms.NumberInput(attrs={'class': 'form-input', 'step': 'any'}),
             'consumo_agua': forms.NumberInput(attrs={'class': 'form-input', 'step': 'any'}),
             'consumo_fertilizante': forms.NumberInput(attrs={'class': 'form-input', 'step': 'any'}),
+            'dias_cosecha': forms.NumberInput(attrs={'class': 'form-input', 'step': '1'}),
         }
+
+class MonitoreoForm(forms.ModelForm):
+    class Meta:
+        model = Monitoreo
+        fields = ['observacion']
+        labels = {
+            'observacion': 'Observaciones Semanales',
+        }
+        widgets = {
+            'observacion': forms.Textarea(attrs={
+                'class': 'form-input',
+                'placeholder': 'Escribe tu observación para esta semana...',
+                'rows': 3
+            }),
+        }
+
+class PlantaImagenForm(forms.ModelForm):
+    class Meta:
+        model = Planta
+        fields = ['imagen']

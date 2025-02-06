@@ -1,4 +1,3 @@
-# views.py
 import math
 from collections import defaultdict, Counter
 from django.shortcuts import render, get_object_or_404, redirect
@@ -8,9 +7,6 @@ from .models import Planta, Vivero, Monitoreo
 from .forms import PlantaForm, ViveroForm, MonitoreoForm, PlantaImagenForm 
 
 def calcular_recomendacion(planta):
-    """
-    (Se mantiene igual que tu código previo, sin cambios de lógica)
-    """
     recommendations = {
         'tomate': {
             'distancia_entre_plantas': (0.6, 0.9),
@@ -46,7 +42,6 @@ def calcular_recomendacion(planta):
         },
         # Agrega más variedades aquí...
     }
-
     rec = recommendations.get(planta.variedad)
     if not rec:
         return None
@@ -77,9 +72,6 @@ def calcular_recomendacion(planta):
 
 @login_required
 def panel_vivero(request):
-    """
-    (Sin cambios)
-    """
     vivero, created = Vivero.objects.get_or_create(
         usuario=request.user,
         defaults={'espacio_total': 100}
@@ -100,12 +92,12 @@ def panel_vivero(request):
     }
     return render(request, 'panel_vivero.html', context)
 
-
-
-
 @login_required
 def listar_plantas(request):
-    # Obtener o crear el vivero del usuario
+    """
+    Esta vista mantiene la lógica original de cálculo de bloque.
+    Ahora, para la vista global se filtra para mostrar sólo las plantas asignadas al Bloque 1.
+    """
     vivero, _ = Vivero.objects.get_or_create(
         usuario=request.user,
         defaults={'espacio_total': 100}
@@ -113,7 +105,6 @@ def listar_plantas(request):
     
     if request.method == 'POST':
         action = request.POST.get('action')
-        # Procesar formulario de monitoreo
         if action == 'monitoreo':
             plant_id = request.POST.get('plant_id')
             planta = get_object_or_404(Planta, id=plant_id, usuario=request.user)
@@ -123,7 +114,6 @@ def listar_plantas(request):
                 monitoreo.planta = planta
                 monitoreo.save()
                 return redirect('listar_plantas')
-        # Procesar formulario de edición de imagen
         elif action == 'editar_imagen':
             plant_id = request.POST.get('plant_id')
             planta = get_object_or_404(Planta, id=plant_id, usuario=request.user)
@@ -131,18 +121,19 @@ def listar_plantas(request):
             if imagen_form.is_valid():
                 imagen_form.save()
                 return redirect('listar_plantas')
-        # Procesar edición del nombre del vivero
         elif 'vivero_name' in request.POST:
             nuevo_nombre = request.POST.get('vivero_name', '').strip()
             if nuevo_nombre:
                 vivero.nombre = nuevo_nombre
                 vivero.save()
 
+    # Se ordenan las plantas por variedad y por id (cálculos originales)
     plantas = Planta.objects.filter(usuario=request.user).order_by('variedad', 'id')
     recomendaciones = {}
     for p in plantas:
         recomendaciones[p.id] = calcular_recomendacion(p)
 
+    # Agrupamos por variedad (código original)
     grupos = defaultdict(list)
     for p in plantas:
         grupos[p.variedad].append(p)
@@ -156,12 +147,11 @@ def listar_plantas(request):
         for i, pl in enumerate(group_sorted):
             block_num = (i // capacity) + 1
             block_numbers.append(block_num)
-
         counts = Counter(block_numbers)
         for i, pl in enumerate(group_sorted):
             block_num = block_numbers[i]
             count_in_block = counts[block_num]
-            remaining = capacity - count_in_block
+            remaining = capacity - count_in_block   # Si remaining == 0, el bloque está lleno.
             avg_area = rec["avg_area_por_planta"] if rec else 0
             plant_block_info[pl.id] = {
                 'block_num': block_num,
@@ -171,18 +161,19 @@ def listar_plantas(request):
                 'avg_area': avg_area,
             }
 
+    # **Filtramos para que la vista global solo muestre las plantas del Bloque 1.**
+    plantas_bloque1 = [p for p in plantas if plant_block_info[p.id]['block_num'] == 1]
+
     context = {
         'vivero': vivero,
-        'plantas': plantas,
+        'plantas': plantas_bloque1,  # Solo se muestran las plantas del Bloque 1
         'recomendaciones': recomendaciones,
         'plant_block_info': plant_block_info,
     }
     return render(request, 'listar_plantas.html', context)
+
 @login_required
 def crear_planta(request):
-    """
-    (Sin cambios)
-    """
     if request.method == 'POST':
         form = PlantaForm(request.POST, request.FILES)
         if form.is_valid():
@@ -201,9 +192,6 @@ def crear_planta(request):
 
 @login_required
 def eliminar_planta(request, planta_id):
-    """
-    Elimina un cultivo.
-    """
     planta = get_object_or_404(Planta, id=planta_id, usuario=request.user)
     if request.method == 'POST':
         planta.delete()
@@ -213,7 +201,8 @@ def eliminar_planta(request, planta_id):
 @login_required
 def listar_sembradio(request, block_num):
     """
-    (Sin cambios)
+    Esta vista filtra globalmente (según la lógica original) y muestra únicamente
+    las plantas cuyo bloque (block_num) coincide con el parámetro recibido.
     """
     plantas = Planta.objects.filter(usuario=request.user).order_by('variedad', 'id')
     recomendaciones = {}
@@ -246,6 +235,7 @@ def listar_sembradio(request, block_num):
                 'remaining': remaining,
                 'avg_area': avg_area,
             }
+    # Filtrar solo las plantas cuyo bloque coincide con el parámetro (por ejemplo, 2, 3, etc.)
     plantas_filtradas = [p for p in plantas if plant_block_info[p.id]['block_num'] == block_num]
 
     context = {
@@ -258,9 +248,6 @@ def listar_sembradio(request, block_num):
 
 @login_required
 def monitorear_planta(request, planta_id):
-    """
-    Crea una observación (Monitoreo) para la planta en la semana actual.
-    """
     planta = get_object_or_404(Planta, id=planta_id, usuario=request.user)
     if request.method == 'POST':
         form = MonitoreoForm(request.POST)
@@ -272,7 +259,6 @@ def monitorear_planta(request, planta_id):
     else:
         form = MonitoreoForm()
 
-    # Obtenemos todos los registros de monitoreo para esta planta
     observaciones = planta.monitoreos.all().order_by('-fecha')
 
     return render(request, 'monitorear_planta.html', {

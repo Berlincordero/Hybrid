@@ -5,13 +5,13 @@
   <!-- Título para el Sembradio específico -->
   <h1 class="text-2xl font-bold text-white mb-4">Sembradio {{ block_num }}</h1>
 
-  <!-- Enlace para volver a la lista general de todos los sembradios -->
+  <!-- Enlace para volver a la lista global de siembras -->
   <a href="{% url 'listar_plantas' %}"
      class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
     Ver Todos los Sembradios
   </a>
 
-  <!-- Aquí utilizamos la misma cuadrícula responsiva de Tailwind que en listar_plantas.html -->
+  <!-- Grid para las plantas del bloque -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     {% for planta in plantas %}
     <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
@@ -24,7 +24,6 @@
       <img src="{{ planta.imagen.url }}" alt="{{ planta.nombre }}" class="w-full h-auto object-cover mt-2 rounded">
       {% endif %}
 
-      <!-- Bloque con los datos adicionales (variedad, riego, etc.) -->
       {% if planta.variedad %}
       <div class="mt-2 p-2 bg-gray-700 text-sm rounded">
         <p><strong>Variedad:</strong> {{ planta.get_variedad_display }}</p>
@@ -37,7 +36,6 @@
       </div>
       {% endif %}
 
-      <!-- Información sobre el bloque actual (número de sembradio, etc.) -->
       {% with info=plant_block_info|get_item:planta.id %}
         <p class="mt-2">
           <strong>Sembradio {{ info.block_num }}:</strong>
@@ -47,7 +45,6 @@
         </p>
       {% endwith %}
 
-      <!-- Recomendaciones calculadas (espaciamiento, agua, etc.) -->
       {% with rec=recomendaciones|get_item:planta.id %}
         {% if rec %}
         <div class="mt-2 p-2 bg-blue-900 text-sm rounded">
@@ -67,7 +64,6 @@
         {% endif %}
       {% endwith %}
 
-      <!-- Botón para eliminar la planta -->
       <form method="post" action="{% url 'eliminar_planta' planta.id %}" class="mt-2">
         {% csrf_token %}
         <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">

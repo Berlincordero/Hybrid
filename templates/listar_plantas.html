@@ -15,7 +15,7 @@
       {{ vivero.nombre }}
     </p>
     <a href="#" class="text-blue-400 underline text-sm mt-1 inline-block"
-       onclick="document.getElementById('vivero-edit-form').classList.remove('hidden');document.getElementById('vivero-display').classList.add('hidden');">
+       onclick="document.getElementById('vivero-edit-form').classList.remove('hidden'); document.getElementById('vivero-display').classList.add('hidden');">
       Editar
     </a>
   </div>
@@ -33,11 +33,18 @@
     </div>
   </form>
 
-  <!-- Título de la sección de plantas -->
-  <h1 class="text-2xl font-bold text-white mb-4">Mis Plantas / Cultivos</h1>
-  <a href="{% url 'crear_planta' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    Añadir Planta
-  </a>
+  <!-- Área de botones: "Añadir Planta" y contenedor para el botón de siguiente sembradio -->
+  <div class="flex items-center mb-4">
+    <a href="{% url 'crear_planta' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mr-2 inline-block">
+      Añadir Planta
+    </a>
+    <!-- Contenedor para el botón "Ver Sembradio 2" (oculto por defecto) -->
+    <div id="next-sembradio-container" style="display: none;">
+      <a id="next-sembradio-button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded" href="{% url 'listar_sembradio' 2 %}">
+        Ver Sembradio 2
+      </a>
+    </div>
+  </div>
 
   <!-- Grid para las plantas -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -55,13 +62,11 @@
         {% else %}
           <img src="URL_DE_IMAGEN_DEFAULT" alt="{{ planta.nombre }}" class="w-full h-auto object-cover rounded">
         {% endif %}
-        <!-- Overlay con ícono Lottie; al hacer clic se dispara el input file -->
         <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 cursor-pointer"
              onclick="document.getElementById('file-input-{{ planta.id }}').click()">
           <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></lottie-player>
         </div>
       </div>
-      <!-- Mensaje debajo de la imagen para actualización (en rojo) -->
       {% if planta.necesita_actualizacion_foto %}
         <p class="text-red-500 text-sm mt-1">
           La foto debe ser actualizada cada 7 días para monitorear el progreso.
@@ -89,9 +94,9 @@
       </div>
       {% endif %}
 
-      <!-- Información de Sembradio -->
+      <!-- Información de Sembradio (utilizando los cálculos originales) -->
       {% with info=plant_block_info|get_item:planta.id %}
-        <p class="mt-2">
+        <p class="mt-2 sembradio-info" data-block="{{ info.block_num }}" data-remaining="{{ info.remaining }}">
           <strong>Sembradio {{ info.block_num }}:</strong>
           ({{ info.count_in_block }} planta{{ info.count_in_block|pluralize }} en este bloque,
           capacidad: {{ info.capacity }},
@@ -165,4 +170,25 @@
     {% endfor %}
   </div>
 </div>
+
+<!-- Script para mostrar el botón "Ver Sembradio 2" cuando en algún elemento del bloque 1 el remaining sea 0 -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var elems = document.querySelectorAll(".sembradio-info");
+    var showNext = false;
+    elems.forEach(function(el) {
+        // Verificamos únicamente los elementos del bloque 1
+        if (el.getAttribute("data-block") === "1") {
+            // Si el atributo "data-remaining" es "0" (o "0.0")
+            if (el.getAttribute("data-remaining") === "0" || el.getAttribute("data-remaining") === "0.0") {
+                showNext = true;
+            }
+        }
+    });
+    if (showNext) {
+        document.getElementById("next-sembradio-container").style.display = "block";
+    }
+});
+</script>
 {% endblock %}
+

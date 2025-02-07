@@ -1,35 +1,40 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">Mis Fincas</h1>
-<a href="{% url 'crear_finca' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    Crear Nueva Finca
-</a>
+<div class="container mx-auto px-4 py-4">
+  <!-- Título principal -->
+  <h1 class="text-2xl font-bold text-white mb-4">
+    Mis Fincas
+  </h1>
 
-<ul class="space-y-4">
+  <!-- Botón para crear nueva finca -->
+  <a href="{% url 'crear_finca' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
+    Crear Nueva Finca
+  </a>
+
+  <!-- Grid responsive para mostrar las fincas -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
     {% for finca in fincas %}
-    <li class="p-4 rounded border bg-white text-black">
-        <h2 class="text-lg font-bold">{{ finca.nombre }}</h2>
-        <p class="text-sm text-gray-600">{{ finca.descripcion }}</p>
-        <p class="text-xs text-gray-500">Ubicación: {{ finca.ubicacion }}</p>
-        <p class="text-xs text-gray-500">Tamaño: {{ finca.tamaño }} hectáreas</p>
-        {% if finca.imagen %}
-        <img src="{{ finca.imagen.url }}" alt="{{ finca.nombre }}" class="w-32 h-32 object-cover">
-        {% endif %}
-        <div class="mt-2">
-            <a href="{% url 'editar_finca' finca.id %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                Editar
-            </a>
-            <form method="post" action="{% url 'eliminar_finca' finca.id %}" class="inline">
-                {% csrf_token %}
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
-                    Eliminar
-                </button>
-            </form>
-        </div>
-    </li>
+    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+      <p class="text-lg text-green-400">Nombre de mi Finca</p>
+      <h2 class="text-lg font-bold mb-2">{{ finca.nombre }}</h2>
+      <p class="text-sm text-gray-300 mb-2">{{ finca.descripcion }}</p>
+      <p class="text-xs text-gray-400">Ubicación: {{ finca.ubicacion }}</p>
+      <p class="text-xs text-gray-400 mb-2">Tamaño: {{ finca.tamaño }} hectáreas</p>
+      
+      {% if finca.imagen %}
+      <img src="{{ finca.imagen.url }}" alt="{{ finca.nombre }}" class="w-full h-auto object-cover rounded mb-2">
+      {% endif %}
+
+      <form method="post" action="{% url 'eliminar_finca' finca.id %}">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+          Eliminar
+        </button>
+      </form>
+    </div>
     {% empty %}
-    <p>No tienes fincas registradas.</p>
+    <p class="text-white">No tienes fincas registradas.</p>
     {% endfor %}
-</ul>
+  </div>
+</div>
 {% endblock %}

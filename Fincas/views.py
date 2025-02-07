@@ -22,3 +22,12 @@ def crear_finca(request):
     else:
         form = FincaForm()
     return render(request, 'crear_finca.html', {'form': form})
+
+@login_required
+def eliminar_finca(request, finca_id):
+    finca = get_object_or_404(Finca, id=finca_id, usuario=request.user)
+    if request.method == 'POST':
+        finca.delete()
+        return redirect('listar_fincas')
+    # Opcionalmente puedes mostrar una página de confirmación
+    return render(request, 'confirmar_eliminar_finca.html', {'finca': finca})

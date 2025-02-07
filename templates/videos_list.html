@@ -7,28 +7,64 @@
 {% endblock %}
 
 {% block extra_head %}
-  <!-- Incluye los estilos de TailwindCSS u otros elementos necesarios en el head -->
+  <!-- Incluye los estilos de TailwindCSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     .submit-button-rojo {
-      background-color: transparent; /* Sin fondo */
-        border: 2px solidrgb(185, 16, 16);     /* Verde-500 */
-      color:rgb(196, 10, 10);                /* Verde-500 */
-      font-weight: 600;              /* font-semibold */
-      padding: 0.75rem 1.5rem;       /* Tailwind py-3 px-6 */
-      border-radius: 0.5rem;         /* rounded-lg */
+      background-color: transparent;
+      border: 2px solid rgb(185, 16, 16);
+      color: rgb(196, 10, 10);
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
       box-shadow: 0 4px 6px rgb(243, 16, 16);
       transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
       cursor: pointer;
-      /* Para anclas, a menudo conviene usar display inline-block */
       display: inline-block;
       text-align: center;
     }
     .submit-button-rojo:hover {
-      background-color:rgb(198, 6, 6);  /* Verde-500 */
+      background-color: rgb(198, 6, 6);
       color: white;
-      border-color:rgb(150, 5, 5);      /* Verde-600 */
+      border-color: rgb(150, 5, 5);
       transform: scale(1.05);
+    }
+    .submit-button-verde {
+      background-color: transparent;
+      border: 2px solid rgb(185, 16, 16);
+      color: rgb(92, 248, 78);
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgb(77, 246, 114);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+    }
+    .submit-button-verde:hover {
+      background-color: rgb(130, 241, 100);
+      color: white;
+      border-color: rgb(72, 254, 72);
+      transform: scale(1.05);
+    }
+
+    /* Contenedor para mantener la relación de aspecto 16:9 */
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 -> 9/16 = 0.5625 = 56.25% */
+    }
+    .video-container video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      /* Usa object-fit según prefieras:
+         - cover: el video cubre todo el contenedor (puede recortarse)
+         - contain: se muestra completo pero puede dejar espacios en negro */
+      object-fit: cover;
     }
   </style>
 {% endblock %}
@@ -37,29 +73,26 @@
   <div class="container mx-auto p-4">
     
     <!-- Encabezado -->
-    <header class="flex flex-col sm:flex-row items-center justify-between mb-6 space-y-4 sm:space-y-0">
-      <h1 class="text-3xl font-bold">{% trans "VideoPlaces" %}</h1>
-      <!-- Enlace para subir video -->
-      <a href="{% url 'video_upload' %}" class="submit-button-rojo">
-        {% trans "Subir Video" %}
-      </a>
+    <header class="flex flex-col items-center justify-between mb-6 space-y-4">
+      <h1 class="text-3xl font-bold">{% trans "VideoPlace" %}</h1>
+      <div class="flex space-x-4">
+        <a href="{% url 'video_upload' %}" class="submit-button-rojo">
+          {% trans "Subir Video" %}
+        </a>
+        <a href="{% url 'video_upload' %}" class="submit-button-verde">
+          {% trans "Mis Videos" %}
+        </a>
+      </div>
     </header>
     
-    <!-- NUEVO: Top 10 Videos más reproducidos -->
+    <!-- Top 10 Videos más reproducidos -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Top 10 Videos más reproducidos</h2>
-      <!-- 
-        En móviles se mostrará en 1 columna,
-        en pantallas pequeñas (sm) en 2 columnas,
-        en mediano (md) en 3 columnas,
-        en grande (lg) en 4 columnas.
-      -->
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-4 grid-cols-1">
         {% for video in top_videos_reproducidos %}
           <div class="bg-gray-800 shadow p-4 rounded">
-            <div class="mb-2">
-              <!-- Ajustamos la altura del video: h-56 en móvil y h-48 para pantallas sm en adelante -->
-              <video controls class="w-full h-80 sm:h-64 md:h-56 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+            <div class="video-container mb-2">
+              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -79,14 +112,14 @@
       </div>
     </section>
     
-    <!-- NUEVO: Top 10 Videos con más estrellas -->
+    <!-- Top 10 Videos con más estrellas -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Top 10 Videos con más estrellas</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-4 grid-cols-1">
         {% for video in top_videos_estrellas %}
           <div class="bg-gray-800 shadow p-4 rounded">
-            <div class="mb-2">
-              <video controls class="w-full h-56 sm:h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+            <div class="video-container mb-2">
+              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -106,14 +139,14 @@
       </div>
     </section>
     
-    <!-- NUEVO: Mejores blogers (Top 10) -->
+    <!-- Mejores Blogers (Top 10) -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Mejores Blogers (Top 10)</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-4 grid-cols-1">
         {% for video in top_bloger_videos %}
           <div class="bg-gray-800 shadow p-4 rounded">
-            <div class="mb-2">
-              <video controls class="w-full h-56 sm:h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+            <div class="video-container mb-2">
+              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -134,14 +167,14 @@
       </div>
     </section>
     
-    <!-- NUEVO: Categorías agrupadas -->
+    <!-- Noticias, Consejos y Cursos -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Noticias, Consejos y Cursos</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-4 grid-cols-1">
         {% for video in noticias_consejos_cursos %}
           <div class="bg-gray-800 shadow p-4 rounded">
-            <div class="mb-2">
-              <video controls class="w-full h-56 sm:h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+            <div class="video-container mb-2">
+              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -164,11 +197,11 @@
     <!-- Bloger -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Bloger</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-4 grid-cols-1">
         {% for video in bloger %}
           <div class="bg-gray-800 shadow p-4 rounded">
-            <div class="mb-2">
-              <video controls class="w-full h-56 sm:h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+            <div class="video-container mb-2">
+              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -191,11 +224,11 @@
     <!-- Publicitario y Servicios Profesionales -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Publicitario y Servicios Profesionales</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-4 grid-cols-1">
         {% for video in publicitario_servprof %}
           <div class="bg-gray-800 shadow p-4 rounded">
-            <div class="mb-2">
-              <video controls class="w-full h-56 sm:h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+            <div class="video-container mb-2">
+              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -218,11 +251,11 @@
     <!-- Personales -->
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">Personales</h2>
-      <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-4 grid-cols-1">
         {% for video in personal %}
           <div class="bg-gray-800 shadow p-4 rounded">
-            <div class="mb-2">
-              <video controls class="w-full h-56 sm:h-48 object-cover" poster="{% static 'medios/default-thumbnail.jpg' %}">
+            <div class="video-container mb-2">
+              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -244,10 +277,9 @@
     
   </div>
 
-  <!-- Script para ajustar las imágenes vía JavaScript -->
+  <!-- Script opcional para ajustar imágenes si es necesario -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Selecciona todas las imágenes con clase 'foro-image'
       const images = document.querySelectorAll('.foro-image');
       images.forEach((img) => {
         img.style.objectFit = 'contain';

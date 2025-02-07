@@ -1,12 +1,135 @@
-{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "Crear Grupo" %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- TailwindCSS desde CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Estilos para inputs de texto, textarea y selects */
+    input[type="text"],
+    textarea,
+    select {
+      background-color: #1a202c; /* bg-gray-900 */
+      color: white;
+      border: 2px solid #10b981; /* Verde-500 */
+      border-radius: 0.5rem; /* rounded-lg */
+      padding: 0.5rem 1rem; /* Tailwind py-2 px-4 */
+      width: 100%;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: #718096; /* text-gray-500 */
+    }
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #059669; /* Verde-600 */
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3); /* Verde con transparencia */
+    }
 
-{% block content %}
-<h1 class="text-2xl font-bold mb-4">Crear Grupo</h1>
-<form method="post" class="space-y-4">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-        Crear Grupo
-    </button>
-</form>
-{% endblock %}
+    /* Botón mejorado: Verde y bordeado */
+    .submit-button {
+      background-color: transparent; /* Sin fondo */
+      border: 2px solid #10b981; /* Verde-500 */
+      color: #10b981; /* Verde-500 */
+      font-weight: 600; /* font-semibold */
+      padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
+      border-radius: 0.5rem; /* rounded-lg */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+    .submit-button:hover {
+      background-color: #10b981; /* Verde-500 */
+      color: white;
+      border-color: #059669; /* Verde-600 */
+      transform: scale(1.05);
+    }
+
+    /* Estilos para labels */
+    label {
+      display: block;
+      font-size: 0.875rem; /* text-sm */
+      font-weight: 500;    /* font-medium */
+      color: #d1d5db;      /* text-gray-300 */
+      margin-bottom: 0.25rem; /* mb-1 */
+    }
+
+    /* Estilos para la tarjeta */
+    .card {
+      background-color: #2d3748; /* bg-gray-800 */
+      border-radius: 0.5rem; /* rounded-xl */
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-lg */
+      padding: 2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Ajustes para el enlace de regresar */
+    .back-link {
+      color: #10b981; /* Verde-500 */
+      transition: color 0.3s;
+    }
+    .back-link:hover {
+      color: #059669; /* Verde-600 */
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-xl">
+    
+    <!-- Enlace para volver al listado de grupos -->
+    <div class="mb-4">
+      <a href="{% url 'listar_grupos' %}" class="inline-flex items-center back-link">
+        <span class="text-2xl mr-2">&#8592;</span>
+        <span>{% trans "Regresar a la lista de grupos" %}</span>
+      </a>
+    </div>
+
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight text-white">
+        {% trans "Crear Grupo" %}
+      </h1>
+    </header>
+
+    <!-- Formulario para crear grupo -->
+    <section class="card">
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Campo Nombre -->
+        <div>
+          {{ form.nombre.label_tag }}
+          {{ form.nombre }}
+          {% if form.nombre.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.nombre.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo Descripción -->
+        <div>
+          {{ form.descripcion.label_tag }}
+          {{ form.descripcion }}
+          {% if form.descripcion.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.descripcion.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Botón de Envío -->
+        <button type="submit" class="submit-button">
+          {% trans "Crear Grupo" %}
+        </button>
+      </form>
+    </section>
+  </div>
+</body>
+</html>

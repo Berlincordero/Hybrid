@@ -1,19 +1,66 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">Grupos</h1>
-<a href="{% url 'crear_grupo' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    Crear Nuevo Grupo
-</a>
-<ul class="space-y-4">
-    {% for grupo in grupos %}
-    <li class="p-4 bg-white text-black rounded shadow">
-        <h2 class="text-lg font-bold">{{ grupo.nombre }}</h2>
-        <p class="text-sm">{{ grupo.descripcion }}</p>
-        <a href="{% url 'detalle_grupo' grupo.id %}" class="text-blue-600 hover:underline">Ver Grupo</a>
-    </li>
-    {% empty %}
-    <p>No hay grupos disponibles.</p>
-    {% endfor %}
-</ul>
+<!-- Contenedor principal con fondo oscuro y texto claro -->
+<div class="bg-gray-900 min-h-screen text-white p-4">
+    
+    <!-- Encabezado: título y botón de crear grupo -->
+    <div class="flex items-center justify-between mb-4">
+        <h1 class="text-xl font-bold">Tus grupos</h1>
+        <a href="{% url 'crear_grupo' %}" 
+           class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+           Crear Nuevo Grupo
+        </a>
+    </div>
+    
+    <!-- Barra de búsqueda -->
+    <div class="mb-4">
+        <input 
+            type="text" 
+            placeholder="Buscar grupos por nombre" 
+            class="w-full bg-gray-800 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+    
+    <!-- Sección de ordenamiento (simulado) -->
+    <div class="flex items-center justify-between mb-2">
+        <span>Ordenar por: <strong>Más visitados</strong></span>
+        <!-- Podrías poner un ícono de 'filtrar' o cambiar orden acá -->
+        <!-- <button class="bg-gray-700 px-2 py-1 rounded text-sm">Cambiar Orden</button> -->
+    </div>
+
+    <!-- Lista de grupos -->
+    <ul class="space-y-2">
+        {% for grupo in grupos %}
+        <li class="flex items-center p-3 bg-gray-800 rounded hover:bg-gray-700 transition">
+            
+            <!-- Ícono o imagen del grupo (aquí podrías poner una imagen real si la tuvieras) -->
+            <img 
+              src="/static/img/placeholder_group.png" 
+              alt="Imagen del grupo" 
+              class="w-12 h-12 rounded mr-3 object-cover" />
+            
+            <!-- Info del grupo -->
+            <div class="flex-1">
+                <p class="font-semibold text-base">{{ grupo.nombre }}</p>
+                <p class="text-sm text-gray-300">
+                    {{ grupo.descripcion|truncatewords:15 }}
+                </p>
+            </div>
+            
+            <!-- Link para ver detalles del grupo -->
+            <div>
+                <a href="{% url 'detalle_grupo' grupo.id %}" 
+                   class="text-blue-400 text-sm hover:underline">
+                   Ver Grupo
+                </a>
+            </div>
+        </li>
+        {% empty %}
+        <li>
+            <p class="text-gray-200">No hay grupos disponibles.</p>
+        </li>
+        {% endfor %}
+    </ul>
+    
+</div>
 {% endblock %}

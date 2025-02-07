@@ -244,33 +244,7 @@
           {% endif %}
         </div>
 
-        <!-- Espacio Requerido (por planta) -->
-        <div>
-          <label for="{{ form.espacio_requerido.id_for_label }}">{{ form.espacio_requerido.label }}</label>
-          {{ form.espacio_requerido }}
-          {% if form.espacio_requerido.errors %}
-            <p class="text-red-400 text-sm mt-1">{{ form.espacio_requerido.errors }}</p>
-          {% endif %}
-        </div>
-
-        <!-- Consumo de Agua -->
-        <div>
-          <label for="{{ form.consumo_agua.id_for_label }}">{{ form.consumo_agua.label }}</label>
-          {{ form.consumo_agua }}
-          {% if form.consumo_agua.errors %}
-            <p class="text-red-400 text-sm mt-1">{{ form.consumo_agua.errors }}</p>
-          {% endif %}
-        </div>
-
-        <!-- Consumo de Fertilizante -->
-        <div>
-          <label for="{{ form.consumo_fertilizante.id_for_label }}">{{ form.consumo_fertilizante.label }}</label>
-          {{ form.consumo_fertilizante }}
-          {% if form.consumo_fertilizante.errors %}
-            <p class="text-red-400 text-sm mt-1">{{ form.consumo_fertilizante.errors }}</p>
-          {% endif %}
-        </div>
-
+   
         <!-- Imagen -->
         <div>
           <label for="{{ form.imagen.id_for_label }}">{{ form.imagen.label }}</label>

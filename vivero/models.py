@@ -9,7 +9,7 @@ class Vivero(models.Model):
     espacio_total = models.FloatField(help_text="Espacio total del vivero en m²")
 
     def espacio_disponible(self):
-        espacio_ocupado = sum(planta.espacio_requerido for planta in self.plantas.all())
+        espacio_ocupado = sum(planta.area_sembrar for planta in self.plantas.all() if planta.area_sembrar)
         return self.espacio_total - espacio_ocupado
 
     def __str__(self):
@@ -31,23 +31,19 @@ class Planta(models.Model):
         ]
     )
     imagen = models.ImageField(upload_to='viveros/', blank=True, null=True)
-    espacio_requerido = models.FloatField(help_text="Espacio requerido por la planta (por unidad) en m²")
-    consumo_agua = models.FloatField(help_text="Consumo de agua semanal en litros")
-    consumo_fertilizante = models.FloatField(help_text="Consumo de fertilizante mensual en gramos")
 
-    # Campos para el cultivo virtual
+    # Campos de cultivo
     variedad = models.CharField(
         max_length=50,
         choices=[
             ('tomate', 'Tomate'),
             ('lechuga', 'Lechuga'),
             ('zanahoria', 'Zanahoria'),
-            ('ejote', 'Ejote'),
+            ('vainica', 'Vainica'),
             ('calabaza', 'Calabaza'),
         ],
         null=True,
         blank=True,
-        help_text="Seleccione la variedad o especie (por ejemplo, tomate)"
     )
     sistema_cultivo = models.CharField(
         max_length=50,
@@ -59,7 +55,6 @@ class Planta(models.Model):
         ],
         null=True,
         blank=True,
-        help_text="Seleccione el sistema de cultivo a utilizar"
     )
     calidad_suelo = models.CharField(
         max_length=50,
@@ -70,7 +65,6 @@ class Planta(models.Model):
         ],
         null=True,
         blank=True,
-        help_text="Calidad del suelo para el cultivo"
     )
     sistema_riego = models.CharField(
         max_length=50,
@@ -81,7 +75,6 @@ class Planta(models.Model):
         ],
         null=True,
         blank=True,
-        help_text="Método de riego que se aplicará"
     )
     tipo_poda = models.CharField(
         max_length=50,
@@ -92,7 +85,6 @@ class Planta(models.Model):
         ],
         null=True,
         blank=True,
-        help_text="Tipo de poda que se aplicará al cultivo"
     )
     exposicion = models.CharField(
         max_length=50,
@@ -103,7 +95,6 @@ class Planta(models.Model):
         ],
         null=True,
         blank=True,
-        help_text="Nivel de exposición solar en el área de siembra"
     )
     area_sembrar = models.FloatField(
         help_text="Área destinada para este cultivo en m² (dentro del total del vivero)",
@@ -113,6 +104,12 @@ class Planta(models.Model):
     dias_cosecha = models.IntegerField(
         default=120,
         help_text="Días estimados para que la planta esté lista"
+    )
+
+    # **NUEVO**: bloque o número de “Sembradio”
+    block_num = models.PositiveIntegerField(
+        default=1,
+        help_text="Número de bloque o sembradio donde se siembra esta planta"
     )
 
     def __str__(self):
@@ -129,8 +126,7 @@ class Planta(models.Model):
     def necesita_actualizacion_foto(self):
         """
         Retorna True si han pasado al menos 7 días desde la fecha de adquisición
-        y el número de días transcurridos es múltiplo de 7, indicando que es
-        momento de actualizar la foto para monitorear el progreso.
+        y el número de días transcurridos es múltiplo de 7.
         """
         dias = self.dias_transcurridos()
         return dias >= 7 and dias % 7 == 0

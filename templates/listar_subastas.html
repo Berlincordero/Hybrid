@@ -117,14 +117,20 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-6">
-  <!-- Encabezado con Título y botón -->
+  <!-- Encabezado con Título y botones -->
   <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
     <h1 class="text-3xl font-bold text-white mb-4 sm:mb-0">
       Subastas Disponibles
     </h1>
-    <div>
+    <div class="flex flex-col sm:flex-row gap-4">
       <a href="{% url 'crear_subasta' %}" class="submit-button">
         Crear Subasta
+      </a>
+      <a href="{% url 'crear_subasta' %}" class="submit-button">
+        Mis Subastas
+      </a>
+      <a href="{% url 'crear_subasta' %}" class="submit-button-rojo">
+        En Vivo
       </a>
     </div>
   </header>

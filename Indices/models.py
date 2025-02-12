@@ -36,3 +36,14 @@ class Indice(models.Model):
 
     def __str__(self):
         return f"{self.get_main_categoria_display()} ({self.fecha})"
+
+class LugarRecomendado(models.Model):
+    nombre = models.CharField(max_length=255)
+    direccion = models.CharField(max_length=255)
+    descripcion = models.TextField(blank=True, null=True)
+    precio = models.DecimalField(max_digits=10, decimal_places=2, help_text="Precio promedio")
+    imagen = models.ImageField(upload_to='lugares/', blank=True, null=True)
+    url = models.URLField(blank=True, null=True, help_text="Sitio web del lugar (opcional)")
+    
+    def __str__(self):
+        return self.nombre

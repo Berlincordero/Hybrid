@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Lugares Recomendados{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-4">
+  <h1 class="text-2xl font-bold text-white mb-4">Lugares Recomendados</h1>
+  
+  <!-- Botón para agregar un nuevo lugar recomendado -->
+  <a href="{% url 'crear_lugar_recomendado' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
+    Recomendar Mi Negocio
+  </a>
+  
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    {% for lugar in lugares %}
+      <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+        {% if lugar.imagen %}
+          <img src="{{ lugar.imagen.url }}" alt="{{ lugar.nombre }}" class="w-full h-40 object-cover rounded mb-2">
+        {% else %}
+          <img src="{% static 'images/default_lugar.png' %}" alt="{{ lugar.nombre }}" class="w-full h-40 object-cover rounded mb-2">
+        {% endif %}
+        <h2 class="text-xl font-bold mb-1">{{ lugar.nombre }}</h2>
+        <p class="text-sm mb-1"><strong>Dirección:</strong> {{ lugar.direccion }}</p>
+        <p class="text-sm mb-1">{{ lugar.descripcion }}</p>
+        <p class="text-base mb-1"><strong>Precio Promedio:</strong> ${{ lugar.precio }}</p>
+        {% if lugar.url %}
+          <a href="{{ lugar.url }}" target="_blank" class="text-blue-400 underline text-sm">Ver sitio web</a>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p class="text-white">No hay lugares recomendados registrados.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

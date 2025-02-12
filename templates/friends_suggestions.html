@@ -37,19 +37,6 @@
     <!-- Encabezado: Contenedor para "Volver al perfil" y "Contactos Agregados" -->
     <div class="w-full max-w-4xl px-6">
       <div class="flex flex-col sm:flex-row items-center justify-between">
-        <!-- Enlace Volver al perfil -->
-        <a href="{% url 'perfil' %}" target="_blank" class="flex items-center text-white hover:text-indigo-400">
-          <lottie-player
-            src="{% static 'animations/profile.json' %}"
-            background="transparent"
-            speed="1"
-            style="width: 50px; height: 50px;"
-            loop
-            autoplay>
-          </lottie-player>
-          <span class="ml-2">{% trans "Volver al perfil" %}</span>
-        </a>
-        <!-- Enlace Contactos Agregados -->
         <a href="{% url 'friends_list' %}" class="flex items-center text-indigo-400 hover:text-indigo-500 font-semibold mt-4 sm:mt-0">
           <lottie-player
             src="{% static 'animations/contact.json' %}"

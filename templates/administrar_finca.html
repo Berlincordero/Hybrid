@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mx-auto px-4 py-4">
+  <!-- Enlace para regresar al listado de fincas -->
+  <a href="{% url 'listar_fincas' %}" class="inline-flex items-center back-link mb-4">
+    <span class="text-2xl mr-2">&#8592;</span>
+    <span>Regresar a mis fincas</span>
+  </a>
+  
+  <!-- Título de la página de administración -->
+  <h1 class="text-3xl font-bold text-white mb-4">Administración de mi Finca</h1>
+  
+  <!-- Información de la finca -->
+  <div class="bg-gray-800 p-6 rounded shadow">
+    <h2 class="text-2xl font-semibold text-green-400 mb-2">{{ finca.nombre }}</h2>
+    <!-- Aquí puedes agregar más opciones y funcionalidades de administración -->
+    <p class="text-gray-300">En esta sección podrás gestionar y modificar los datos de tu finca.</p>
+  </div>
+</div>
+{% endblock %}

@@ -12,18 +12,20 @@
       rel="stylesheet"
     />
   </head>
+  <!-- Se agrega el atributo style para definir la imagen de fondo -->
   <body
+    style="background: url('{% static 'img/Perritos.jpg' %}') no-repeat center center fixed; background-size: cover;"
     class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center relative"
   >
     <!-- Bloque de mensajes -->
     {% if messages %}
-        <div class="fixed top-4 right-4 space-y-2">
-            {% for message in messages %}
-                <div class="p-4 rounded-md {{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
+      <div class="fixed top-4 right-4 space-y-2">
+        {% for message in messages %}
+          <div class="p-4 rounded-md {{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
     {% endif %}
 
     <!-- Contenedor principal del formulario de registro -->
@@ -171,7 +173,6 @@
           />
         </div>
         
-
         <!-- Botón Registrarte -->
         <div>
           <button
@@ -213,12 +214,11 @@
             >{% trans "Política de Privacidad" %}</a
           >. {% trans "y" %}
           <a
-          href="{% url 'politica_cookies' %}"
-          class="text-blue-500 hover:underline"
-          >{% trans "Política de Cookies" %}</a>
-        <a>
-      </p>
-    </div>
+            href="{% url 'politica_cookies' %}"
+            class="text-blue-500 hover:underline"
+            >{% trans "Política de Cookies" %}</a>
+        </p>
+      </div>
     </div>
 
     <!-- Scripts -->

@@ -12,7 +12,9 @@
       rel="stylesheet"
     />
   </head>
+  <!-- Se agregó el atributo style para establecer la imagen de fondo -->
   <body
+    style="background: url('{% static 'img/Refugio.jpg' %}') no-repeat center center fixed; background-size: cover;"
     class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center relative"
   >
     {% if messages %}
@@ -32,16 +34,20 @@
           src="{% static 'animations/capibara.json' %}"
           background="transparent"
           speed="1"
-          style="width: 200px; height: 200px border-radius: 50%"
+          style="width: 200px; height: 200px; border-radius: 50%;"
           loop
           autoplay
         ></lottie-player>
-        <h1 class="text-2xl font-bold mb-1">{% trans "@Hybrid" %}</h1>
+        <h1 class="text-2xl font-bold mb-1">{% trans "Little Paws" %}</h1>
         <p class="text-gray-300 text-center text-sm sm:text-base">
-          {% trans "@Hybrid es una app social comunity ecommerce exclusiva dedicada a los animales y la agropecuaria .. Parte de las ganacias de esta compañia esta destinada a donaciones de refugios animales " %}
+          {% trans "Little Paws es una app Beta en prueba social comunity ecommerce exclusiva dedicada a los animales y la agropecuaria y la conexion con la naturaleza " %}
         </p>
+        <p class="text-gray-300 text-center text-2xl sm:text-2xl"><strong>
+          {% trans "Se donara el 40% de los ingresos generados por la plataforma para Refugios de Animales y Animales en vulnerabilidad" %}
+        </strong></p>
         
-        <p class="text-gray-400 text-center mt-2">
+        
+        <p class="text-green-400 text-center mt-2">
           {% trans "Inicia sesión para continuar" %}
         </p>
       </div>
@@ -129,7 +135,7 @@
     </div>
 
      <!-- Footer con selector de idioma -->
-     <footer class="absolute bottom-4 w-full text-center text-gray-400">
+     <footer class="absolute bottom-4 w-full text-center text-blue">
       <div class="flex justify-center flex-wrap gap-2 text-sm">
 
         <!-- Asegúrate de cargar la lista de idiomas -->

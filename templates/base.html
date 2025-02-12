@@ -84,9 +84,11 @@
                 src="{% if perfil and perfil.foto_perfil %}{{ perfil.foto_perfil.url }}{% else %}{% static 'img/vacio.png' %}{% endif %}"
                 class="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
               />
-              <p class="text-center font-semibold">
-                {% trans "Hola! Bienvenido" %}
-              </p>
+              <p class="text-center font-semibold text-green-500">
+                {% trans "Hola! Bienvenid(@)" %} 
+                <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong>
+            </p>
+            
             </div>
             <hr class="border-gray-600" />
 
@@ -162,6 +164,22 @@
 
     <!-- Texto de Opiniones -->
     <span class="whitespace-nowrap">{% trans "Mi Finca" %}</span>
+</a>
+
+<a
+href="{% url 'listar_indices' %}"
+class="flex items-center px-4 py-2 hover:bg-gray-700"
+>
+<!-- Ícono Lottie -->
+<lottie-player
+    src="{% static 'animations/Indice.json' %}"
+    background="transparent"
+    speed="1"
+    style="width: 54px; height: 54px; margin-right: 2px"
+    loop
+    autoplay
+></lottie-player>
+<span class="whitespace-nowrap">{% trans "Indice Precios" %}</span>
 </a>
 
 

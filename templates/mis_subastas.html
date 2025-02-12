@@ -1,0 +1,221 @@
+{# templates/mis_subastas.html #}
+{% extends 'base.html' %}
+{% load static i18n %}
+{% load subasta_filters %}
+
+{% block title %}
+  Mis Subastas - Mi Red Social
+{% endblock %}
+
+{% block extra_head %}
+<link
+  href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+  rel="stylesheet"
+/>
+<style>
+  /* Botón verde */
+  .submit-button {
+    background-color: transparent;
+    border: 2px solid rgb(255, 0, 0);
+    color: rgb(31, 194, 58);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgb(140, 255, 0);
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+  }
+  .submit-button:hover {
+    background-color: rgb(88, 212, 36);
+    color: white;
+    border-color: rgb(255, 1, 1);
+    transform: scale(1.05);
+  }
+
+  /* Botón rojo */
+  .submit-button-rojo {
+    background-color: transparent;
+    border: 2px solid rgb(255, 0, 0);
+    color: rgb(239, 0, 0);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgb(255, 0, 0);
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+  }
+  .submit-button-rojo:hover {
+    background-color: rgb(255, 0, 0);
+    color: white;
+    border-color: rgb(255, 1, 1);
+    transform: scale(1.05);
+  }
+
+  /* Carrusel contenedor */
+  .carousel-container {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+  }
+  .carousel-track {
+    white-space: nowrap;
+    transition: transform 0.3s ease-in-out;
+  }
+  .carousel-slide {
+    display: inline-block;
+    width: 100%;
+    height: 200px;
+    vertical-align: top;
+  }
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Flechas */
+  .carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.5);
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+  .carousel-button:hover {
+    background-color: rgba(0,0,0,0.7);
+  }
+  .carousel-button.left {
+    left: 0.5rem;
+  }
+  .carousel-button.right {
+    right: 0.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+  <!-- Encabezado con Título y botones -->
+  <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+    <h1 class="text-3xl font-bold text-white mb-4 sm:mb-0">
+      Mis Subastas
+    </h1>
+      <a href="{% url 'listar_subastas' %}" class="submit-button">
+        Todas las Subastas
+      </a>
+    </div>
+  </header>
+
+  {% if subastas %}
+    <ul class="space-y-8">
+      {% for subasta in subastas %}
+        <li class="bg-gray-800 shadow rounded p-4 text-white">
+          <div class="flex flex-col md:flex-row md:space-x-6">
+            <!-- Sección de imágenes, documento y video -->
+            <div class="md:w-1/3 mb-4 md:mb-0">
+              {% if subasta.imagenes.all %}
+                <div class="carousel-container mb-4">
+                  <button class="carousel-button left" onclick="prevSlide({{ subasta.id }})">&#9664;</button>
+                  <div id="carousel-track-{{ subasta.id }}" class="carousel-track">
+                    {% for img in subasta.imagenes.all %}
+                      <div class="carousel-slide">
+                        <img src="{{ img.imagen.url }}" alt="Imagen de {{ subasta.titulo }}" />
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <button class="carousel-button right" onclick="nextSlide({{ subasta.id }})">&#9654;</button>
+                </div>
+              {% endif %}
+
+              {% if subasta.document %}
+                <div class="mb-4">
+                  <p class="text-gray-300 font-semibold">Documento:</p>
+                  <a href="{{ subasta.document.url }}" class="text-blue-400 underline" target="_blank" download>
+                    Descargar Documento
+                  </a>
+                </div>
+              {% endif %}
+
+              {% if subasta.video %}
+                <div class="mt-4">
+                  <p class="text-gray-300 font-semibold mb-2">Video:</p>
+                  <video controls class="w-full h-auto rounded">
+                    <source src="{{ subasta.video.url }}" type="video/mp4" />
+                    Tu navegador no soporta la etiqueta de video.
+                  </video>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Detalles de la subasta -->
+            <div class="md:w-2/3">
+              <h2 class="text-2xl font-bold mb-2">{{ subasta.titulo }}</h2>
+              <p class="text-gray-300 mb-2"><strong>Descripción:</strong> {{ subasta.descripcion }}</p>
+              <p class="text-gray-300 mb-2"><strong>Tipo:</strong> {{ subasta.get_tipo_display }}</p>
+              <p class="text-gray-300 mb-2"><strong>Precio Inicial:</strong> ₡{{ subasta.precio_inicial }}</p>
+              <p class="text-gray-300 mb-2"><strong>Precio Reserva:</strong> ₡{{ subasta.precio_reserva }}</p>
+              <p class="text-gray-300 mb-2"><strong>Fecha de Inicio:</strong> {{ subasta.fecha_inicio }}</p>
+              <p class="text-gray-300 mb-4"><strong>Fecha de Fin:</strong> {{ subasta.fecha_fin }}</p>
+
+              <!-- Botones para editar y eliminar -->
+              <div class="flex gap-4">
+                <a href="{% url 'editar_subasta' subasta.id %}" class="submit-button">
+                  Editar
+                </a>
+                <form action="{% url 'eliminar_subasta' subasta.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="submit-button-rojo">
+                    Eliminar
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-white">No tienes subastas publicadas.</p>
+  {% endif %}
+</div>
+
+<!-- Script para el carrusel -->
+<script>
+  // Diccionario para almacenar el índice actual de cada carrusel
+  const currentIndex = {};
+
+  function showSlide(subastaId, index) {
+    const track = document.getElementById(`carousel-track-${subastaId}`);
+    if (!track) return;
+    const slides = track.querySelectorAll('.carousel-slide');
+    const total = slides.length;
+    if (index < 0) index = total - 1;
+    if (index >= total) index = 0;
+    currentIndex[subastaId] = index;
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }
+  function prevSlide(subastaId) {
+    const index = currentIndex[subastaId] || 0;
+    showSlide(subastaId, index - 1);
+  }
+  function nextSlide(subastaId) {
+    const index = currentIndex[subastaId] || 0;
+    showSlide(subastaId, index + 1);
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const allTracks = document.querySelectorAll('[id^="carousel-track-"]');
+    allTracks.forEach(track => {
+      const subastaId = track.id.replace('carousel-track-', '');
+      currentIndex[subastaId] = 0;
+      showSlide(subastaId, 0);
+    });
+  });
+</script>
+{% endblock %}

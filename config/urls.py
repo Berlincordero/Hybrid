@@ -33,6 +33,7 @@ urlpatterns += i18n_patterns(
     path('comunity/', include('comunity.urls')),
     path('galeria/', include('galeria.urls')),
     path('vivero/', include('vivero.urls')),
+    path('Indices/', include('Indices.urls')),  # <--- Aquí importamos nuestras URLs de 'Indices'
 )
 
 if settings.DEBUG:

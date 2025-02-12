@@ -1,7 +1,127 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mis Fincas{% endblock %}
 {% block content %}
+<!-- Estilos para la animación de parpadeo -->
+<style>
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  .blink {
+    animation: blink 1s infinite;
+  }
+</style>
+
 <div class="container mx-auto px-4 py-4">
-  <!-- Título principal -->
+
+  <!-- Card Índice de Productos, Insumos y Animales -->
+  <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white mb-4">
+    <h2 class="text-xl font-bold mb-2">Índice de Productos, Insumos y Animales</h2>
+    <div class="grid grid-cols-3 gap-4">
+      
+      <!-- Productos -->
+      <div class="flex flex-col items-center">
+        <span class="text-lg font-semibold">Productos</span>
+        <div class="flex items-center">
+          <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
+          <span class="ml-1 text-sm">12/02/2025</span>
+          <span class="ml-2 text-sm font-bold">13%</span>
+        </div>
+        <div class="mt-1 text-xs text-gray-300 text-center">
+          Antes: 56 col<br>
+          Sube: 24<br>
+          Total: 80<br>
+          Precio Actual: $100
+        </div>
+        <div class="mt-1 text-xs text-yellow-400">
+          Inflación: 33%
+        </div>
+        <!-- Imagen pequeña con opción a subir nueva imagen -->
+        <div class="mt-2 relative">
+          <img src="{% static 'img/tomate.png' %}" alt="Producto" class="w-10 h-10 rounded">
+          <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 cursor-pointer"
+               onclick="document.getElementById('file-input-producto').click()">
+            <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" style="width: 40px; height: 40px;" loop autoplay></lottie-player>
+          </div>
+          <!-- Formulario para subir imagen de producto -->
+          <form id="product-image-form" method="post" action="{% url 'upload_producto_imagen' %}" enctype="multipart/form-data" class="hidden">
+            {% csrf_token %}
+            <input type="file" name="imagen" id="file-input-producto" class="hidden" accept="image/*" onchange="this.form.submit()">
+          </form>
+        </div>
+      </div>
+      
+      <!-- Insumos -->
+      <div class="flex flex-col items-center">
+        <span class="text-lg font-semibold">Insumos</span>
+        <div class="flex items-center">
+          <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
+          <span class="ml-1 text-sm">11/02/2025</span>
+          <span class="ml-2 text-sm font-bold">13%</span>
+        </div>
+        <div class="mt-1 text-xs text-gray-300 text-center">
+          Antes: 56 col<br>
+          Sube: 24<br>
+          Total: 80<br>
+          Precio Actual: $80
+        </div>
+        <div class="mt-1 text-xs text-yellow-400">
+          Inflación: 33%
+        </div>
+        <!-- Imagen pequeña con opción a subir nueva imagen -->
+        <div class="mt-2 relative">
+          <img src="{% static 'images/insumo_placeholder.png' %}" alt="Insumo" class="w-10 h-10 rounded">
+          <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 cursor-pointer"
+               onclick="document.getElementById('file-input-insumo').click()">
+            <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" style="width: 40px; height: 40px;" loop autoplay></lottie-player>
+          </div>
+          <!-- Formulario para subir imagen de insumo -->
+          <form id="insumo-image-form" method="post" action="{% url 'upload_insumo_imagen' %}" enctype="multipart/form-data" class="hidden">
+            {% csrf_token %}
+            <input type="file" name="imagen" id="file-input-insumo" class="hidden" accept="image/*" onchange="this.form.submit()">
+          </form>
+        </div>
+      </div>
+      
+      <!-- Animales -->
+      <div class="flex flex-col items-center">
+        <span class="text-lg font-semibold">Animales</span>
+        <div class="flex items-center">
+          <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
+          <span class="ml-1 text-sm">10/02/2025</span>
+          <span class="ml-2 text-sm font-bold">13%</span>
+        </div>
+        <div class="mt-1 text-xs text-gray-300 text-center">
+          Antes: 56 col<br>
+          Sube: 24<br>
+          Total: 80<br>
+          Precio Actual: $120
+        </div>
+        <div class="mt-1 text-xs text-yellow-400">
+          Inflación: 33%
+        </div>
+        <!-- Imagen pequeña con opción a subir nueva imagen -->
+        <div class="mt-2 relative">
+          <img src="{% static 'images/animales_placeholder.png' %}" alt="Animales" class="w-10 h-10 rounded">
+          <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 cursor-pointer"
+               onclick="document.getElementById('file-input-animales').click()">
+            <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" style="width: 40px; height: 40px;" loop autoplay></lottie-player>
+          </div>
+          <!-- Formulario para subir imagen de animales -->
+          <form id="animales-image-form" method="post" action="{% url 'upload_animales_imagen' %}" enctype="multipart/form-data" class="hidden">
+            {% csrf_token %}
+            <input type="file" name="imagen" id="file-input-animales" class="hidden" accept="image/*" onchange="this.form.submit()">
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Título principal para las fincas -->
   <h1 class="text-2xl font-bold text-white mb-4">
     Mis Fincas
   </h1>
@@ -12,29 +132,81 @@
   </a>
 
   <!-- Grid responsive para mostrar las fincas -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-5">
     {% for finca in fincas %}
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white w-full">
       <p class="text-lg text-green-400">Nombre de mi Finca</p>
       <h2 class="text-lg font-bold mb-2">{{ finca.nombre }}</h2>
       <p class="text-sm text-gray-300 mb-2">{{ finca.descripcion }}</p>
       <p class="text-xs text-gray-400">Ubicación: {{ finca.ubicacion }}</p>
-      <p class="text-xs text-gray-400 mb-2">Tamaño: {{ finca.tamaño }} hectáreas</p>
+      <p class="text-xs text-gray-400 mb-2">Tamaño en Metros Cuadrados: {{ finca.tamaño }} Metros</p>
       
-      {% if finca.imagen %}
-      <img src="{{ finca.imagen.url }}" alt="{{ finca.nombre }}" class="w-full h-auto object-cover rounded mb-2">
-      {% endif %}
-
-      <form method="post" action="{% url 'eliminar_finca' finca.id %}">
+      <!-- Bloque de edición de imagen integrado con Lottie -->
+      <div class="relative mt-2">
+        {% if finca.imagen %}
+          <img src="{{ finca.imagen.url }}" alt="{{ finca.nombre }}" class="w-full h-auto object-cover rounded mb-2">
+        {% else %}
+          <img src="{% static 'images/default_finca.png' %}" alt="{{ finca.nombre }}" class="w-full h-auto object-cover rounded mb-2">
+        {% endif %}
+        <!-- Overlay: al hacer clic se activa el input oculto para editar la imagen -->
+        <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 cursor-pointer"
+             onclick="document.getElementById('file-input-{{ finca.id }}').click()">
+          <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></lottie-player>
+        </div>
+      </div>
+      <!-- Formulario oculto para editar la imagen sin salir de la vista -->
+      <form id="image-edit-form-{{ finca.id }}" method="post" action="{% url 'editar_finca_imagen' finca.id %}" enctype="multipart/form-data" class="hidden">
         {% csrf_token %}
-        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
-          Eliminar
-        </button>
+        <input type="file" name="imagen" id="file-input-{{ finca.id }}" class="hidden" accept="image/*" onchange="this.form.submit()">
       </form>
+  
+      <!-- Botones: Administrar Finca y Eliminar -->
+      <div class="flex flex-col sm:flex-row gap-2">
+        <a href="{% url 'administrar_finca' finca.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+          Administrar
+        </a>
+        <form method="post" action="{% url 'eliminar_finca' finca.id %}">
+          {% csrf_token %}
+          <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+            Eliminar
+          </button>
+        </form>
+      </div>
     </div>
     {% empty %}
-    <p class="text-white">No tienes fincas registradas.</p>
+      <p class="text-white">No tienes fincas registradas.</p>
     {% endfor %}
   </div>
+  
+  <!-- Card de Recomendaciones -->
+  <div class="bg-gray-800 border border-gray-700 rounded p-4 mt-8">
+    <div class="flex items-center mb-4">
+      <!-- Contenedor para la animación Lottie -->
+      <div id="lottieRecomendacion" class="w-14 h-14"></div>
+      <!-- Título con estilos: rojo que cambia a verde claro al pasar el cursor -->
+      <h2 class="text-2xl font-bold ml-2 text-red-600 hover:text-green-300 transition-colors duration-300">
+        Recomendaciones
+      </h2>
+    </div>
+    <ul class="list-disc list-inside text-sm">
+      <li class="text-yellow-400">
+        Administre la finca conforme a la actividad sea adecuada. Por ejemplo, si es de uso agrícola con limitación de construcción, explote todo el terreno para la agricultura y divídalo en secciones.
+      </li>
+    </ul>
+  </div>
+  
+  <!-- Lottie script (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
+  <script>
+    // Cargar la animación Lottie en el contenedor "lottieRecomendacion"
+    lottie.loadAnimation({
+      container: document.getElementById('lottieRecomendacion'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: '{% static "animations/bombillo.json" %}',
+    });
+  </script>
+  
 </div>
 {% endblock %}

@@ -10,76 +10,74 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
   <style>
-    /* Estilos para inputs de texto, textarea y selects */
+    /* Estilos generales para inputs, textarea, etc. (ya existentes) */
     input[type="text"],
+    input[type="number"],
     textarea,
     select {
-      background-color: #1a202c; /* bg-gray-900 */
+      background-color: #1a202c;
       color: white;
-      border: 2px solid #10b981; /* Verde-500 */
-      border-radius: 0.5rem; /* rounded-lg */
-      padding: 0.5rem 1rem; /* Tailwind py-2 px-4 */
+      border: 2px solid #10b981;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
       width: 100%;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
-    input[type="text"]::placeholder,
+    input::placeholder,
     textarea::placeholder {
-      color: #718096; /* text-gray-500 */
+      color: #718096;
     }
-    input[type="text"]:focus,
+    input:focus,
     textarea:focus,
     select:focus {
       outline: none;
-      border-color: #059669; /* Verde-600 */
+      border-color: #059669;
       box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
     }
-
-    /* Estilos para input de archivo (imagen de la finca) */
+    /* Estilos para el input de archivo */
     input[type="file"] {
-      background-color: transparent; /* Sin fondo */
-      color: #10b981; /* Verde-500 */
-      border: 2px solid #10b981; /* Verde-500 */
-      border-radius: 0.5rem; /* rounded-lg */
-      padding: 0.5rem 1rem; /* Tailwind py-2 px-4 */
+      background-color: transparent;
+      color: #10b981;
+      border: 2px solid #10b981;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
       display: inline-block;
     }
     input[type="file"]::-webkit-file-upload-button {
-      visibility: hidden; /* Esconde el botón nativo en navegadores WebKit */
+      visibility: hidden;
     }
     input[type="file"]::before {
       content: "{% trans 'Elegir Archivo' %}";
       display: inline-block;
       background-color: transparent;
-      color: #10b981; /* Verde-500 */
-      border: 2px solid #10b981; /* Verde-500 */
-      border-radius: 0.5rem; /* rounded-lg */
+      color: #10b981;
+      border: 2px solid #10b981;
+      border-radius: 0.5rem;
       padding: 0.5rem 1rem;
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
     }
     input[type="file"]:hover::before {
-      background-color: #10b981; /* Verde-500 */
+      background-color: #10b981;
       color: white;
-      border-color: #059669; /* Verde-600 */
+      border-color: #059669;
       transform: scale(1.05);
     }
-
     /* Estilos para labels */
     label {
       display: block;
-      font-size: 0.875rem; /* text-sm */
-      font-weight: 500;    /* font-medium */
-      color: #d1d5db;      /* text-gray-300 */
-      margin-bottom: 0.25rem; /* mb-1 */
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #d1d5db;
+      margin-bottom: 0.25rem;
     }
-
     /* Estilos para la tarjeta */
     .card {
-      background-color: #2d3748; /* bg-gray-800 */
-      border-radius: 0.5rem; /* rounded-xl */
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-lg */
+      background-color: #2d3748;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
       padding: 2rem;
       transition: transform 0.3s, box-shadow 0.3s;
     }
@@ -87,61 +85,36 @@
       transform: translateY(-5px);
       box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
     }
-
-    /* Botón verde con hover */
+    /* Botón verde */
     .submit-button {
-      background-color: transparent; /* Sin fondo */
-      border: 2px solid #10b981; /* Verde-500 */
-      color: #10b981; /* Verde-500 */
-      font-weight: 600; /* font-semibold */
-      padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
-      border-radius: 0.5rem; /* rounded-lg */
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+      background-color: transparent;
+      border: 2px solid #10b981;
+      color: #10b981;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
       cursor: pointer;
     }
     .submit-button:hover {
-      background-color: #10b981; /* Verde-500 */
+      background-color: #10b981;
       color: white;
-      border-color: #059669; /* Verde-600 */
+      border-color: #059669;
       transform: scale(1.05);
     }
-
-    /* Ajustes para el enlace de regresar */
-    .back-link {
-      color: #10b981; /* Verde-500 */
-      transition: color 0.3s;
+    /* Estilos para el overlay de edición de imagen */
+    .relative { position: relative; }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
-    .back-link:hover {
-      color: #059669; /* Verde-600 */
-    }
-    input[type="text"],
-input[type="number"], /* Agrega esta línea */
-textarea,
-select {
-  background-color: #1a202c; /* bg-gray-900 */
-  color: white;
-  border: 2px solid #10b981; /* Verde-500 */
-  border-radius: 0.5rem; /* rounded-lg */
-  padding: 0.5rem 1rem; /* Tailwind py-2 px-4 */
-  width: 100%;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-input[type="text"]::placeholder,
-input[type="number"]::placeholder, /* Agrega esta línea si deseas placeholders oscuros */
-textarea::placeholder {
-  color: #718096; /* text-gray-500 */
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus, /* Agrega esta línea */
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: #059669; /* Verde-600 */
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3); /* Verde con transparencia */
-}
+    .hidden { display: none; }
   </style>
 </head>
 
@@ -150,8 +123,8 @@ select:focus {
 
     <!-- Enlace para regresar al listado de fincas -->
     <div class="mb-4">
-      <a href="{% url 'listar_fincas' %}" class="inline-flex items-center back-link">
-        <span class="text-2xl mr-2">&#8592;</span>
+      <a href="{% url 'listar_fincas' %}" class="inline-flex items-center text-2xl text-green-500 hover:text-green-600">
+        <span class="mr-2">&#8592;</span>
         <span>{% trans "Regresar a mis fincas" %}</span>
       </a>
     </div>
@@ -186,7 +159,7 @@ select:focus {
           {% endif %}
         </div>
 
-        <!-- Campo Descripción (Textarea) -->
+        <!-- Campo Descripción -->
         <div>
           {{ form.descripcion.label_tag }}
           {{ form.descripcion }}
@@ -204,13 +177,42 @@ select:focus {
           {% endif %}
         </div>
 
-        <!-- Campo Imagen (tipo file) -->
+        <!-- Campo Servicios -->
+        <div>
+          {{ form.servicios.label_tag }}
+          {{ form.servicios }}
+          {% if form.servicios.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.servicios.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo Tipo de Actividad -->
+        <div>
+          {{ form.tipo_actividad.label_tag }}
+          {{ form.tipo_actividad }}
+          {% if form.tipo_actividad.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.tipo_actividad.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo Imagen y vista previa con overlay Lottie -->
         <div>
           {{ form.imagen.label_tag }}
           {{ form.imagen }}
           {% if form.imagen.errors %}
             <p class="text-red-400 text-sm mt-1">{{ form.imagen.errors }}</p>
           {% endif %}
+          
+          <!-- Contenedor para la vista previa de la imagen -->
+          <div class="relative mt-4">
+            <!-- Imagen de vista previa, inicialmente oculta -->
+            <img id="imagePreview" src="#" alt="Vista previa de la imagen" class="w-full h-auto object-cover rounded mb-2 hidden">
+            <!-- Overlay con Lottie para editar la imagen -->
+            <div id="editOverlay" class="overlay hidden">
+              <!-- Contenedor donde se cargará la animación Lottie -->
+              <div id="lottieContainer" class="w-16 h-16"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Botón de Envío -->
@@ -220,6 +222,44 @@ select:focus {
       </form>
     </section>
   </div>
+
+  <!-- Lottie script (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const imageInput = document.getElementById("id_imagen"); // Django asigna el id "id_imagen" al input
+      const imagePreview = document.getElementById("imagePreview");
+      const editOverlay = document.getElementById("editOverlay");
+
+      // Cargar la animación Lottie en el contenedor
+      const animation = lottie.loadAnimation({
+        container: document.getElementById('lottieContainer'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        // Reemplaza con la URL de tu animación Lottie o usa un archivo local
+        path: 'https://assets10.lottiefiles.com/packages/lf20_kkflmtur.json'
+      });
+
+      // Cuando se selecciona una imagen, actualizar la vista previa y mostrar el overlay
+      imageInput.addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            imagePreview.classList.remove("hidden");
+            editOverlay.classList.remove("hidden");
+          }
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Al hacer clic en el overlay, se dispara el click del input de archivo para poder cambiar la imagen
+      editOverlay.addEventListener("click", function() {
+        imageInput.click();
+      });
+    });
+  </script>
 </body>
 </html>
-

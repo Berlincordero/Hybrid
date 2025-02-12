@@ -7,17 +7,13 @@
 {% endblock %}
 
 {% block extra_head %}
-<link
-  href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-  rel="stylesheet"
-/>
-
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 <style>
   /* Botón verde */
   .submit-button {
     background-color: transparent;
-    border: 2px solidrgb(255, 0, 0);
-    color:rgb(31, 194, 58);
+    border: 2px solid rgb(255, 0, 0);
+    color: rgb(31, 194, 58);
     font-weight: 600;
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
@@ -28,17 +24,16 @@
     text-align: center;
   }
   .submit-button:hover {
-    background-color:rgb(88, 212, 36);
+    background-color: rgb(88, 212, 36);
     color: white;
-    border-color:rgb(255, 1, 1);
+    border-color: rgb(255, 1, 1);
     transform: scale(1.05);
   }
-
-  /* Botón verde */
+  /* Botón rojo */
   .submit-button-rojo {
     background-color: transparent;
-    border: 2px solidrgb(255, 0, 0);
-    color:rgb(239, 0, 0);
+    border: 2px solid rgb(255, 0, 0);
+    color: rgb(239, 0, 0);
     font-weight: 600;
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
@@ -49,12 +44,11 @@
     text-align: center;
   }
   .submit-button-rojo:hover {
-    background-color:rgb(255, 0, 0);
+    background-color: rgb(255, 0, 0);
     color: white;
-    border-color:rgb(255, 1, 1);
+    border-color: rgb(255, 1, 1);
     transform: scale(1.05);
   }
-
   /* Botón ofertar */
   .ofertar-button {
     background-color: #2563eb;
@@ -69,7 +63,6 @@
     background-color: #1d4ed8;
     transform: scale(1.03);
   }
-
   /* Carrusel contenedor */
   .carousel-container {
     position: relative;
@@ -91,7 +84,6 @@
     height: 100%;
     object-fit: cover;
   }
-
   /* Flechas */
   .carousel-button {
     position: absolute;
@@ -123,29 +115,17 @@
       Subastas Disponibles
     </h1>
     <div class="flex flex-col sm:flex-row gap-4">
-      <a href="{% url 'crear_subasta' %}" class="submit-button">
-        Crear Subasta
-      </a>
-      <a href="{% url 'crear_subasta' %}" class="submit-button">
-        Mis Subastas
-      </a>
-      <a href="{% url 'crear_subasta' %}" class="submit-button-rojo">
-        En Vivo
-      </a>
+      <a href="{% url 'crear_subasta' %}" class="submit-button">Crear Subasta</a>
+      <a href="{% url 'mis_subastas' %}" class="submit-button">Mis Subastas</a>
+      <a href="{% url 'crear_subasta' %}" class="submit-button-rojo">En Vivo</a>
     </div>
   </header>
 
-  <!-- Listado de Categorías (botones ancla) -->
-  <h2 class="text-2xl font-bold text-white mb-4">
-    Listado de Categorías
-  </h2>
-
+  <!-- Listado de Categorías -->
+  <h2 class="text-2xl font-bold text-white mb-4">Listado de Categorías</h2>
   <div class="flex flex-wrap gap-4 mb-8">
     {% for categoria in categorias %}
-      <a
-        class="bg-green-700 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-colors duration-300"
-        href="#{{ categoria }}"
-      >
+      <a class="bg-green-700 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-colors duration-300" href="#{{ categoria }}">
         {{ categoria|capfirst }}
       </a>
     {% endfor %}
@@ -154,17 +134,13 @@
   <!-- Sección de subastas por categoría -->
   {% for categoria in categorias %}
     <section id="{{ categoria }}" class="mb-8">
-      <h3 class="text-xl font-semibold text-white mb-4">
-        {{ categoria|capfirst }}
-      </h3>
-
+      <h3 class="text-xl font-semibold text-white mb-4">{{ categoria|capfirst }}</h3>
       <ul class="space-y-4">
         {% for subasta in subastas %}
           {% if subasta.tipo == categoria %}
             <li class="bg-gray-800 shadow rounded p-4 text-white">
               <div class="flex flex-col md:flex-row md:space-x-6">
-                
-                <!-- Imágenes (carrusel) + documento + video -->
+                <!-- Imágenes, documento y video -->
                 <div class="md:w-1/3 mb-4 md:mb-0">
                   {% if subasta.imagenes.all %}
                     <div class="carousel-container mb-4">
@@ -172,31 +148,21 @@
                       <div id="carousel-track-{{ subasta.id }}" class="carousel-track">
                         {% for img in subasta.imagenes.all %}
                           <div class="carousel-slide">
-                            <img
-                              src="{{ img.imagen.url }}"
-                              alt="Imagen de {{ subasta.titulo }}"
-                            />
+                            <img src="{{ img.imagen.url }}" alt="Imagen de {{ subasta.titulo }}" />
                           </div>
                         {% endfor %}
                       </div>
                       <button class="carousel-button right" onclick="nextSlide({{ subasta.id }})">&#9654;</button>
                     </div>
                   {% endif %}
-
                   {% if subasta.document %}
                     <div class="mb-4">
                       <p class="text-gray-300 font-semibold">Documento:</p>
-                      <a
-                        href="{{ subasta.document.url }}"
-                        class="text-blue-400 underline"
-                        target="_blank"
-                        download
-                      >
+                      <a href="{{ subasta.document.url }}" class="text-blue-400 underline" target="_blank" download>
                         Descargar Documento
                       </a>
                     </div>
                   {% endif %}
-
                   {% if subasta.video %}
                     <div class="mt-4">
                       <p class="text-gray-300 font-semibold mb-2">Video:</p>
@@ -207,46 +173,48 @@
                     </div>
                   {% endif %}
                 </div>
-
                 <!-- Detalles de la subasta -->
                 <div class="md:w-2/3">
-                  <h4 class="text-2xl font-bold mb-2">
-                    {{ subasta.titulo }}
-                  </h4>
-                  <p class="text-gray-300 mb-2">
-                    <strong>Descripción:</strong> {{ subasta.descripcion }}
-                  </p>
-                  <p class="text-gray-300 mb-2">
-                    <strong>Precio Inicial:</strong> ₡{{ subasta.precio_inicial }}
-                  </p>
-                  <p class="text-gray-300 mb-2">
-                    <strong>Precio Reserva:</strong> ₡{{ subasta.precio_reserva }}
-                  </p>
-                  <p class="text-gray-300 mb-2">
-                    <strong>Fecha de Inicio:</strong> {{ subasta.fecha_inicio }}
-                  </p>
-                  <p class="text-gray-300 mb-4">
-                    <strong>Fecha de Fin:</strong> {{ subasta.fecha_fin }}
-                  </p>
-
+                  <h4 class="text-2xl font-bold mb-2">{{ subasta.titulo }}</h4>
+                  <p class="text-gray-300 mb-2"><strong>Descripción:</strong> {{ subasta.descripcion }}</p>
+                  <p class="text-gray-300 mb-2"><strong>Precio Inicial:</strong> ₡{{ subasta.precio_inicial }}</p>
+                  <p class="text-gray-300 mb-2"><strong>Precio Reserva:</strong> ₡{{ subasta.precio_reserva }}</p>
+                  <p class="text-gray-300 mb-2"><strong>Fecha de Inicio:</strong> {{ subasta.fecha_inicio }}</p>
+                  <p class="text-gray-300 mb-4"><strong>Fecha de Fin:</strong> {{ subasta.fecha_fin }}</p>
+                  
+                  <!-- Nombre del vendedor -->
+                  <p class="text-gray-300 mb-4"><strong>Vendedor:</strong> {{ subasta.vendedor.username }}</p>
+                  
+                  <!-- Calificación interactiva -->
+                  <div class="rating" data-subasta-id="{{ subasta.id }}" data-rate-url="{% url 'rate_subasta' subasta.id %}">
+                    <strong class="text-gray-300 mr-2">Calificación:</strong>
+                    <div class="flex">
+                      {% for i in "12345"|make_list %}
+                        <span class="star cursor-pointer" data-value="{{ forloop.counter }}">
+                          {% if forloop.counter <= subasta.rating|floatformat:0 %}
+                            <svg class="w-5 h-5 text-yellow-400 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                              <path d="M10 15l-5.878 3.09 1.123-6.545L.49 6.91l6.564-.955L10 0l2.945 5.955 6.564.955-4.755 4.635 1.123 6.545z"/>
+                            </svg>
+                          {% else %}
+                            <svg class="w-5 h-5 text-gray-400 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                              <path d="M10 15l-5.878 3.09 1.123-6.545L.49 6.91l6.564-.955L10 0l2.945 5.955 6.564.955-4.755 4.635 1.123 6.545z"/>
+                            </svg>
+                          {% endif %}
+                        </span>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <p class="text-gray-300 mb-4 text-sm">Califica conforme el producto - precio - calidad</p>
+                  
                   <!-- Ofertas -->
-                  <h5 class="text-lg font-semibold mb-2">
-                    Ofertas
-                  </h5>
+                  <h5 class="text-lg font-semibold mb-2">Ofertas</h5>
                   <ul class="list-disc list-inside text-gray-300 mb-4">
                     {% for oferta in subasta.ofertas.all %}
                       <li>
                         {{ oferta.comprador.username }}
-
-                        <!-- Link que diga (enviar msj) al lado del nombre -->
-                        <a
-                          href="{% url 'chat_list' %}?user_id={{ oferta.comprador.id }}"
-                          class="text-blue-400 underline ml-2"
-                          title="Enviar msj a {{ oferta.comprador.username }}"
-                        >
+                        <a href="{% url 'chat_list' %}?user_id={{ oferta.comprador.id }}" class="text-blue-400 underline ml-2" title="Enviar msj a {{ oferta.comprador.username }}">
                           (enviar msj)
                         </a>
-
                         : ₡{{ oferta.monto }}
                         <small class="text-red-500">({{ oferta.fecha }})</small>
                       </li>
@@ -254,28 +222,21 @@
                       <li>No hay ofertas aún.</li>
                     {% endfor %}
                   </ul>
-
+                  
                   <!-- Formulario de Oferta -->
                   <div class="mt-4">
-                    <h5 class="text-lg font-semibold mb-2 text-red-500">
-                      Hacer una oferta
-                    </h5>                    
+                    <h5 class="text-lg font-semibold mb-2 text-red-500">Hacer una oferta</h5>
                     <form method="post" class="space-y-4">
                       {% csrf_token %}
                       <input type="hidden" name="subasta_id" value="{{ subasta.id }}">
                       {{ oferta_forms|get_item:subasta.id }}
-                      <button type="submit" class="submit-button-rojo">
-                        Ofertar
-                      </button>
+                      <button type="submit" class="submit-button-rojo">Ofertar</button>
                     </form>
-
-                    <!-- Mensaje debajo del formulario -->
                     <p class="text-sm text-green-400 mt-2">
                       Después de la fecha no se aceptarán ofertas aunque la propongan.
                     </p>
                   </div>
                 </div>
-
               </div>
             </li>
           {% endif %}
@@ -287,23 +248,17 @@
 
 <!-- Script para el carrusel -->
 <script>
-  // Diccionario que guarda el índice actual de cada carrusel
   const currentIndex = {};
-
   function showSlide(subastaId, index) {
     const track = document.getElementById(`carousel-track-${subastaId}`);
     if (!track) return;
-
     const slides = track.querySelectorAll('.carousel-slide');
     const total = slides.length;
-
     if (index < 0) index = total - 1;
     if (index >= total) index = 0;
-
     currentIndex[subastaId] = index;
     track.style.transform = `translateX(-${index * 100}%)`;
   }
-
   function prevSlide(subastaId) {
     const index = currentIndex[subastaId] || 0;
     showSlide(subastaId, index - 1);
@@ -312,7 +267,6 @@
     const index = currentIndex[subastaId] || 0;
     showSlide(subastaId, index + 1);
   }
-
   document.addEventListener('DOMContentLoaded', () => {
     const allTracks = document.querySelectorAll('[id^="carousel-track-"]');
     allTracks.forEach(track => {
@@ -321,5 +275,46 @@
       showSlide(subastaId, 0);
     });
   });
+</script>
+
+<!-- JavaScript para la calificación interactiva -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.rating').forEach(function(container) {
+    container.querySelectorAll('.star').forEach(function(star) {
+      star.addEventListener('click', function() {
+        var ratingValue = this.getAttribute('data-value');
+        var url = container.getAttribute('data-rate-url');
+        var csrfToken = '{{ csrf_token }}';
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+          },
+          body: new URLSearchParams({ rating: ratingValue })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.rating) {
+            var newRating = Math.round(data.rating);
+            container.querySelectorAll('.star').forEach(function(s) {
+              var starValue = parseInt(s.getAttribute('data-value'));
+              var svg = s.querySelector('svg');
+              if (starValue <= newRating) {
+                svg.classList.remove('text-gray-400');
+                svg.classList.add('text-yellow-400');
+              } else {
+                svg.classList.remove('text-yellow-400');
+                svg.classList.add('text-gray-400');
+              }
+            });
+          }
+        })
+        .catch(error => console.error('Error al enviar calificación:', error));
+      });
+    });
+  });
+});
 </script>
 {% endblock %}

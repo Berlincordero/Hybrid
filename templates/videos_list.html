@@ -53,7 +53,7 @@
     .video-container {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* 16:9 -> 9/16 = 0.5625 = 56.25% */
+      padding-top: 56.25%; /* 16:9 -> 9/16 = 56.25% */
     }
     .video-container video {
       position: absolute;
@@ -61,9 +61,6 @@
       left: 0;
       width: 100%;
       height: 100%;
-      /* Usa object-fit según prefieras:
-         - cover: el video cubre todo el contenedor (puede recortarse)
-         - contain: se muestra completo pero puede dejar espacios en negro */
       object-fit: cover;
     }
   </style>
@@ -79,7 +76,7 @@
         <a href="{% url 'video_upload' %}" class="submit-button-rojo">
           {% trans "Subir Video" %}
         </a>
-        <a href="{% url 'video_upload' %}" class="submit-button-verde">
+        <a href="{% url 'personal_gallery' %}" class="submit-button-verde">
           {% trans "Mis Videos" %}
         </a>
       </div>
@@ -92,7 +89,7 @@
         {% for video in top_videos_reproducidos %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="video-container mb-2">
-              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
+              <video controls preload="metadata" poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -119,7 +116,7 @@
         {% for video in top_videos_estrellas %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="video-container mb-2">
-              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
+              <video controls preload="metadata" poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -146,7 +143,7 @@
         {% for video in top_bloger_videos %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="video-container mb-2">
-              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
+              <video controls preload="metadata" poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -174,7 +171,7 @@
         {% for video in noticias_consejos_cursos %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="video-container mb-2">
-              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
+              <video controls preload="metadata" poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -201,7 +198,7 @@
         {% for video in bloger %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="video-container mb-2">
-              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
+              <video controls preload="metadata" poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -228,7 +225,7 @@
         {% for video in publicitario_servprof %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="video-container mb-2">
-              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
+              <video controls preload="metadata" poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>
@@ -255,7 +252,7 @@
         {% for video in personal %}
           <div class="bg-gray-800 shadow p-4 rounded">
             <div class="video-container mb-2">
-              <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
+              <video controls preload="metadata" poster="{% static 'medios/default-thumbnail.jpg' %}">
                 <source src="{{ video.video_file.url }}" type="video/mp4">
                 {% trans "Tu navegador no soporta videos HTML5." %}
               </video>

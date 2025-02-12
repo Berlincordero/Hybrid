@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+  {% trans "Mis Videos" %} - Medios
+{% endblock %}
+
+{% block extra_head %}
+  <!-- Incluye los estilos de TailwindCSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .submit-button-rojo {
+      background-color: transparent;
+      border: 2px solid rgb(185, 16, 16);
+      color: rgb(196, 10, 10);
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgb(243, 16, 16);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+    }
+    .submit-button-rojo:hover {
+      background-color: rgb(198, 6, 6);
+      color: white;
+      border-color: rgb(150, 5, 5);
+      transform: scale(1.05);
+    }
+    .submit-button-verde {
+      background-color: transparent;
+      border: 2px solid rgb(185, 16, 16);
+      color: rgb(92, 248, 78);
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgb(77, 246, 114);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+    }
+    .submit-button-verde:hover {
+      background-color: rgb(130, 241, 100);
+      color: white;
+      border-color: rgb(72, 254, 72);
+      transform: scale(1.05);
+    }
+    /* Contenedor para mantener la relación de aspecto 16:9 */
+    .video-container {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 */
+    }
+    .video-container video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="container mx-auto p-4">
+    <!-- Encabezado -->
+    <header class="flex flex-col items-center justify-between mb-6 space-y-4">
+      <h1 class="text-3xl font-bold">{% trans "Mis Videos" %}</h1>
+      <div class="flex space-x-4">
+        <a href="{% url 'video_upload' %}" class="submit-button-rojo">
+          {% trans "Subir Video" %}
+        </a>
+        <a href="{% url 'videos_list' %}" class="submit-button-verde">
+          {% trans "Todos los Videos" %}
+        </a>
+      </div>
+    </header>
+
+    <!-- Galería Personal -->
+    <section class="mb-8">
+      {% if videos %}
+        <div class="grid gap-4 grid-cols-1">
+          {% for video in videos %}
+            <div class="bg-gray-800 shadow p-4 rounded">
+              <div class="video-container mb-2">
+                <video controls poster="{% static 'medios/default-thumbnail.jpg' %}">
+                  <source src="{{ video.video_file.url }}" type="video/mp4">
+                  {% trans "Tu navegador no soporta videos HTML5." %}
+                </video>
+              </div>
+              <h2 class="text-lg font-semibold mb-1">{{ video.titulo }}</h2>
+              <p class="text-sm text-gray-400 mb-1">
+                {% trans "Subido el" %} {{ video.created_at|date:"d/m/Y H:i" }}
+              </p>
+              <a href="{% url 'video_detail' video.pk %}" class="text-blue-400 hover:underline">
+                {% trans "Ver Detalles" %}
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-gray-400">{% trans "Aún no has subido videos." %}</p>
+      {% endif %}
+    </section>
+  </div>
+{% endblock %}

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'comunity',
     'galeria',
     'vivero',
+    'Indices',
 ]
 
 # Middleware

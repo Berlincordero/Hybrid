@@ -104,3 +104,15 @@ def video_like(request, pk):
     video.estrellas += 1
     video.save()
     return redirect('video_detail', pk=pk)
+
+@login_required
+def personal_gallery(request):
+    """
+    Vista para la galería personal del usuario: muestra únicamente los videos
+    subidos por el usuario actual.
+    """
+    videos = Video.objects.filter(autor=request.user).order_by('-created_at')
+    context = {
+        "videos": videos,
+    }
+    return render(request, "personal_gallery.html", context)

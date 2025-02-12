@@ -1,0 +1,63 @@
+{# templates/eliminar_subasta.html #}
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}Eliminar Subasta - Mi Red Social{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+  .submit-button, .submit-button-rojo {
+    /* Puedes reutilizar estilos de las plantillas anteriores */
+    background-color: transparent;
+    border: 2px solid rgb(255, 0, 0);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+  }
+  .submit-button {
+    color: rgb(31, 194, 58);
+    box-shadow: 0 4px 6px rgb(140, 255, 0);
+  }
+  .submit-button:hover {
+    background-color: rgb(88, 212, 36);
+    color: white;
+    border-color: rgb(255, 1, 1);
+    transform: scale(1.05);
+  }
+  .submit-button-rojo {
+    color: rgb(239, 0, 0);
+    box-shadow: 0 4px 6px rgb(255, 0, 0);
+  }
+  .submit-button-rojo:hover {
+    background-color: rgb(255, 0, 0);
+    color: white;
+    border-color: rgb(255, 1, 1);
+    transform: scale(1.05);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-8 px-4 max-w-2xl">
+  <h1 class="text-2xl font-bold text-white mb-6">Eliminar Subasta</h1>
+  <p class="text-white mb-4">
+    ¿Estás seguro de que deseas eliminar la subasta <strong>{{ subasta.titulo }}</strong>?
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="flex gap-4">
+      <button type="submit" class="submit-button-rojo">
+        Confirmar Eliminación
+      </button>
+      <a href="{% url 'mis_subastas' %}" class="submit-button">
+        Cancelar
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

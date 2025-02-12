@@ -23,6 +23,9 @@ class Subasta(models.Model):
 
     fecha_inicio = models.DateTimeField()
     fecha_fin = models.DateTimeField()
+    
+    rating = models.FloatField(default=0)         # Calificación promedio
+    rating_count = models.IntegerField(default=0)  # Cantidad de calificaciones recibidas
 
     vendedor = models.ForeignKey(User, on_delete=models.CASCADE)
 

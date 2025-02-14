@@ -1,20 +1,25 @@
-# indices/models.py
+# Indices/models.py
 from django.db import models
 
 class Indice(models.Model):
-    # Categorías principales
+    # Tus campos para Indice...
     MAIN_CATEGORIES = (
         ('productos', 'Productos'),
         ('insumos', 'Insumos'),
         ('animales', 'Animales'),
     )
-    # Subcategorías (sólo aplicable a productos)
     SUBCATEGORIAS_PRODUCTOS = (
         ('carnes', 'Carnes'),
         ('granos', 'Granos'),
         ('vegetales', 'Vegetales'),
         ('frutas', 'Frutas'),
         ('lacteos', 'Lácteos'),
+    )
+    pais = models.CharField(
+        max_length=50, 
+        blank=True, 
+        null=True, 
+        help_text="País al que corresponde el índice"
     )
     main_categoria = models.CharField(
         max_length=20, choices=MAIN_CATEGORIES,
@@ -44,6 +49,6 @@ class LugarRecomendado(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2, help_text="Precio promedio")
     imagen = models.ImageField(upload_to='lugares/', blank=True, null=True)
     url = models.URLField(blank=True, null=True, help_text="Sitio web del lugar (opcional)")
-    
+
     def __str__(self):
         return self.nombre

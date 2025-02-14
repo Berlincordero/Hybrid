@@ -17,32 +17,14 @@
 <div class="container mx-auto px-4 py-4">
   <!-- Agregamos la imagen de la bandera al lado del título -->
   <h1 class="text-2xl font-bold text-white mb-4 flex items-center">
-    <img src="{% static 'img/Bandera_de_costa_rica.png' %}" alt="Bandera de Costa Rica" style="width: 150px; height: 150px;" class="mr-2">
-    Indices Económicos de Productos de Costa Rica
+    <img src="{% static 'img/bandera_nicaragua.png' %}" alt="Bandera de Costa Rica" style="width: 150px; height: 150px;" class="mr-2">
+    Índices Económicos de Nicaragua
   </h1>
   <!-- Botón: Ver lugares recomendados (redirige a la vista listar_lugares_recomendados) -->
-  <a href="{% url 'listar_lugares_recomendados' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    Ver lugares recomendados
+  <a href="{% url 'listar_indices' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4 inline-block">
+    Regresar a la lista de índices
   </a>
-   <!-- Botón: Ver lugares recomendados (redirige a la vista listar_lugares_recomendados) -->
-   <a href="{% url 'indice_panama' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    Panamá
-  </a>
-  <a href="{% url 'indice_nicaragua' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    Nicaragua
-  </a>
-  <a href="{% url 'indice_guatemala' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    Guatemala
-  </a>
-  <a href="{% url 'indice_el_salvador' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    El Salvador
-  </a>
-  <a href="{% url 'indice_honduras' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    Honduras
-  </a>
-  <a href="{% url 'indice_mexico' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    México
-  </a>
+  
   
   <!-- Resto del contenido... -->
   <!-- Sección: Carnes -->

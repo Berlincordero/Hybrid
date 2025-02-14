@@ -1,0 +1,225 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "Organizar Finca" %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- TailwindCSS desde CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Aplicar estilo oscuro a todos los campos de formulario */
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      background-color: #1a202c; /* bg-gray-900 */
+      color: white;
+      border: 2px solid #10b981; /* Verde-500 */
+      border-radius: 0.5rem; /* rounded-lg */
+      padding: 0.5rem 1rem; /* py-2 px-4 */
+      width: 100%;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input[type="text"]::placeholder,
+    input[type="number"]::placeholder,
+    textarea::placeholder {
+      color: #718096; /* text-gray-500 */
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #059669; /* Verde-600 */
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3); /* Verde con transparencia */
+    }
+
+    /* Estilo para el botón de subir archivo: solo borde verde y fondo transparente */
+    input[type="file"] {
+      -webkit-appearance: none;
+         -moz-appearance: none;
+              appearance: none;
+    }
+    input[type="file"]::file-selector-button {
+      background-color: transparent;
+      border: 2px solid #10b981; /* Verde-500 */
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s, border-color 0.3s;
+      margin-right: 1rem;
+    }
+    input[type="file"]::file-selector-button:hover {
+      background-color: transparent;
+      border-color: #059669; /* Verde-600 en hover */
+    }
+
+    /* Botón mejorado: Verde y bordeado */
+    .submit-button {
+      background-color: transparent; /* Sin fondo */
+      border: 2px solid #10b981; /* Verde-500 */
+      color: #10b981; /* Verde-500 */
+      font-weight: 600; /* font-semibold */
+      padding: 0.75rem 1.5rem; /* py-3 px-6 */
+      border-radius: 0.5rem; /* rounded-lg */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+    .submit-button:hover {
+      background-color: #10b981; /* Verde-500 */
+      color: white;
+      border-color: #059669; /* Verde-600 */
+      transform: scale(1.05);
+    }
+
+    /* Estilos para labels */
+    label {
+      display: block;
+      font-size: 0.875rem; /* text-sm */
+      font-weight: 500;    /* font-medium */
+      color: #d1d5db;      /* text-gray-300 */
+      margin-bottom: 0.25rem; /* mb-1 */
+    }
+
+    /* Estilos para la tarjeta */
+    .card {
+      background-color: #2d3748; /* bg-gray-800 */
+      border-radius: 0.5rem; /* rounded-xl */
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-lg */
+      padding: 2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Ajustes para el enlace de regresar */
+    .back-link {
+      color: #10b981; /* Verde-500 */
+      transition: color 0.3s;
+    }
+    .back-link:hover {
+      color: #059669; /* Verde-600 */
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-xl">
+    
+    <!-- Enlace para regresar a la administración de la finca -->
+    <div class="mb-4">
+      <a href="{% url 'administrar_finca' finca.id %}" class="inline-flex items-center back-link">
+        <span class="text-2xl mr-2">&#8592;</span>
+        <span>{% trans "Regresar a Administración" %}</span>
+      </a>
+    </div>
+
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight text-white">
+        {% trans "Organizar Finca:" %} {{ finca.nombre }}
+      </h1>
+      <p class="text-gray-300 mt-2">
+        {% trans "Área restante:" %} {{ remaining_area }} m²
+      </p>
+    </header>
+
+    <!-- Formulario para agregar división -->
+    <section class="card">
+      <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Campo: Tipo de división -->
+        <div>
+          {{ form.tipo_division.label_tag }}
+          {{ form.tipo_division }}
+          {% if form.tipo_division.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.tipo_division.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Descripción -->
+        <div>
+          {{ form.descripcion.label_tag }}
+          {{ form.descripcion }}
+          {% if form.descripcion.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.descripcion.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Tipo de terreno -->
+        <div>
+          {{ form.tipo_terreno.label_tag }}
+          {{ form.tipo_terreno }}
+          {% if form.tipo_terreno.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.tipo_terreno.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Tamaño -->
+        <div>
+          {{ form.tamaño.label_tag }}
+          {{ form.tamaño }}
+          {% if form.tamaño.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.tamaño.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Ubicación -->
+        <div>
+          {{ form.ubicacion.label_tag }}
+          {{ form.ubicacion }}
+          {% if form.ubicacion.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.ubicacion.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Cantidad de árboles -->
+        <div>
+          {{ form.cantidad_arboles.label_tag }}
+          {{ form.cantidad_arboles }}
+          {% if form.cantidad_arboles.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.cantidad_arboles.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Ríos -->
+        <div>
+          {{ form.rios.label_tag }}
+          {{ form.rios }}
+          {% if form.rios.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.rios.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Animales -->
+        <div>
+          {{ form.animales.label_tag }}
+          {{ form.animales }}
+          {% if form.animales.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.animales.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Imagen -->
+        <div>
+          {{ form.imagen.label_tag }}
+          {{ form.imagen }}
+          {% if form.imagen.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.imagen.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Botón de Envío -->
+        <button type="submit" class="submit-button">
+          {% trans "Guardar División" %}
+        </button>
+      </form>
+    </section>
+  </div>
+</body>
+</html>

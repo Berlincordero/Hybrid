@@ -1,7 +1,9 @@
+{# administrar_finca.html #}
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <div class="container mx-auto px-4 py-4">
-  <!-- Enlace para regresar al listado de fincas -->
+  <!-- Enlace para regresar al listado general -->
   <a href="{% url 'listar_fincas' %}" class="inline-flex items-center back-link mb-4">
     <span class="text-2xl mr-2">&#8592;</span>
     <span>Regresar a mis fincas</span>
@@ -10,11 +12,177 @@
   <!-- Título de la página de administración -->
   <h1 class="text-3xl font-bold text-white mb-4">Administración de mi Finca</h1>
   
-  <!-- Información de la finca -->
-  <div class="bg-gray-800 p-6 rounded shadow">
+  <!-- Información de la finca seleccionada -->
+  <div class="bg-gray-800 p-6 rounded shadow mb-6">
     <h2 class="text-2xl font-semibold text-green-400 mb-2">{{ finca.nombre }}</h2>
-    <!-- Aquí puedes agregar más opciones y funcionalidades de administración -->
     <p class="text-gray-300">En esta sección podrás gestionar y modificar los datos de tu finca.</p>
+    <!-- Botón para organizar divisiones -->
+    <a href="{% url 'organizar_finca' finca.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded inline-block mt-4">
+      Organizar
+    </a>
+    <!-- Botón para organizar galpón -->
+    <a href="{% url 'organizar_galpon' finca.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded inline-block mt-4 ml-4">
+      Organizar Galpón
+    </a>
+    <!-- Botón para control de animales -->
+    <a href="{% url 'control_animales' finca.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded inline-block mt-4 ml-4">
+      Control de Animales
+    </a>
   </div>
+  
+  <!-- Listado de fincas (cards) del usuario -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+    {% for finca_item in fincas %}
+      <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-lg uppercase">{{ finca_item.nombre }}</span>
+          <span class="text-sm">{{ finca_item.fecha_creacion|date:"Y-m-d" }}</span>
+        </div>
+        {% if finca_item.imagen %}
+          <img src="{{ finca_item.imagen.url }}" alt="{{ finca_item.nombre }}" class="w-full h-32 object-cover rounded mb-2">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="Sin imagen" class="w-full h-32 object-cover rounded mb-2">
+        {% endif %}
+        <div class="text-base text-gray-300 mb-1">
+          <strong>Ubicación:</strong> {{ finca_item.ubicacion }}<br>
+          <strong>Tamaño:</strong> {{ finca_item.tamaño }} m²
+        </div>
+        {% if finca_item.descripcion %}
+          <div class="text-base text-gray-300 mb-1">
+            <strong>Descripción:</strong> {{ finca_item.descripcion }}
+          </div>
+        {% endif %}
+        {% if finca_item.servicios %}
+          <div class="text-base text-gray-300 mb-1">
+            <strong>Servicios:</strong> {{ finca_item.servicios }}
+          </div>
+        {% endif %}
+        {% if finca_item.tipo_actividad %}
+          <div class="text-base text-gray-300 mb-1">
+            <strong>Actividad Económica:</strong> {{ finca_item.get_tipo_actividad_display }}
+          </div>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p class="text-gray-300">No tienes fincas registradas.</p>
+    {% endfor %}
+  </div>
+  
+  <!-- Sección para listar las divisiones de la finca actual -->
+  <h2 class="text-2xl font-bold text-white mt-8 mb-4">Divisiones de la Finca</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for division in finca.divisiones.all %}
+      <div class="bg-gray-700 border border-gray-600 rounded p-4 text-white">
+        <h3 class="text-xl font-semibold">{{ division.get_tipo_division_display }}</h3>
+        {% if division.imagen %}
+          <!-- Se elimina la clase h-32 y se agrega un estilo inline con aspect-ratio para preservar la proporción -->
+          <img src="{{ division.imagen.url }}" alt="{{ division.get_tipo_division_display }}" class="w-full object-cover rounded mb-2" style="aspect-ratio: 16/9;">
+        {% endif %}
+        <p><strong>Descripción:</strong> {{ division.descripcion }}</p>
+        <p><strong>Tipo de terreno:</strong> {{ division.get_tipo_terreno_display }}</p>
+        <p><strong>Tamaño:</strong> {{ division.tamaño }} m²</p>
+        <p><strong>Ubicación:</strong> {{ division.get_ubicacion_display }}</p>
+        <p><strong>Árboles:</strong> {{ division.cantidad_arboles }}</p>
+        <p><strong>Ríos:</strong> {{ division.rios }}</p>
+        <!-- Botones para editar y eliminar la división -->
+        <div class="flex space-x-2 mt-2">
+          <a href="{% url 'editar_division' division.id %}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+            Editar
+          </a>
+          <a href="{% url 'eliminar_division' division.id %}" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
+            Eliminar
+          </a>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-gray-300">No se han agregado divisiones.</p>
+    {% endfor %}
+  </div>
+  
+  <!-- Sección para listar los galpones de la finca actual -->
+  <h2 class="text-2xl font-bold text-white mt-8 mb-4">Galpones / Establos</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for galpon in finca.galpones.all %}
+      <div class="bg-gray-700 border border-gray-600 rounded p-4 text-white">
+        <h3 class="text-xl font-semibold">{{ galpon.nombre }}</h3>
+        {% if galpon.descripcion %}
+          <p><strong>Descripción:</strong> {{ galpon.descripcion }}</p>
+        {% endif %}
+        <p><strong>Tamaño:</strong> {{ galpon.tamano }} m²</p>
+        <p><strong>Área restante:</strong> {{ galpon.area_restante }} m²</p>
+        <p><strong>Almacén de paja:</strong> {{ galpon.almacen_paja }}</p>
+        {% if galpon.tamano_almacen_paja %}
+          <p><strong>Tamaño de almacén:</strong> {{ galpon.tamano_almacen_paja }} m²</p>
+        {% endif %}
+        {% if galpon.otro_producto %}
+          <p><strong>Otro producto:</strong> {{ galpon.otro_producto }}</p>
+        {% endif %}
+        <!-- Botones para editar y eliminar el galpón -->
+        <div class="flex space-x-2 mt-2">
+          <a href="{% url 'editar_galpon' galpon.id %}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+            Editar
+          </a>
+          <a href="{% url 'eliminar_galpon' galpon.id %}" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
+            Eliminar
+          </a>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-gray-300">No se han agregado galpones.</p>
+    {% endfor %}
+  </div>
+  
+  <!-- Sección para listar los registros de Control de Animales -->
+  <h2 class="text-2xl font-bold text-white mt-8 mb-4">Control de Animales</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for control in finca.control_animales.all %}
+      <div class="bg-gray-700 border border-gray-600 rounded p-4 text-white">
+        <h3 class="text-xl font-semibold">{{ control.nombre }}</h3>
+        {% if control.imagen %}
+          <img src="{{ control.imagen.url }}" alt="{{ control.nombre }}" class="w-full h-32 object-cover rounded mb-2">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="Sin imagen" class="w-full h-32 object-cover rounded mb-2">
+        {% endif %}
+        <p><strong>Tipo:</strong> {{ control.tipo_animal }}</p>
+        <p><strong>Raza:</strong> {{ control.raza }}</p>
+        <p><strong>Peso:</strong> {{ control.peso }} kg</p>
+        <p><strong>Edad:</strong> {{ control.edad }}</p>
+        <p><strong>Tratamiento:</strong> {{ control.tipo_tratamiento }}</p>
+        <p><strong>Medicina:</strong> {{ control.nombre_medicina }} ({{ control.cantidad }})</p>
+        <p><strong>Control:</strong> {{ control.tipo_control }}</p>
+        <p><strong>Arete/ID:</strong> {{ control.num_arete }}</p>
+        <p><strong>Atendido por:</strong> {{ control.atendido_por }}</p>
+        <p><strong>Ubicación:</strong> {{ control.ubicacion }}</p>
+        <p><strong>Fecha y Hora:</strong> {{ control.fecha_control|date:"Y-m-d H:i:s" }}</p>
+        <!-- Botón para eliminar el registro de control animal -->
+        <form action="{% url 'eliminar_control_animal' control.id %}" method="post" class="mt-2">
+          {% csrf_token %}
+          <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
+            Eliminar
+          </button>
+        </form>
+      </div>
+    {% empty %}
+      <p class="text-gray-300">No se han agregado controles de animales.</p>
+    {% endfor %}
+  </div>
+  
 </div>
+
+<!-- JavaScript para centrar las imágenes (solo se aplica a las divisiones) -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Selecciona todas las imágenes dentro de la sección de divisiones
+  const divisionImages = document.querySelectorAll('.grid img');
+  divisionImages.forEach(function(img) {
+    // Se asegura que la imagen esté centrada horizontalmente
+    img.style.display = 'block';
+    img.style.marginLeft = 'auto';
+    img.style.marginRight = 'auto';
+    // Se mantiene el objeto centrado en su contenedor
+    img.style.objectPosition = 'center';
+  });
+});
+</script>
+
 {% endblock %}

@@ -1,0 +1,215 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "Control de Animales" %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- TailwindCSS desde CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Estilos generales similares al de Organizar Galpón */
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      background-color: #1a202c;
+      color: white;
+      border: 2px solid #10b981;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      width: 100%;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input[type="text"]::placeholder,
+    input[type="number"]::placeholder,
+    textarea::placeholder {
+      color: #718096;
+    }
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #059669;
+      box-shadow: 0 0 0 3px rgba(16,185,129,0.3);
+    }
+    .submit-button {
+      background-color: transparent;
+      border: 2px solid #10b981;
+      color: #10b981;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+    .submit-button:hover {
+      background-color: #10b981;
+      color: white;
+      border-color: #059669;
+      transform: scale(1.05);
+    }
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #d1d5db;
+      margin-bottom: 0.25rem;
+    }
+    .card {
+      background-color: #2d3748;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+      padding: 2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px rgba(0,0,0,0.15);
+    }
+    .back-link {
+      color: #10b981;
+      transition: color 0.3s;
+    }
+    .back-link:hover {
+      color: #059669;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+  <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-2xl">
+    <!-- Enlace para regresar a la administración de la finca -->
+    <div class="mb-4">
+      <a href="{% url 'administrar_finca' finca.id %}" class="inline-flex items-center back-link">
+        <span class="text-2xl mr-2">&#8592;</span>
+        <span>{% trans "Regresar a Administración" %}</span>
+      </a>
+    </div>
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight text-white">
+        {% trans "Control de Animales" %}
+      </h1>
+      <p class="text-gray-300 mt-2">
+        {% trans "Finca:" %} {{ finca.nombre }}
+      </p>
+    </header>
+    <section class="card">
+      <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        <!-- Campo: Nombre del Animal -->
+        <div>
+          <label for="nombre">{% trans "Nombre del Animal" %}</label>
+          <input type="text" name="nombre" id="nombre" placeholder="{% trans 'Ingrese el nombre del animal' %}" required>
+        </div>
+        <!-- Campo: Descripción -->
+        <div>
+          <label for="descripcion">{% trans "Descripción" %}</label>
+          <textarea name="descripcion" id="descripcion" rows="3" placeholder="{% trans 'Ingrese una descripción' %}"></textarea>
+        </div>
+        <!-- Campo: Tipo de Animal -->
+        <div>
+          <label for="tipo_animal">{% trans "Tipo de Animal" %}</label>
+          <input type="text" name="tipo_animal" id="tipo_animal" placeholder="{% trans 'Ej: Vaca, Cerdo, Oveja, etc.' %}" required>
+        </div>
+        <!-- Campo: Raza -->
+        <div>
+          <label for="raza">{% trans "Raza" %}</label>
+          <input type="text" name="raza" id="raza" placeholder="{% trans 'Ingrese la raza' %}">
+        </div>
+        <!-- Campo: Peso -->
+        <div>
+          <label for="peso">{% trans "Peso (kg)" %}</label>
+          <input type="number" name="peso" id="peso" placeholder="{% trans 'Ingrese el peso' %}" step="any" required>
+        </div>
+        <!-- Campo: Edad (ahora texto para permitir "4 meses") -->
+        <div>
+          <label for="edad">{% trans "Edad" %}</label>
+          <input type="text" name="edad" id="edad" placeholder="{% trans 'Ingrese la edad (ej: 4 meses)' %}" required>
+        </div>
+        <!-- Campo: Tipo de Tratamiento -->
+        <div>
+          <label for="tipo_tratamiento">{% trans "Tipo de Tratamiento" %}</label>
+          <input type="text" name="tipo_tratamiento" id="tipo_tratamiento" placeholder="{% trans 'Ej: Vacunación, Desparasitación, etc.' %}">
+        </div>
+        <!-- Campo: Nombre de la Medicina -->
+        <div>
+          <label for="nombre_medicina">{% trans "Nombre de la Medicina" %}</label>
+          <input type="text" name="nombre_medicina" id="nombre_medicina" placeholder="{% trans 'Ingrese el nombre de la medicina' %}">
+        </div>
+        <!-- Campo: Cantidad (ahora texto para permitir "100 gramos", "1 onza", etc.) -->
+        <div>
+          <label for="cantidad">{% trans "Cantidad" %}</label>
+          <input type="text" name="cantidad" id="cantidad" placeholder="{% trans 'Ingrese la cantidad (ej: 100 gramos)' %}" required>
+        </div>
+        <!-- Campo: Tipo de Control -->
+        <div>
+          <label for="tipo_control">{% trans "Tipo de Control" %}</label>
+          <input type="text" name="tipo_control" id="tipo_control" placeholder="{% trans 'Ej: Preventivo, Correctivo, etc.' %}">
+        </div>
+        <!-- Campo: Número de Arete o Identificación -->
+        <div>
+          <label for="num_arete">{% trans "Número de Arete o Identificación" %}</label>
+          <input type="text" name="num_arete" id="num_arete" placeholder="{% trans 'Ingrese el número de arete o identificación' %}">
+        </div>
+        <!-- Campo: Nombre de quien atiende el animal -->
+        <div>
+          <label for="atendido_por">{% trans "Nombre de quien atiende el animal" %}</label>
+          <input type="text" name="atendido_por" id="atendido_por" placeholder="{% trans 'Ingrese el nombre del encargado' %}">
+        </div>
+        <!-- Campo: Ubicación -->
+        <div>
+          <label for="ubicacion">{% trans "Ubicación" %}</label>
+          <input type="text" name="ubicacion" id="ubicacion" placeholder="{% trans 'Ingrese la ubicación en la finca' %}">
+        </div>
+        <!-- Campo: Imagen o Foto (movido al final) -->
+        <div>
+          <label for="imagen">{% trans "Imagen o Foto" %}</label>
+          <input type="file" name="imagen" id="imagen">
+        </div>
+        <!-- Botón de envío -->
+        <button type="submit" class="submit-button">
+          {% trans "Guardar Registro" %}
+        </button>
+      </form>
+    </section>
+    
+    <!-- Listado de registros de control de animales con botón de eliminar -->
+    <section class="card mt-6">
+      <h2 class="text-2xl font-bold text-white mb-4">{% trans "Registros de Control de Animales" %}</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for control in control_animales %}
+          <div class="bg-gray-700 border border-gray-600 rounded p-4 text-white">
+            <h3 class="text-xl font-semibold">{{ control.nombre }}</h3>
+            {% if control.imagen %}
+              <img src="{{ control.imagen.url }}" alt="{{ control.nombre }}" class="w-full h-32 object-cover rounded mb-2">
+            {% else %}
+              <img src="{% static 'images/product_placeholder.png' %}" alt="Sin imagen" class="w-full h-32 object-cover rounded mb-2">
+            {% endif %}
+            <p><strong>{% trans "Tipo:" %}</strong> {{ control.tipo_animal }}</p>
+            <p><strong>{% trans "Raza:" %}</strong> {{ control.raza }}</p>
+            <p><strong>{% trans "Peso:" %}</strong> {{ control.peso }} kg</p>
+            <p><strong>{% trans "Edad:" %}</strong> {{ control.edad }}</p>
+            <p><strong>{% trans "Tratamiento:" %}</strong> {{ control.tipo_tratamiento }}</p>
+            <p><strong>{% trans "Medicina:" %}</strong> {{ control.nombre_medicina }} ({{ control.cantidad }})</p>
+            <p><strong>{% trans "Control:" %}</strong> {{ control.tipo_control }}</p>
+            <p><strong>{% trans "Arete/ID:" %}</strong> {{ control.num_arete }}</p>
+            <p><strong>{% trans "Atendido por:" %}</strong> {{ control.atendido_por }}</p>
+            <p><strong>{% trans "Ubicación:" %}</strong> {{ control.ubicacion }}</p>
+            <p><strong>{% trans "Fecha y Hora:" %}</strong> {{ control.fecha_control|date:"Y-m-d H:i:s" }}</p>
+            <!-- Botón para eliminar el registro de control animal -->
+            <form action="{% url 'eliminar_control_animal' control.id %}" method="post" class="mt-2">
+              {% csrf_token %}
+              <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
+                {% trans "Eliminar" %}
+              </button>
+            </form>
+          </div>
+        {% empty %}
+          <p class="text-gray-300">{% trans "No hay registros de control de animales." %}</p>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</body>
+</html>

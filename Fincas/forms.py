@@ -1,4 +1,3 @@
-# forms.py
 from django import forms
 from .models import Finca, Division, Galpon, GalponDivision
 from .models import ControlAnimal
@@ -24,18 +23,25 @@ class DivisionForm(forms.ModelForm):
             'ubicacion', 
             'cantidad_arboles', 
             'rios', 
-            'animales',  # Nuevo campo
+            'animales',
             'imagen'
         ]
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 3}),
         }
         
-
 class GalponForm(forms.ModelForm):
     class Meta:
         model = Galpon
-        fields = ['nombre', 'descripcion', 'tamano', 'almacen_paja', 'tamano_almacen_paja', 'otro_producto']
+        fields = [
+            'nombre',
+            'descripcion',
+            'tamano',
+            'almacen_paja',
+            'tamano_almacen_paja',
+            'otro_producto',
+            'imagen',  # <-- Añadimos aquí
+        ]
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 3}),
         }

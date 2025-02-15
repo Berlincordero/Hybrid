@@ -9,7 +9,6 @@
   <!-- TailwindCSS desde CDN -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    /* Estilos similares a los anteriores */
     input[type="text"],
     input[type="number"],
     textarea,
@@ -75,14 +74,6 @@
     .back-link:hover {
       color: #059669;
     }
-    .division-row {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .division-row input {
-      flex: 1;
-    }
   </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
@@ -94,6 +85,7 @@
         <span>{% trans "Regresar a Administración" %}</span>
       </a>
     </div>
+
     <header class="mb-6">
       <h1 class="text-3xl font-extrabold tracking-tight text-white">
         {% trans "Organizar Galpón" %}
@@ -102,130 +94,94 @@
         {% trans "Finca:" %} {{ finca.nombre }}
       </p>
     </header>
+
     <section class="card">
+      <!-- Si hay un mensaje de error (p.ej., suma divisiones > tamano galpon), lo mostramos -->
+      {% if error %}
+        <div class="text-red-500 font-bold mb-4">
+          {{ error }}
+        </div>
+      {% endif %}
+
+      <!-- Form para crear galpón + divisiones -->
+      <!-- IMPORTANTE: enctype="multipart/form-data" para poder subir imagen -->
       <form method="post" enctype="multipart/form-data" id="galpon-form" class="space-y-6">
         {% csrf_token %}
-        <!-- Nombre del Galpón -->
-        <div>
-          <label for="nombre_galpon">{% trans "Nombre del Galpón" %}</label>
-          <input type="text" name="nombre_galpon" id="nombre_galpon" placeholder="{% trans 'Ingrese el nombre' %}" required>
-        </div>
-        <!-- Descripción -->
-        <div>
-          <label for="descripcion">{% trans "Descripción" %}</label>
-          <textarea name="descripcion" id="descripcion" rows="3" placeholder="{% trans 'Ingrese una descripción' %}"></textarea>
-        </div>
-        <!-- Tamaño global del Galpón -->
-        <div>
-          <label for="tamano_galpon">{% trans "Tamaño global (m²)" %}</label>
-          <input type="number" name="tamano_galpon" id="tamano_galpon" placeholder="{% trans 'Ingrese el tamaño global' %}" step="any" required>
-        </div>
-        <!-- Divisiones dinámicas -->
-        <div>
-          <label>{% trans "Divisiones del Galpón" %}</label>
-          <div id="divisiones-container">
-            <!-- Se agregarán dinámicamente filas con inputs para animales y tamaño -->
+
+        <!-- Sección: Datos del Galpón -->
+        <h2 class="text-xl font-bold mb-2">{% trans "Datos del Galpón" %}</h2>
+        {{ galpon_form.as_p }}
+
+        <!-- Etiqueta para mostrar área restante (cálculo JS en tiempo real) -->
+        <p class="text-green-400 font-semibold">
+          {% trans "Área restante (cálculo en tiempo real):" %}
+          <span id="remaining-area">0</span> m²
+        </p>
+
+        <!-- Formset: se incluyen management_form y luego bucle para cada formulario de división -->
+        <h2 class="text-xl font-bold mt-6 mb-2">{% trans "Divisiones del Galpón" %}</h2>
+        {{ formset.management_form }}
+        
+        {% for division_form in formset %}
+          <div class="bg-gray-800 p-4 rounded mb-4">
+            <p class="text-green-400 font-semibold mb-2">
+              {% trans "División" %} {{ forloop.counter }}
+            </p>
+            {{ division_form.as_p }}
           </div>
-          <button type="button" id="add-division" class="submit-button">
-            {% trans "Agregar División" %}
-          </button>
-        </div>
-        <!-- Mostrar área restante del galpón -->
-        <div>
-          <label>{% trans "Área restante del Galpón (m²)" %}</label>
-          <input type="number" id="area-restante" readonly class="bg-gray-800" value="0">
-        </div>
-        <!-- ¿Tiene espacio de almacenamiento de paja superior? -->
-        <div>
-          <label for="almacen_paja">{% trans "¿Tiene espacio de almacenamiento de paja superior?" %}</label>
-          <select name="almacen_paja" id="almacen_paja">
-            <option value="no">{% trans "No" %}</option>
-            <option value="si">{% trans "Sí" %}</option>
-          </select>
-        </div>
-        <!-- Tamaño del almacenamiento de paja -->
-        <div>
-          <label for="tamano_almacen_paja">{% trans "Tamaño del almacenamiento de paja (m²)" %}</label>
-          <input type="number" name="tamano_almacen_paja" id="tamano_almacen_paja" placeholder="{% trans 'Ingrese el tamaño' %}" step="any">
-        </div>
-        <!-- Otro tipo de producto almacenado (opcional) -->
-        <div>
-          <label for="otro_producto">{% trans "Otro tipo de producto almacenado (opcional)" %}</label>
-          <input type="text" name="otro_producto" id="otro_producto" placeholder="{% trans 'Especifique si aplica' %}">
-        </div>
-        <!-- Botón de envío -->
+        {% endfor %}
+
+        <!-- Botón para guardar todo -->
         <button type="submit" class="submit-button">
           {% trans "Guardar Galpón" %}
         </button>
       </form>
     </section>
-    
-   
   </div>
-  
-  <!-- JavaScript para manejar divisiones dinámicas y cálculo del área restante -->
+
+  <!-- Script para mostrar en tiempo real la suma de divisiones y el área restante -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const addDivisionBtn = document.getElementById('add-division');
-      const divisionesContainer = document.getElementById('divisiones-container');
-      const tamanoGalponInput = document.getElementById('tamano_galpon');
-      const areaRestanteInput = document.getElementById('area-restante');
-      
-      function updateAreaRestante() {
-        let totalDivisionArea = 0;
-        const divisionSizeInputs = document.querySelectorAll('.division-size');
-        divisionSizeInputs.forEach(input => {
-          const val = parseFloat(input.value) || 0;
-          totalDivisionArea += val;
-        });
-        const galponSize = parseFloat(tamanoGalponInput.value) || 0;
-        areaRestanteInput.value = galponSize - totalDivisionArea;
+      const galponTamanoInput = document.getElementById('id_tamano');  // campo "tamano" del galpon_form
+      const remainingAreaSpan = document.getElementById('remaining-area');
+
+      // Busca todos los inputs de tamaño de las divisiones del formset (form-0-tamano, form-1-tamano, etc.)
+      function getDivisionSizeInputs() {
+        return document.querySelectorAll('input[name$="tamano"]');
       }
-      
-      addDivisionBtn.addEventListener('click', function() {
-        // Crear un contenedor para la nueva división
-        const divisionDiv = document.createElement('div');
-        divisionDiv.classList.add('division-row');
-        
-        // Input para "Animales en la sección"
-        const animalesInput = document.createElement('input');
-        animalesInput.type = 'number';
-        animalesInput.name = 'division_animales';
-        animalesInput.placeholder = '{% trans "Animales" %}';
-        animalesInput.required = true;
-        
-        // Input para "Tamaño de la sección"
-        const sizeInput = document.createElement('input');
-        sizeInput.type = 'number';
-        sizeInput.name = 'division_tamano';
-        sizeInput.placeholder = '{% trans "Tamaño (m²)" %}';
-        sizeInput.classList.add('division-size');
-        sizeInput.step = 'any';
-        sizeInput.required = true;
-        
-        // Botón para eliminar esta división
-        const removeBtn = document.createElement('button');
-        removeBtn.type = 'button';
-        removeBtn.textContent = '{% trans "Eliminar" %}';
-        removeBtn.classList.add('submit-button');
-        removeBtn.style.padding = '0.5rem 1rem';
-        removeBtn.addEventListener('click', function() {
-          divisionDiv.remove();
-          updateAreaRestante();
+
+      function updateRemainingArea() {
+        const galponSize = parseFloat(galponTamanoInput.value) || 0;
+        let totalDivisions = 0;
+        const divisionInputs = getDivisionSizeInputs();
+        divisionInputs.forEach(function(input) {
+          const val = parseFloat(input.value) || 0;
+          totalDivisions += val;
         });
-        
-        divisionDiv.appendChild(animalesInput);
-        divisionDiv.appendChild(sizeInput);
-        divisionDiv.appendChild(removeBtn);
-        
-        divisionesContainer.appendChild(divisionDiv);
-        
-        sizeInput.addEventListener('input', updateAreaRestante);
-        tamanoGalponInput.addEventListener('input', updateAreaRestante);
-        updateAreaRestante();
+
+        const remaining = galponSize - totalDivisions;
+        // Mostrar con 2 decimales
+        remainingAreaSpan.textContent = remaining.toFixed(2);
+
+        // Si queda negativo, mostrar en rojo
+        if (remaining < 0) {
+          remainingAreaSpan.style.color = 'red';
+        } else {
+          remainingAreaSpan.style.color = '#10b981'; // verde
+        }
+      }
+
+      // Escucha cada cambio en el tamaño del galpón
+      galponTamanoInput.addEventListener('input', updateRemainingArea);
+
+      // Escucha cada cambio en el tamaño de las divisiones
+      const divisionSizeInputs = getDivisionSizeInputs();
+      divisionSizeInputs.forEach(function(input) {
+        input.addEventListener('input', updateRemainingArea);
       });
-      
-      updateAreaRestante();
+
+      // Calcula área restante al inicio
+      updateRemainingArea();
     });
   </script>
 </body>

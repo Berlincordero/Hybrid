@@ -12,136 +12,173 @@
       rel="stylesheet"
     />
   </head>
-  <!-- Se agregó el atributo style para establecer la imagen de fondo -->
+
   <body
+    class="bg-gray-900 text-white min-h-screen flex flex-col"
     style="background: url('{% static 'img/Refugio.jpg' %}') no-repeat center center fixed; background-size: cover;"
-    class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center relative"
   >
     {% if messages %}
-    <div class="fixed top-4 right-4 space-y-2">
-      {% for message in messages %}
-      <div class="p-4 rounded-md {{ message.tags }}">{{ message }}</div>
-      {% endfor %}
-    </div>
+      <div class="fixed top-4 right-4 space-y-2">
+        {% for message in messages %}
+          <div class="p-4 rounded-md {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
     {% endif %}
 
-    <div
-      class="w-full max-w-sm sm:max-w-md lg:max-w-lg bg-gray-800 p-6 sm:p-8 md:p-10 rounded-xl shadow-md"
-    >
-      <div class="flex flex-col items-center">
-        <!-- Animación Lottie -->
-        <lottie-player
-          src="{% static 'animations/capibara.json' %}"
-          background="transparent"
-          speed="1"
-          style="width: 200px; height: 200px; border-radius: 50%;"
-          loop
-          autoplay
-        ></lottie-player>
-        <h1 class="text-2xl font-bold mb-1">{% trans "Little Paws" %}</h1>
-        <p class="text-gray-300 text-center text-sm sm:text-base">
-          {% trans "Little Paws es una app Beta en prueba social comunity ecommerce exclusiva dedicada a los animales y la agropecuaria y la conexion con la naturaleza " %}
-        </p>
-        <p class="text-gray-300 text-center text-2xl sm:text-2xl"><strong>
-          {% trans "Se donara el 40% de los ingresos generados por la plataforma para Refugios de Animales y Animales en vulnerabilidad" %}
-        </strong></p>
-        
-        
-        <p class="text-green-400 text-center mt-2">
-          {% trans "Inicia sesión para continuar" %}
-        </p>
-      </div>
-
-      <!-- Formulario -->
-      <form method="post" class="mt-6 space-y-4">
-        {% csrf_token %} {{ form.non_field_errors }}
-
-        <!-- Campo Email -->
-        <div class="flex flex-col">
-          <label
-            for="{{ form.email.id_for_label }}"
-            class="mb-1 font-medium text-gray-200"
-          >
-            {% trans "Email" %}
-          </label>
-          {% if form.email.errors %}
-          <div class="text-red-500 text-sm mb-1">{{ form.email.errors }}</div>
-          {% endif %}
-          <input
-            type="email"
-            name="email"
-            id="{{ form.email.id_for_label }}"
-            class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-300 placeholder-gray-400"
-            placeholder=""
-            value=""
-          />
+    <!-- Contenedor principal (centra el contenido) -->
+    <div class="flex-grow flex items-center justify-center px-4 py-8">
+      <div
+        class="w-full max-w-md sm:max-w-lg bg-gray-800 p-6 sm:p-8 md:p-10 rounded-xl shadow-md"
+      >
+        <div class="flex flex-col items-center">
+          <!-- Lottie Animation -->
+          <lottie-player
+            src="{% static 'animations/capibara.json' %}"
+            background="transparent"
+            speed="1"
+            style="width: 200px; height: 200px; border-radius: 50%;"
+            loop
+            autoplay
+          ></lottie-player>
+          
+          <h1 class="text-2xl font-bold mb-1 text-center">
+            {% trans "Little Paws" %}
+          </h1>
+          
+          <p class="text-gray-300 text-center text-sm sm:text-base">
+            {% trans "Little Paws es una app Beta en prueba social community ecommerce exclusiva dedicada a los animales y la agropecuaria y la conexión con la naturaleza" %}
+          </p>
+          <p class="text-gray-300 text-center text-2xl sm:text-2xl font-semibold mt-2">
+            {% trans "Se donará el 40% de los ingresos generados por la plataforma para Refugios de Animales y Animales en vulnerabilidad" %}
+          </p>
+          
+          <p class="text-green-400 text-center mt-2">
+            {% trans "Inicia sesión para continuar" %}
+          </p>
         </div>
 
-        <!-- Campo Contraseña -->
-        <div class="flex flex-col">
-          <label
-            for="{{ form.password.id_for_label }}"
-            class="mb-1 font-medium text-gray-200"
-          >
-            {% trans "Contraseña" %}
-          </label>
-          {% if form.password.errors %}
-          <div class="text-red-500 text-sm mb-1">
-            {{ form.password.errors }}
+        <!-- Formulario -->
+        <form method="post" class="mt-6 space-y-4">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+          <!-- Campo Email -->
+          <div class="flex flex-col">
+            <label
+              for="{{ form.email.id_for_label }}"
+              class="mb-1 font-medium text-gray-200"
+            >
+              {% trans "Email" %}
+            </label>
+            {% if form.email.errors %}
+              <div class="text-red-500 text-sm mb-1">{{ form.email.errors }}</div>
+            {% endif %}
+            <input
+              type="email"
+              name="email"
+              id="{{ form.email.id_for_label }}"
+              class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md
+                     focus:outline-none focus:ring-2 focus:ring-indigo-500
+                     text-gray-300 placeholder-gray-400"
+              placeholder=""
+            />
           </div>
-          {% endif %}
-          <input
-            type="password"
-            name="password"
-            id="{{ form.password.id_for_label }}"
-            class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-300 placeholder-gray-400"
-            placeholder=""
-            value=""
-          />
+
+          <!-- Campo Contraseña con "ojito" -->
+          <div class="flex flex-col">
+            <label
+              for="{{ form.password.id_for_label }}"
+              class="mb-1 font-medium text-gray-200"
+            >
+              {% trans "Contraseña" %}
+            </label>
+            {% if form.password.errors %}
+              <div class="text-red-500 text-sm mb-1">{{ form.password.errors }}</div>
+            {% endif %}
+
+            <div class="relative">
+              <input
+                type="password"
+                name="password"
+                id="{{ form.password.id_for_label }}"
+                class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500
+                       text-gray-300 placeholder-gray-400"
+                placeholder=""
+              />
+              <!-- Botón para mostrar/ocultar contraseña -->
+              <button
+                type="button"
+                class="absolute right-3 top-2 text-gray-400 hover:text-gray-200"
+                onclick="togglePasswordVisibility()"
+              >
+                <!-- Ícono (ojo abierto) -->
+                <svg
+                  id="eyeIcon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z
+                       M2.458 12C3.732 7.943 7.523 5 12 5
+                       c4.477 0 8.268 2.943 9.542 7
+                       -1.274 4.057-5.065 7-9.542 7
+                       -4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Botón de Envío -->
+          <div>
+            <button
+              type="submit"
+              class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md
+                     font-semibold text-white transition"
+            >
+              {% trans "Iniciar sesión" %}
+            </button>
+          </div>
+        </form>
+
+        <!-- Enlaces de Registro -->
+        <div class="mt-4 text-center">
+          <p class="text-gray-400 text-sm">
+            {% trans "¿No tienes cuenta?" %}
+            <a
+              href="{% url 'register' %}"
+              class="text-blue-500 hover:underline"
+            >
+              {% trans "Regístrate" %}
+            </a>
+          </p>
         </div>
 
-        <!-- Botón de Envío -->
-        <div>
-          <button
-            type="submit"
-            class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-md font-semibold text-white transition"
-          >
-            {% trans "Iniciar sesión" %}
-          </button>
-        </div>
-      </form>
-
-      <!-- Enlaces de Registro y Opciones de Inicio de Sesión con Redes Sociales -->
-      <div class="mt-4 text-center">
-        <p class="text-gray-400 text-sm">
-          {% trans "¿No tienes cuenta?" %}
-          <a href="{% url 'register' %}" class="text-blue-500 hover:underline">
-            {% trans "Regístrate" %}
-          </a>
-        </p>
-      </div>
-
-      <!-- Opcional: Redes sociales -->
-      <div class="mt-6 text-center">
-        <p class="text-gray-400 text-sm">{% trans "O inicia con" %}</p>
-        <div class="flex justify-center flex-wrap gap-2 mt-2">
-          <button
-            class="bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2 text-sm"
-          >
-            {% trans "Google" %}
-          </button>
+        <!-- Redes sociales opcionales -->
+        <div class="mt-6 text-center">
+          <p class="text-gray-400 text-sm">{% trans "O inicia con" %}</p>
+          <div class="flex justify-center flex-wrap gap-2 mt-2">
+            <button
+              class="bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2 text-sm"
+            >
+              {% trans "Google" %}
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-     <!-- Footer con selector de idioma -->
-     <footer class="absolute bottom-4 w-full text-center text-blue">
+    <!-- Footer con selector de idioma -->
+    <footer class="text-center text-blue-300 pb-4">
       <div class="flex justify-center flex-wrap gap-2 text-sm">
-
-        <!-- Asegúrate de cargar la lista de idiomas -->
         {% get_language_info_list for LANGUAGES as languages %}
-
-        <!-- Recorremos cada idioma -->
         {% for language in languages %}
           <form
             action="{% url 'set_language' %}"
@@ -155,7 +192,10 @@
               value="{{ request.get_full_path }}"
             />
             <input type="hidden" name="language" value="{{ language.code }}" />
-            <button type="submit" class="hover:underline focus:outline-none">
+            <button
+              type="submit"
+              class="hover:underline focus:outline-none"
+            >
               {{ language.name_local }}
             </button>
           </form>
@@ -163,17 +203,80 @@
             <span>|</span>
           {% endif %}
         {% endfor %}
-
       </div>
+
       <div class="mt-2 text-xs">
-        &copy; {% trans "Umbrella Neural Technology S.A Una compañia orgullosamente Costarricense. Todos los derechos reservados." %}
+        &copy;
+        {% trans "Umbrella Neural Technology S.A Una compañía orgullosamente Costarricense. Todos los derechos reservados." %}
       </div>
       <div class="mt-2 text-sm">
         {% trans "Foros Sociales, MarketPlace,  Chats, Videos, Noticias, Eventos, Cursos, Indices de Productos" %}
-        {%trans ",Subastas Virtual Pro, Vivero Virtual Pro, Finca Virtual Pro"%}
+        {% trans ",Subastas Virtual Pro, Vivero Virtual Pro, Finca Virtual Pro" %}
       </div>
     </footer>
+
     <!-- Scripts -->
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script
+      src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
+    ></script>
+    <script>
+      // Función para mostrar/ocultar contraseña
+      function togglePasswordVisibility() {
+        const passwordInput = document.getElementById("{{ form.password.id_for_label }}");
+        const eyeIcon = document.getElementById("eyeIcon");
+
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          // Cambiamos a un ícono de "ojo tachado" (heroicon Eye Off)
+          eyeIcon.outerHTML = `
+            <svg
+              id="eyeIcon"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13.875 18.825A10.05 10.05 0 0112 19
+                   C7.523 19 3.732 16.057 2.458 12
+                   c.74-2.352 2.137-4.399 3.927-5.978
+                   m3.175-1.67A9.967 9.967 0 0112 5
+                   c4.477 0 8.268 2.943 9.542 7
+                   -.507 1.619-1.357 3.09-2.458 4.343
+                   M15 12a3 3 0 01-3 3
+                   m0-6a3 3 0 013 3
+                   M2 2l20 20"
+              />
+            </svg>`;
+        } else {
+          passwordInput.type = "password";
+          // Volvemos al ícono de "ojo abierto"
+          eyeIcon.outerHTML = `
+            <svg
+              id="eyeIcon"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z
+                   M2.458 12C3.732 7.943 7.523 5 12 5
+                   c4.477 0 8.268 2.943 9.542 7
+                   -1.274 4.057-5.065 7-9.542 7
+                   -4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>`;
+        }
+      }
+    </script>
   </body>
 </html>

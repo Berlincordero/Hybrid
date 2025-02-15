@@ -1,11 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Finca, Division
-from .forms import FincaForm, DivisionForm
 from django.forms import modelformset_factory
-from .models import Galpon, GalponDivision
-from .forms import GalponForm, GalponDivisionForm
-from .forms import ControlAnimalForm
+from django.db.models import Count
+from .models import Finca, Division, Galpon, GalponDivision, ControlAnimal
+from .forms import FincaForm, DivisionForm, GalponForm, GalponDivisionForm, ControlAnimalForm
+import json
 
 @login_required
 def listar_fincas(request):
@@ -29,6 +28,7 @@ def crear_finca(request):
 
 @login_required
 def eliminar_finca(request, finca_id):
+    """Elimina una finca, previa confirmación."""
     finca = get_object_or_404(Finca, id=finca_id, usuario=request.user)
     if request.method == 'POST':
         finca.delete()
@@ -39,49 +39,89 @@ def eliminar_finca(request, finca_id):
 def administrar_finca(request, finca_id):
     """
     Vista para administrar una finca específica.
-    Se obtiene la finca seleccionada y se listan todas las fincas del usuario.
+    Se muestra la finca, así como sus divisiones, galpones y controles de animales.
+    Además, se calculan datos para el análisis: total de animales, rendimiento promedio, etc.
     """
     finca = get_object_or_404(Finca, id=finca_id, usuario=request.user)
     fincas = Finca.objects.filter(usuario=request.user).order_by('-fecha_creacion')
-    return render(request, 'administrar_finca.html', {'finca': finca, 'fincas': fincas})
+    
+    total_animales_galpon = sum(
+        gd.animales for gd in GalponDivision.objects.filter(galpon__finca=finca)
+    )
+    
+    control_animales = finca.control_animales.all()
+    if control_animales.exists():
+        avg_weight = sum(ca.peso for ca in control_animales) / control_animales.count()
+    else:
+        avg_weight = None
+    rendimiento_promedio = f"{avg_weight:.2f}" if avg_weight is not None else "N/A"
+    
+    composition = finca.control_animales.values('tipo_animal').annotate(count=Count('id'))
+    labels = [entry['tipo_animal'] for entry in composition]
+    values = [entry['count'] for entry in composition]
+    composition_labels = json.dumps(labels)
+    composition_values = json.dumps(values)
+    
+    galpon_division_data = {}
+    for galpon in finca.galpones.all():
+        divisions = galpon.divisiones.all()
+        labels_div = [f"División {i+1}" for i, div in enumerate(divisions)]
+        data_div = [div.tamano for div in divisions]
+        galpon_division_data[galpon.id] = {
+            "labels": labels_div,
+            "data": data_div,
+            "nombre": galpon.nombre,
+            "total": galpon.tamano,
+        }
+    galpon_division_data_json = json.dumps(galpon_division_data)
+    
+    context = {
+        'finca': finca,
+        'fincas': fincas,
+        'total_animales_galpon': total_animales_galpon,
+        'rendimiento_promedio': rendimiento_promedio,
+        'composition_labels': composition_labels,
+        'composition_values': composition_values,
+        'galpon_division_data_json': galpon_division_data_json,
+    }
+    return render(request, 'administrar_finca.html', context)
 
 @login_required
 def editar_finca_imagen(request, finca_id):
+    """Permite actualizar únicamente la imagen de una finca."""
     finca = get_object_or_404(Finca, id=finca_id, usuario=request.user)
     if request.method == 'POST' and request.FILES.get('imagen'):
         finca.imagen = request.FILES['imagen']
         finca.save()
     return redirect('listar_fincas')
 
-# Vistas para subir imágenes en el índice
 @login_required
 def upload_producto_imagen(request):
+    """(Ejemplo) Manejo de imagen para un producto."""
     if request.method == 'POST' and request.FILES.get('imagen'):
-        # Aquí deberías implementar la lógica para actualizar la imagen del producto
-        pass  # Implementa tu lógica aquí.
+        pass
     return redirect('listar_fincas')
 
 @login_required
 def upload_insumo_imagen(request):
+    """(Ejemplo) Manejo de imagen para un insumo."""
     if request.method == 'POST' and request.FILES.get('imagen'):
-        # Implementa la lógica para actualizar la imagen del insumo
-        pass  # Implementa tu lógica aquí.
+        pass
     return redirect('listar_fincas')
 
 @login_required
 def upload_animales_imagen(request):
+    """(Ejemplo) Manejo de imagen para un animal."""
     if request.method == 'POST' and request.FILES.get('imagen'):
-        # Implementa la lógica para actualizar la imagen de animales
-        pass  # Implementa tu lógica aquí.
+        pass
     return redirect('listar_fincas')
 
-# Nueva vista para organizar la finca (agregar divisiones)
 @login_required
 def organizar_finca(request, finca_id):
     """
     Permite agregar divisiones a una finca.
-    Se verifica que el tamaño ingresado para la división no supere el área disponible,
-    la cual se calcula restando la suma de los tamaños de las divisiones existentes al tamaño total de la finca.
+    Verifica que el tamaño ingresado para la división no supere el área disponible
+    (tamaño total de la finca - divisiones ya existentes).
     """
     finca = get_object_or_404(Finca, id=finca_id, usuario=request.user)
     used_area = sum(division.tamaño for division in finca.divisiones.all())
@@ -105,10 +145,10 @@ def organizar_finca(request, finca_id):
         'finca': finca,
         'remaining_area': remaining_area,
     })
-# Vista para editar una división
+
 @login_required
 def editar_division(request, division_id):
-    # Aseguramos que la división pertenezca a una finca del usuario
+    """Edita los datos de una división concreta."""
     division = get_object_or_404(Division, id=division_id, finca__usuario=request.user)
     if request.method == 'POST':
         form = DivisionForm(request.POST, request.FILES, instance=division)
@@ -119,10 +159,9 @@ def editar_division(request, division_id):
         form = DivisionForm(instance=division)
     return render(request, 'editar_division.html', {'form': form, 'division': division})
 
-# Vista para eliminar una división
 @login_required
 def eliminar_division(request, division_id):
-    # Aseguramos que la división pertenezca a una finca del usuario
+    """Elimina una división de la finca, previa confirmación."""
     division = get_object_or_404(Division, id=division_id, finca__usuario=request.user)
     if request.method == 'POST':
         finca_id = division.finca.id
@@ -133,37 +172,57 @@ def eliminar_division(request, division_id):
 @login_required
 def organizar_galpon(request, finca_id):
     finca = get_object_or_404(Finca, id=finca_id, usuario=request.user)
-    GalponDivisionFormSet = modelformset_factory(GalponDivision, form=GalponDivisionForm, extra=1)
+    GalponDivisionFormSet = modelformset_factory(
+        GalponDivision,
+        form=GalponDivisionForm,
+        extra=1
+    )
     
     if request.method == 'POST':
-        galpon_form = GalponForm(request.POST)
+        # Se añade request.FILES
+        galpon_form = GalponForm(request.POST, request.FILES)
         formset = GalponDivisionFormSet(request.POST, queryset=GalponDivision.objects.none())
         
         if galpon_form.is_valid() and formset.is_valid():
             galpon = galpon_form.save(commit=False)
             galpon.finca = finca
             galpon.save()
+            
             total_divisiones = 0
-            for form in formset:
-                if form.cleaned_data:
-                    division = form.save(commit=False)
+            for f in formset:
+                if f.cleaned_data:
+                    division = f.save(commit=False)
                     division.galpon = galpon
-                    total_divisiones += division.tamano
                     division.save()
-            if galpon.tamano < total_divisiones:
-                # Manejo de error: la suma de divisiones supera el tamaño global.
+                    total_divisiones += division.tamano
+            if total_divisiones > galpon.tamano:
+                galpon.delete()
                 error = "El total de los tamaños de las divisiones supera el tamaño global del galpón."
-                return render(request, 'organizar_galpon.html', {'finca': finca, 'galpon_form': galpon_form, 'formset': formset, 'error': error})
+                return render(
+                    request,
+                    'organizar_galpon.html',
+                    {
+                        'finca': finca,
+                        'galpon_form': galpon_form,
+                        'formset': formset,
+                        'error': error
+                    }
+                )
             return redirect('administrar_finca', finca_id=finca.id)
     else:
         galpon_form = GalponForm()
         formset = GalponDivisionFormSet(queryset=GalponDivision.objects.none())
     
-    return render(request, 'organizar_galpon.html', {'finca': finca, 'galpon_form': galpon_form, 'formset': formset})
+    return render(request, 'organizar_galpon.html', {
+        'finca': finca,
+        'galpon_form': galpon_form,
+        'formset': formset
+    })
 
-# views.py
+
 @login_required
 def control_animales(request, finca_id):
+    """Control de animales: crea nuevos registros y lista los existentes."""
     finca = get_object_or_404(Finca, id=finca_id, usuario=request.user)
     control_animales = finca.control_animales.all().order_by('-fecha_control')
     
@@ -185,10 +244,36 @@ def control_animales(request, finca_id):
 
 @login_required
 def eliminar_control_animal(request, control_id):
+    """Elimina un registro de ControlAnimal, previa confirmación."""
     control = get_object_or_404(ControlAnimal, id=control_id, finca__usuario=request.user)
     finca_id = control.finca.id
     if request.method == 'POST':
         control.delete()
         return redirect('administrar_finca', finca_id=finca_id)
-    # Puedes optar por confirmar la eliminación o redirigir directamente
     return render(request, 'confirmar_eliminar_control_animal.html', {'control': control})
+
+# ---------------------------------------------------
+# NUEVAS VISTAS PARA EDITAR Y ELIMINAR GALPÓN
+# ---------------------------------------------------
+@login_required
+def editar_galpon(request, galpon_id):
+    galpon = get_object_or_404(Galpon, id=galpon_id, finca__usuario=request.user)
+    if request.method == 'POST':
+        # Añadir request.FILES
+        form = GalponForm(request.POST, request.FILES, instance=galpon)
+        if form.is_valid():
+            form.save()
+            return redirect('administrar_finca', finca_id=galpon.finca.id)
+    else:
+        form = GalponForm(instance=galpon)
+    return render(request, 'editar_galpon.html', {'form': form, 'galpon': galpon})
+
+@login_required
+def eliminar_galpon(request, galpon_id):
+    """Elimina un galpón, previa confirmación."""
+    galpon = get_object_or_404(Galpon, id=galpon_id, finca__usuario=request.user)
+    finca_id = galpon.finca.id
+    if request.method == 'POST':
+        galpon.delete()
+        return redirect('administrar_finca', finca_id=finca_id)
+    return render(request, 'confirmar_eliminar_galpon.html', {'galpon': galpon})

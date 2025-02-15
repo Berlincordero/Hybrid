@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mx-auto px-4 py-4 text-white">
+  <h2 class="text-2xl font-bold mb-4">Editar Galpón: {{ galpon.nombre }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+      Guardar
+    </button>
+  </form>
+  <div class="mt-4">
+    <a href="{% url 'administrar_finca' galpon.finca.id %}" class="text-green-400 hover:text-green-300">
+      Volver a Administración
+    </a>
+  </div>
+</div>
+{% endblock %}

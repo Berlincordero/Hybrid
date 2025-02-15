@@ -1,4 +1,3 @@
-# models.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
@@ -33,9 +32,6 @@ class Finca(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.usuario.username})"
-
-
-# models.py
 
 class Division(models.Model):
     finca = models.ForeignKey(Finca, on_delete=models.CASCADE, related_name='divisiones')
@@ -74,15 +70,12 @@ class Division(models.Model):
     cantidad_arboles = models.PositiveIntegerField(default=0)
     rios = models.PositiveIntegerField(default=0)
     
-    # Nuevo campo para animales (ej: cantidad de vacas si es potrero)
     animales = models.PositiveIntegerField(default=0, help_text="Cantidad de animales (ej: vacas) si es un potrero")
     
     imagen = models.ImageField(upload_to='divisiones/', blank=True, null=True)
     
     def __str__(self):
         return f"{self.get_tipo_division_display()} - {self.tamaño} m²"
-
-
 class Galpon(models.Model):
     finca = models.ForeignKey(Finca, on_delete=models.CASCADE, related_name='galpones')
     nombre = models.CharField(max_length=255)
@@ -104,9 +97,23 @@ class Galpon(models.Model):
         null=True,
         help_text="Otro tipo de producto almacenado (opcional)"
     )
-    
+
+    # Nuevo campo de imagen (carpeta "galpones/" dentro de MEDIA_ROOT)
+    imagen = models.ImageField(
+        upload_to='galpones/',
+        blank=True,
+        null=True,
+        help_text="Imagen o foto del galpón (opcional)"
+    )
+
     def __str__(self):
         return self.nombre
+
+    @property
+    def area_restante(self):
+        """Calcula el área restante del galpón según las divisiones."""
+        total_divisiones = sum(d.tamano for d in self.divisiones.all())
+        return self.tamano - total_divisiones
 
 
 class GalponDivision(models.Model):
@@ -116,8 +123,7 @@ class GalponDivision(models.Model):
     
     def __str__(self):
         return f"División ({self.tamano} m², {self.animales} animales)"
-    
-# models.py (en tu app, actualiza o agrega la siguiente clase)
+
 class ControlAnimal(models.Model):
     finca = models.ForeignKey(Finca, on_delete=models.CASCADE, related_name='control_animales')
     imagen = models.ImageField(upload_to='control_animales/', blank=True, null=True)
@@ -126,11 +132,9 @@ class ControlAnimal(models.Model):
     tipo_animal = models.CharField(max_length=50, help_text="Tipo de Animal")
     raza = models.CharField(max_length=100, help_text="Raza")
     peso = models.FloatField(help_text="Peso (en kg)")
-    # Cambiamos de FloatField a CharField para permitir textos como "4 meses"
     edad = models.CharField(max_length=50, help_text="Edad (ej: 4 meses)")
     tipo_tratamiento = models.CharField(max_length=100, help_text="Tipo de Tratamiento")
     nombre_medicina = models.CharField(max_length=100, help_text="Nombre de la Medicina")
-    # Cambiamos de FloatField a CharField para permitir textos como "1 onza" o "100 gramos"
     cantidad = models.CharField(max_length=50, help_text="Cantidad aplicada (ej: 1 onza, 100 gramos)")
     tipo_control = models.CharField(max_length=100, help_text="Tipo de Control")
     num_arete = models.CharField(max_length=50, help_text="Número de Arete o de Identificación")

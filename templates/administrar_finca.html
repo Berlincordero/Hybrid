@@ -1,4 +1,3 @@
-{# administrar_finca.html #}
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
@@ -39,9 +38,9 @@
           <span class="text-sm">{{ finca_item.fecha_creacion|date:"Y-m-d" }}</span>
         </div>
         {% if finca_item.imagen %}
-          <img src="{{ finca_item.imagen.url }}" alt="{{ finca_item.nombre }}" class="w-full h-32 object-cover rounded mb-2">
+          <img src="{{ finca_item.imagen.url }}" alt="{{ finca_item.nombre }}" class="w-full h-32 object-cover rounded mb-2 finca-img">
         {% else %}
-          <img src="{% static 'images/product_placeholder.png' %}" alt="Sin imagen" class="w-full h-32 object-cover rounded mb-2">
+          <img src="{% static 'images/product_placeholder.png' %}" alt="Sin imagen" class="w-full h-32 object-cover rounded mb-2 finca-img">
         {% endif %}
         <div class="text-base text-gray-300 mb-1">
           <strong>Ubicación:</strong> {{ finca_item.ubicacion }}<br>
@@ -75,8 +74,10 @@
       <div class="bg-gray-700 border border-gray-600 rounded p-4 text-white">
         <h3 class="text-xl font-semibold">{{ division.get_tipo_division_display }}</h3>
         {% if division.imagen %}
-          <!-- Se elimina la clase h-32 y se agrega un estilo inline con aspect-ratio para preservar la proporción -->
-          <img src="{{ division.imagen.url }}" alt="{{ division.get_tipo_division_display }}" class="w-full object-cover rounded mb-2" style="aspect-ratio: 16/9;">
+          <img src="{{ division.imagen.url }}" alt="{{ division.get_tipo_division_display }}" class="w-full object-cover rounded mb-2 division-img" style="aspect-ratio: 16/9;">
+        {% else %}
+          <!-- Si quieres placeholder en divisiones cuando no hay imagen -->
+          <img src="{% static 'images/product_placeholder.png' %}" alt="Sin imagen" class="w-full object-cover rounded mb-2 division-img" style="aspect-ratio: 16/9;">
         {% endif %}
         <p><strong>Descripción:</strong> {{ division.descripcion }}</p>
         <p><strong>Tipo de terreno:</strong> {{ division.get_tipo_terreno_display }}</p>
@@ -84,7 +85,6 @@
         <p><strong>Ubicación:</strong> {{ division.get_ubicacion_display }}</p>
         <p><strong>Árboles:</strong> {{ division.cantidad_arboles }}</p>
         <p><strong>Ríos:</strong> {{ division.rios }}</p>
-        <!-- Botones para editar y eliminar la división -->
         <div class="flex space-x-2 mt-2">
           <a href="{% url 'editar_division' division.id %}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
             Editar
@@ -105,6 +105,11 @@
     {% for galpon in finca.galpones.all %}
       <div class="bg-gray-700 border border-gray-600 rounded p-4 text-white">
         <h3 class="text-xl font-semibold">{{ galpon.nombre }}</h3>
+        {% if galpon.imagen %}
+          <img src="{{ galpon.imagen.url }}" alt="{{ galpon.nombre }}" class="w-full h-32 object-cover rounded mb-2 galpon-img">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="Sin imagen" class="w-full h-32 object-cover rounded mb-2 galpon-img">
+        {% endif %}
         {% if galpon.descripcion %}
           <p><strong>Descripción:</strong> {{ galpon.descripcion }}</p>
         {% endif %}
@@ -117,7 +122,6 @@
         {% if galpon.otro_producto %}
           <p><strong>Otro producto:</strong> {{ galpon.otro_producto }}</p>
         {% endif %}
-        <!-- Botones para editar y eliminar el galpón -->
         <div class="flex space-x-2 mt-2">
           <a href="{% url 'editar_galpon' galpon.id %}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
             Editar
@@ -139,9 +143,9 @@
       <div class="bg-gray-700 border border-gray-600 rounded p-4 text-white">
         <h3 class="text-xl font-semibold">{{ control.nombre }}</h3>
         {% if control.imagen %}
-          <img src="{{ control.imagen.url }}" alt="{{ control.nombre }}" class="w-full h-32 object-cover rounded mb-2">
+          <img src="{{ control.imagen.url }}" alt="{{ control.nombre }}" class="w-full h-32 object-cover rounded mb-2 control-img">
         {% else %}
-          <img src="{% static 'images/product_placeholder.png' %}" alt="Sin imagen" class="w-full h-32 object-cover rounded mb-2">
+          <img src="{% static 'images/product_placeholder.png' %}" alt="Sin imagen" class="w-full h-32 object-cover rounded mb-2 control-img">
         {% endif %}
         <p><strong>Tipo:</strong> {{ control.tipo_animal }}</p>
         <p><strong>Raza:</strong> {{ control.raza }}</p>
@@ -154,7 +158,6 @@
         <p><strong>Atendido por:</strong> {{ control.atendido_por }}</p>
         <p><strong>Ubicación:</strong> {{ control.ubicacion }}</p>
         <p><strong>Fecha y Hora:</strong> {{ control.fecha_control|date:"Y-m-d H:i:s" }}</p>
-        <!-- Botón para eliminar el registro de control animal -->
         <form action="{% url 'eliminar_control_animal' control.id %}" method="post" class="mt-2">
           {% csrf_token %}
           <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
@@ -167,22 +170,96 @@
     {% endfor %}
   </div>
   
+  <!-- Sección: Análisis y Rendimiento de la Finca -->
+  <h2 class="text-2xl font-bold text-white mt-8 mb-4">Análisis y Rendimiento de la Finca</h2>
+  <div class="bg-gray-800 p-6 rounded shadow mb-6">
+    <!-- Contenedor para el gráfico, centrado y con tamaño adecuado -->
+    <div class="mx-auto w-full max-w-md" style="height: 300px;">
+      <canvas id="farmAnalysisChart"></canvas>
+    </div>
+    <!-- Datos adicionales de rendimiento -->
+    <div class="mt-4 text-gray-300">
+      <p><strong>Total de animales en galpón:</strong> {{ total_animales_galpon|default:"0" }}</p>
+      <p><strong>Rendimiento promedio:</strong> {{ rendimiento_promedio|default:"N/A" }} (ej. kg/animal)</p>
+    </div>
+  </div>
+  
 </div>
 
-<!-- JavaScript para centrar las imágenes (solo se aplica a las divisiones) -->
+<!-- Modal universal para TODAS las imágenes (fincas, divisiones, galpones, control) -->
+<div id="universalImageModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+  <div class="absolute inset-0 bg-black opacity-75"></div>
+  <div class="relative">
+    <button id="universalCloseModal" class="absolute top-0 right-0 m-4 text-white text-3xl font-bold">&times;</button>
+    <img id="universalModalImage" src="" alt="Imagen ampliada" class="max-h-screen max-w-full rounded">
+  </div>
+</div>
+
+<!-- JavaScript: activar modal sólo en .finca-img, .division-img, .galpon-img, .control-img -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Selecciona todas las imágenes dentro de la sección de divisiones
-  const divisionImages = document.querySelectorAll('.grid img');
-  divisionImages.forEach(function(img) {
-    // Se asegura que la imagen esté centrada horizontalmente
-    img.style.display = 'block';
-    img.style.marginLeft = 'auto';
-    img.style.marginRight = 'auto';
-    // Se mantiene el objeto centrado en su contenedor
-    img.style.objectPosition = 'center';
+  // Classes que activarán el modal
+  const classesToEnable = ['finca-img', 'division-img', 'galpon-img', 'control-img'];
+  
+  // Función para asignar event listener a cada clase
+  function enableModalForClass(cls) {
+    const images = document.querySelectorAll('.' + cls);
+    images.forEach(function(img) {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', function() {
+        const modalImage = document.getElementById('universalModalImage');
+        modalImage.src = this.src;
+        document.getElementById('universalImageModal').classList.remove('hidden');
+      });
+    });
+  }
+  
+  // Activar modal en cada clase
+  classesToEnable.forEach(enableModalForClass);
+  
+  // Cerrar modal
+  const universalModal = document.getElementById('universalImageModal');
+  universalModal.addEventListener('click', function(e) {
+    if (e.target.id === 'universalImageModal' || e.target.id === 'universalCloseModal') {
+      this.classList.add('hidden');
+    }
+  });
+
+  // Configurar gráfico (Chart.js) para mostrar composición actual de animales
+  const compositionLabels = {{ composition_labels|safe }};
+  const compositionData = {{ composition_values|safe }};
+  const ctx = document.getElementById('farmAnalysisChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: compositionLabels,
+      datasets: [{
+        data: compositionData,
+        backgroundColor: [
+          '#10B981',
+          '#3B82F6',
+          '#F59E0B',
+          '#EF4444',
+          '#8B5CF6',
+          '#EC4899'
+        ],
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        },
+        title: {
+          display: true,
+          text: 'Composición Actual de Animales'
+        }
+      }
+    }
   });
 });
 </script>
-
 {% endblock %}

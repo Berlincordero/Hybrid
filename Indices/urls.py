@@ -12,5 +12,7 @@ urlpatterns = [
     path('guatemala/', views.indice_guatemala, name='indice_guatemala'),
     path('mexico/', views.indice_mexico, name='indice_mexico'),
     path('honduras/', views.indice_honduras, name='indice_honduras'),
+    path('crear/', views.crear_indice, name='crear_indice'),
+    path('editar/<int:pk>/', views.editar_indice, name='editar_indice'),
 ]
 

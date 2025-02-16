@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}Índices Económicos{% endblock %}
+
 {% block content %}
-<!-- Estilos para la animación de parpadeo -->
+<!-- Estilo para la animación de parpadeo de flechas -->
 <style>
   @keyframes blink {
     0% { opacity: 1; }
@@ -15,17 +17,18 @@
 </style>
 
 <div class="container mx-auto px-4 py-4">
-  <!-- Agregamos la imagen de la bandera al lado del título -->
+  <!-- Encabezado con la bandera de Costa Rica y el título -->
   <h1 class="text-2xl font-bold text-white mb-4 flex items-center">
-    <img src="{% static 'img/Bandera_de_costa_rica.png' %}" alt="Bandera de Costa Rica" style="width: 150px; height: 150px;" class="mr-2">
-    Indices Económicos de Productos de Costa Rica
+    <img src="{% static 'img/Bandera_de_costa_rica.png' %}" alt="Bandera de Costa Rica"
+         style="width: 150px; height: 150px;" class="mr-2">
+    Índices Económicos de Productos de Costa Rica
   </h1>
-  <!-- Botón: Ver lugares recomendados (redirige a la vista listar_lugares_recomendados) -->
+  
+  <!-- Botones de navegación (ejemplo) -->
   <a href="{% url 'listar_lugares_recomendados' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4 inline-block">
     Ver lugares recomendados
   </a>
-   <!-- Botón: Ver lugares recomendados (redirige a la vista listar_lugares_recomendados) -->
-   <a href="{% url 'indice_panama' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
+  <a href="{% url 'indice_panama' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
     Panamá
   </a>
   <a href="{% url 'indice_nicaragua' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
@@ -43,517 +46,326 @@
   <a href="{% url 'indice_mexico' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
     México
   </a>
-  
-  <!-- Resto del contenido... -->
-  <!-- Sección: Carnes -->
+
+  <!-- Botón para crear un nuevo índice (solo si el usuario tiene ese correo) -->
+  {% if user.email == "enriquecorderob33@gmail.com" %}
+    <a href="{% url 'crear_indice' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4 inline-block">
+      Crear Índice
+    </a>
+  {% endif %}
+
+  <!-- SECCIÓN: Carnes -->
   <h2 class="text-xl font-bold text-white mb-2">Carnes</h2>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-    <!-- Card 1 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Carnes</span>
-        <span class="text-sm">2025-02-12</span>
+    {% for indice in indices_carnes %}
+      <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+        
+        <!-- Encabezado: Nombre, Subcategoría y Fecha -->
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-lg uppercase">
+            {{ indice.nombre }} ({{ indice.sub_categoria|title }})
+          </span>
+          <span class="text-sm">{{ indice.fecha }}</span>
+        </div>
+
+        <!-- Flecha parpadeante según "sube" -->
+        <div class="flex items-center mb-2">
+          {% if indice.sube == 'sube' %}
+            <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
+          {% else %}
+            <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
+          {% endif %}
+        </div>
+
+        <!-- Campos: Antes, Sube/Baja, Total, Precio, Fuente -->
+        <div class="text-base text-gray-300 mb-1">
+          Antes: {{ indice.antes }} colones<br>
+          {% if indice.sube == 'sube' %}
+            <span class="text-green-500 font-bold">Sube</span><br>
+          {% else %}
+            <span class="text-red-500 font-bold">Baja</span><br>
+          {% endif %}
+          Total (Baja o Sube): {{ indice.total }} colones<br>
+          Precio Actual: {{ indice.precio_actual }} colones<br>
+          
+          {% if indice.fuente %}
+            <span class="text-sm text-green-400">
+              Fuente: {{ indice.fuente }}
+            </span>
+          {% endif %}
+        </div>
+
+        <!-- Inflación -->
+        <div class="text-base text-yellow-400 mb-2">
+          Porcentaje de Inflación: {{ indice.inflacion }}%
+        </div>
+
+        <!-- Imagen (si existe) -->
+        {% if indice.image %}
+          <img src="{{ indice.image.url }}" alt="{{ indice.sub_categoria }}" class="w-30 h-30 rounded">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="{{ indice.sub_categoria }}" class="w-16 h-16 rounded">
+        {% endif %}
+
+        <!-- Botón Editar (solo si el usuario tiene el correo) -->
+        {% if user.email == "enriquecorderob33@gmail.com" %}
+          <div class="mt-2">
+            <!-- Enlace al view "editar_indice" con pk -->
+            <a href="{% url 'editar_indice' indice.pk %}"
+               class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 rounded">
+              Editar
+            </a>
+          </div>
+        {% endif %}
       </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">13%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 56 col<br>
-        Sube: 24<br>
-        Total: 80<br>
-        Precio Actual: $100
-      </div>
-      <div class="text-base text-yellow-400 mb-2">
-        Inflación: 33%
-      </div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Carnes" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 2 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Carnes</span>
-        <span class="text-sm">2025-02-12</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">12%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 60 col<br>
-        Sube: 22<br>
-        Total: 82<br>
-        Precio Actual: $105
-      </div>
-      <div class="text-base text-yellow-400 mb-2">
-        Inflación: 30%
-      </div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Carnes" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 3 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Carnes</span>
-        <span class="text-sm">2025-02-12</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">14%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 55 col<br>
-        Sube: 26<br>
-        Total: 81<br>
-        Precio Actual: $98
-      </div>
-      <div class="text-base text-yellow-400 mb-2">
-        Inflación: 32%
-      </div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Carnes" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 4 (flecha abajo) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Carnes</span>
-        <span class="text-sm">2025-02-12</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
-        <span class="ml-2 text-lg font-bold">8%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 58 col<br>
-        Sube: 20<br>
-        Total: 78<br>
-        Precio Actual: $95
-      </div>
-      <div class="text-base text-yellow-400 mb-2">
-        Inflación: 34%
-      </div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Carnes" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 5 (flecha abajo) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Carnes</span>
-        <span class="text-sm">2025-02-12</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
-        <span class="ml-2 text-lg font-bold">9%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 59 col<br>
-        Sube: 21<br>
-        Total: 80<br>
-        Precio Actual: $97
-      </div>
-      <div class="text-base text-yellow-400 mb-2">
-        Inflación: 31%
-      </div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Carnes" class="w-16 h-16 rounded">
-    </div>
+    {% empty %}
+      <p class="text-white">No hay índices para Carnes.</p>
+    {% endfor %}
   </div>
 
-  <!-- Sección: Granos -->
+  <!-- Repite la MISMA LÓGICA (incluyendo el botón "Editar") para Granos, Vegetales, Frutas y Lácteos. -->
+  <!-- SECCIÓN: Granos -->
   <h2 class="text-xl font-bold text-white mt-8 mb-2">Granos</h2>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-    <!-- Card 1 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Granos</span>
-        <span class="text-sm">2025-02-10</span>
+    {% for indice in indices_granos %}
+      <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-lg uppercase">
+            {{ indice.nombre }} ({{ indice.sub_categoria|title }})
+          </span>
+          <span class="text-sm">{{ indice.fecha }}</span>
+        </div>
+
+        <div class="flex items-center mb-2">
+          {% if indice.sube == 'sube' %}
+            <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
+          {% else %}
+            <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
+          {% endif %}
+        </div>
+
+        <div class="text-base text-gray-300 mb-1">
+          Antes: {{ indice.antes }} colones<br>
+          {% if indice.sube == 'sube' %}
+            <span class="text-green-500 font-bold">Sube</span><br>
+          {% else %}
+            <span class="text-red-500 font-bold">Baja</span><br>
+          {% endif %}
+          Total (Baja o Sube): {{ indice.total }} colones<br>
+          Precio Actual: {{ indice.precio_actual }} colones<br>
+          
+          {% if indice.fuente %}
+            <span class="text-sm text-green-400">
+              Fuente: {{ indice.fuente }}
+            </span>
+          {% endif %}
+        </div>
+
+        <div class="text-base text-yellow-400 mb-2">
+          Porcentaje de Inflación: {{ indice.inflacion }}%
+        </div>
+
+        {% if indice.image %}
+          <img src="{{ indice.image.url }}" alt="{{ indice.sub_categoria }}" class="w-30 h-30 rounded">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="{{ indice.sub_categoria }}" class="w-16 h-16 rounded">
+        {% endif %}
+
+        {% if user.email == "enriquecorderob33@gmail.com" %}
+          <div class="mt-2">
+            <a href="{% url 'editar_indice' indice.pk %}"
+               class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 rounded">
+              Editar
+            </a>
+          </div>
+        {% endif %}
       </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">12%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 45 col<br>
-        Sube: 20<br>
-        Total: 65<br>
-        Precio Actual: $90
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 25%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Granos" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 2 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Granos</span>
-        <span class="text-sm">2025-02-10</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">11%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 46 col<br>
-        Sube: 19<br>
-        Total: 65<br>
-        Precio Actual: $88
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 24%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Granos" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 3 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Granos</span>
-        <span class="text-sm">2025-02-10</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">13%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 44 col<br>
-        Sube: 21<br>
-        Total: 65<br>
-        Precio Actual: $92
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 26%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Granos" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 4 (flecha abajo) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Granos</span>
-        <span class="text-sm">2025-02-10</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
-        <span class="ml-2 text-lg font-bold">7%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 47 col<br>
-        Sube: 18<br>
-        Total: 65<br>
-        Precio Actual: $87
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 23%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Granos" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 5 (flecha abajo) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Granos</span>
-        <span class="text-sm">2025-02-10</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
-        <span class="ml-2 text-lg font-bold">8%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 45 col<br>
-        Sube: 20<br>
-        Total: 65<br>
-        Precio Actual: $89
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 24%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Granos" class="w-16 h-16 rounded">
-    </div>
+    {% empty %}
+      <p class="text-white">No hay índices para Granos.</p>
+    {% endfor %}
   </div>
 
-  <!-- Sección: Vegetales -->
+  <!-- Vegetales -->
   <h2 class="text-xl font-bold text-white mt-8 mb-2">Vegetales</h2>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-    <!-- Card 1 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Vegetales</span>
-        <span class="text-sm">2025-02-11</span>
+    {% for indice in indices_vegetales %}
+      <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-lg uppercase">
+            {{ indice.nombre }} ({{ indice.sub_categoria|title }})
+          </span>
+          <span class="text-sm">{{ indice.fecha }}</span>
+        </div>
+
+        <div class="flex items-center mb-2">
+          {% if indice.sube == 'sube' %}
+            <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
+          {% else %}
+            <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
+          {% endif %}
+        </div>
+
+        <div class="text-base text-gray-300 mb-1">
+          Antes: {{ indice.antes }} colones<br>
+          {% if indice.sube == 'sube' %}
+            <span class="text-green-500 font-bold">Sube</span><br>
+          {% else %}
+            <span class="text-red-500 font-bold">Baja</span><br>
+          {% endif %}
+          Total (Baja o Sube): {{ indice.total }} colones<br>
+          Precio Actual: {{ indice.precio_actual }} colones<br>
+
+          {% if indice.fuente %}
+            <span class="text-ls text-green-400">
+              Fuente: {{ indice.fuente }}
+            </span>
+          {% endif %}
+        </div>
+
+        <div class="text-base text-yellow-400 mb-2">
+          Porcentaje de Inflación: {{ indice.inflacion }}%
+        </div>
+
+        {% if indice.image %}
+          <img src="{{ indice.image.url }}" alt="{{ indice.sub_categoria }}" class="w-30 h-30 rounded">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="{{ indice.sub_categoria }}" class="w-16 h-16 rounded">
+        {% endif %}
+
+        {% if user.email == "enriquecorderob33@gmail.com" %}
+          <div class="mt-2">
+            <a href="{% url 'editar_indice' indice.pk %}"
+               class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 rounded">
+              Editar
+            </a>
+          </div>
+        {% endif %}
       </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">11%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 50 col<br>
-        Sube: 22<br>
-        Total: 72<br>
-        Precio Actual: $95
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 30%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Vegetales" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 2 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Vegetales</span>
-        <span class="text-sm">2025-02-11</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">12%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 51 col<br>
-        Sube: 21<br>
-        Total: 72<br>
-        Precio Actual: $96
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 29%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Vegetales" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 3 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Vegetales</span>
-        <span class="text-sm">2025-02-11</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">13%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 49 col<br>
-        Sube: 23<br>
-        Total: 72<br>
-        Precio Actual: $94
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 31%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Vegetales" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 4 (flecha abajo) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Vegetales</span>
-        <span class="text-sm">2025-02-11</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
-        <span class="ml-2 text-lg font-bold">6%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 52 col<br>
-        Sube: 20<br>
-        Total: 72<br>
-        Precio Actual: $97
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 30%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Vegetales" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 5 (flecha abajo) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Vegetales</span>
-        <span class="text-sm">2025-02-11</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
-        <span class="ml-2 text-lg font-bold">7%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 50 col<br>
-        Sube: 22<br>
-        Total: 72<br>
-        Precio Actual: $95
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 32%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Vegetales" class="w-16 h-16 rounded">
-    </div>
+    {% empty %}
+      <p class="text-white">No hay índices para Vegetales.</p>
+    {% endfor %}
   </div>
 
-  <!-- Sección: Frutas -->
+  <!-- Frutas -->
   <h2 class="text-xl font-bold text-white mt-8 mb-2">Frutas</h2>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-    <!-- Card 1 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Frutas</span>
-        <span class="text-sm">2025-02-09</span>
+    {% for indice in indices_frutas %}
+      <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-lg uppercase">
+            {{ indice.nombre }} ({{ indice.sub_categoria|title }})
+          </span>
+          <span class="text-sm">{{ indice.fecha }}</span>
+        </div>
+
+        <div class="flex items-center mb-2">
+          {% if indice.sube == 'sube' %}
+            <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
+          {% else %}
+            <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
+          {% endif %}
+        </div>
+
+        <div class="text-base text-gray-300 mb-1">
+          Antes: {{ indice.antes }} colones<br>
+          {% if indice.sube == 'sube' %}
+            <span class="text-green-500 font-bold">Sube</span><br>
+          {% else %}
+            <span class="text-red-500 font-bold">Baja</span><br>
+          {% endif %}
+          Total (Baja o Sube): {{ indice.total }} colones<br>
+          Precio Actual: {{ indice.precio_actual }} colones<br>
+
+          {% if indice.fuente %}
+            <span class="text-sm text-green-400">
+              Fuente: {{ indice.fuente }}
+            </span>
+          {% endif %}
+        </div>
+
+        <div class="text-base text-yellow-400 mb-2">
+          Porcentaje de Inflación: {{ indice.inflacion }}%
+        </div>
+
+        {% if indice.image %}
+          <img src="{{ indice.image.url }}" alt="{{ indice.sub_categoria }}" class="w-30 h-30 rounded">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="{{ indice.sub_categoria }}" class="w-16 h-16 rounded">
+        {% endif %}
+
+        {% if user.email == "enriquecorderob33@gmail.com" %}
+          <div class="mt-2">
+            <a href="{% url 'editar_indice' indice.pk %}"
+               class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 rounded">
+              Editar
+            </a>
+          </div>
+        {% endif %}
       </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">10%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 40 col<br>
-        Sube: 15<br>
-        Total: 55<br>
-        Precio Actual: $85
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 28%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Frutas" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 2 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Frutas</span>
-        <span class="text-sm">2025-02-09</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">11%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 41 col<br>
-        Sube: 16<br>
-        Total: 57<br>
-        Precio Actual: $87
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 29%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Frutas" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 3 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Frutas</span>
-        <span class="text-sm">2025-02-09</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">9%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 39 col<br>
-        Sube: 14<br>
-        Total: 53<br>
-        Precio Actual: $83
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 27%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Frutas" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 4 (flecha abajo) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Frutas</span>
-        <span class="text-sm">2025-02-09</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
-        <span class="ml-2 text-lg font-bold">5%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 42 col<br>
-        Sube: 14<br>
-        Total: 56<br>
-        Precio Actual: $86
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 26%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Frutas" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 5 (flecha abajo) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Frutas</span>
-        <span class="text-sm">2025-02-09</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
-        <span class="ml-2 text-lg font-bold">4%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 40 col<br>
-        Sube: 13<br>
-        Total: 53<br>
-        Precio Actual: $84
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 25%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Frutas" class="w-16 h-16 rounded">
-    </div>
+    {% empty %}
+      <p class="text-white">No hay índices para Frutas.</p>
+    {% endfor %}
   </div>
 
-  <!-- Sección: Lácteos -->
+  <!-- Lácteos -->
   <h2 class="text-xl font-bold text-white mt-8 mb-2">Lácteos</h2>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-    <!-- Card 1 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Lácteos</span>
-        <span class="text-sm">2025-02-08</span>
+    {% for indice in indices_lacteos %}
+      <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-lg uppercase">
+            {{ indice.nombre }} ({{ indice.sub_categoria|title }})
+          </span>
+          <span class="text-sm">{{ indice.fecha }}</span>
+        </div>
+
+        <div class="flex items-center mb-2">
+          {% if indice.sube == 'sube' %}
+            <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
+          {% else %}
+            <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
+          {% endif %}
+        </div>
+
+        <div class="text-base text-gray-300 mb-1">
+          Antes: {{ indice.antes }} colones<br>
+          {% if indice.sube == 'sube' %}
+            <span class="text-green-500 font-bold">Sube</span><br>
+          {% else %}
+            <span class="text-red-500 font-bold">Baja</span><br>
+          {% endif %}
+          Total (Baja o Sube): {{ indice.total }} colones<br>
+          Precio Actual: {{ indice.precio_actual }} colones<br>
+
+          {% if indice.fuente %}
+            <span class="text-sm text-green-400">
+              Fuente: {{ indice.fuente }}
+            </span>
+          {% endif %}
+        </div>
+
+        <div class="text-base text-yellow-400 mb-2">
+          Porcentaje de Inflación: {{ indice.inflacion }}%
+        </div>
+
+        {% if indice.image %}
+          <img src="{{ indice.image.url }}" alt="{{ indice.sub_categoria }}" class="w-30 h-30 rounded">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="{{ indice.sub_categoria }}" class="w-16 h-16 rounded">
+        {% endif %}
+
+        {% if user.email == "enriquecorderob33@gmail.com" %}
+          <div class="mt-2">
+            <a href="{% url 'editar_indice' indice.pk %}"
+               class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1 rounded">
+              Editar
+            </a>
+          </div>
+        {% endif %}
       </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">14%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 65 col<br>
-        Sube: 28<br>
-        Total: 93<br>
-        Precio Actual: $110
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 35%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Lácteos" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 2 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Lácteos</span>
-        <span class="text-sm">2025-02-08</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">15%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 66 col<br>
-        Sube: 27<br>
-        Total: 93<br>
-        Precio Actual: $112
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 36%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Lácteos" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 3 (flecha arriba) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Lácteos</span>
-        <span class="text-sm">2025-02-08</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
-        <span class="ml-2 text-lg font-bold">13%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 64 col<br>
-        Sube: 29<br>
-        Total: 93<br>
-        Precio Actual: $108
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 34%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Lácteos" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 4 (flecha abajo) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Lácteos</span>
-        <span class="text-sm">2025-02-08</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
-        <span class="ml-2 text-lg font-bold">9%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 63 col<br>
-        Sube: 26<br>
-        Total: 93<br>
-        Precio Actual: $107
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 33%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Lácteos" class="w-16 h-16 rounded">
-    </div>
-    <!-- Card 5 (flecha abajo) -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-      <div class="flex items-center justify-between mb-2">
-        <span class="font-bold text-lg uppercase">Lácteos</span>
-        <span class="text-sm">2025-02-08</span>
-      </div>
-      <div class="flex items-center mb-2">
-        <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
-        <span class="ml-2 text-lg font-bold">8%</span>
-      </div>
-      <div class="text-base text-gray-300 mb-1">
-        Antes: 62 col<br>
-        Sube: 27<br>
-        Total: 93<br>
-        Precio Actual: $106
-      </div>
-      <div class="text-base text-yellow-400 mb-2">Inflación: 32%</div>
-      <img src="{% static 'images/product_placeholder.png' %}" alt="Lácteos" class="w-16 h-16 rounded">
-    </div>
+    {% empty %}
+      <p class="text-white">No hay índices para Lácteos.</p>
+    {% endfor %}
   </div>
-  
 </div>
 {% endblock %}

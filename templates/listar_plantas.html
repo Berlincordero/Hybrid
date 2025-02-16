@@ -2,6 +2,22 @@
 {% load my_filters %}
 {% block content %}
 <div class="container mx-auto px-4 py-4">
+
+  <div id="vegetales-carousel" class="relative overflow-hidden mb-6">
+    <div class="carousel-inner">
+      {% for indice in vegetales_indices %}
+        <div class="carousel-item p-4" style="display: {% if forloop.first %}block{% else %}none{% endif %};">
+          <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
+            <h2 class="text-xl font-bold mb-2">{{ indice.get_sub_categoria_display }}</h2>
+            <p class="text-sm">Fecha: {{ indice.fecha }}</p>
+            <p class="text-base">Precio Actual: {{ indice.precio_actual }}</p>
+            <p class="text-sm">Inflación: {{ indice.inflacion }}%</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
   
   <!-- Título principal -->
   <h1 class="text-2xl font-bold text-bg-green-700 mb-4">
@@ -189,6 +205,22 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("next-sembradio-container").style.display = "block";
     }
 });
+
+<scrip>
+  document.addEventListener("DOMContentLoaded", function(){
+    var items = document.querySelectorAll("#vegetales-carousel .carousel-item");
+    var currentIndex = 0;
+    function showItem(index) {
+      items.forEach(function(item, i){
+        item.style.display = (i === index) ? "block" : "none";
+      });
+    }
+    showItem(currentIndex);
+    setInterval(function(){
+      currentIndex = (currentIndex + 1) % items.length;
+      showItem(currentIndex);
+    }, 10000); // 10,000 ms = 10 segundos
+  });
 </script>
 {% endblock %}
 

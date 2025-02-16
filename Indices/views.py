@@ -3,18 +3,78 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Indice, LugarRecomendado
 from .forms import IndiceForm, LugarRecomendadoForm
+from django.contrib import messages
+from django.utils import timezone
+
+@login_required
+def crear_indice(request):
+    if request.user.email != "enriquecorderob33@gmail.com":
+        messages.error(request, "No tienes permiso para acceder a esta funcionalidad.")
+        return redirect("listar_indices")
+    
+    if request.method == "POST":
+        form = IndiceForm(request.POST, request.FILES)
+        if form.is_valid():
+            indice = form.save(commit=False)
+            # Asigna la fecha actual al crear el índice
+            indice.fecha = timezone.now().date()
+            indice.save()
+            messages.success(request, "Índice creado correctamente.")
+            return redirect("listar_indices")
+        else:
+            messages.error(request, "Por favor, corrige los errores en el formulario.")
+    else:
+        form = IndiceForm()
+        # Si deseas ocultar el campo 'fecha' en el formulario, lo eliminas:
+        # if "fecha" in form.fields:
+        #     del form.fields["fecha"]
+    
+    return render(request, "crear_indice.html", {"form": form})
+@login_required
+def editar_indice(request, pk):
+    if request.user.email != "enriquecorderob33@gmail.com":
+        messages.error(request, "No tienes permiso para acceder.")
+        return redirect("listar_indices")
+    
+    indice = get_object_or_404(Indice, pk=pk)
+    
+    if request.method == "POST":
+        form = IndiceForm(request.POST, request.FILES, instance=indice)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Índice actualizado correctamente.")
+            return redirect("listar_indices")
+    else:
+        form = IndiceForm(instance=indice)
+
+    return render(request, "editar_indice.html", {"form": form, "indice": indice})
+
+
 
 @login_required
 def listar_indices(request):
-    # Esta vista es para Costa Rica y utiliza el template 'listar_indices.html'
-    indices = Indice.objects.all().order_by('-fecha')
+    """
+    Vista para listar los índices económicos.
+    """
+    indices_carnes = Indice.objects.filter(sub_categoria='carnes').order_by('-fecha')
+    indices_granos = Indice.objects.filter(sub_categoria='granos').order_by('-fecha')
+    indices_vegetales = Indice.objects.filter(sub_categoria='vegetales').order_by('-fecha')
+    indices_frutas = Indice.objects.filter(sub_categoria='frutas').order_by('-fecha')
+    indices_lacteos = Indice.objects.filter(sub_categoria='lacteos').order_by('-fecha')
+
     context = {
-        'indices': indices,
-        'country_name': 'Costa Rica',
-        'flag_url': 'img/Bandera_de_costa_rica.png',
-        'title': 'Índices Económicos de Costa Rica'
+        "indices_carnes": indices_carnes,
+        "indices_granos": indices_granos,
+        "indices_vegetales": indices_vegetales,
+        "indices_frutas": indices_frutas,
+        "indices_lacteos": indices_lacteos,
+        "country_name": "Costa Rica",
+        "flag_url": "img/Bandera_de_costa_rica.png",
+        "title": "Índices Económicos de Productos de Costa Rica"
     }
-    return render(request, 'listar_indices.html', context)
+    return render(request, "listar_indices.html", context)
+
+# El resto de tus vistas (editar, lugares, etc.) se mantienen similares.
 
 @login_required
 def listar_lugares_recomendados(request):

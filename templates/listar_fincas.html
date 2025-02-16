@@ -1,7 +1,7 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
 {% block title %}
-{%endblock %} 
+{% endblock %}
 {% block content %}
 <!-- Estilos para la animación de parpadeo -->
 <style>
@@ -21,13 +21,15 @@
   }
 </style>
 
-<div class="container mx-auto px-4 py-4">
+<!-- ÚNICAMENTE se añaden las clases "w-full max-w-none" para forzar el ancho completo. -->
+<div class="container mx-auto px-4 py-4 w-full max-w-none">
   <!-- Card Índice de Productos, Insumos y Animales -->
   <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white mb-4">
     <h2 class="text-xl font-bold mb-2">
       Índice de Productos, Insumos y Animales
     </h2>
-    <div class="grid grid-cols-3 gap-4">
+    <!-- De "grid grid-cols-3" cambiamos a "grid grid-cols-1 md:grid-cols-3" -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <!-- Productos -->
       <div class="flex flex-col items-center">
         <span class="text-lg font-semibold">Productos</span>
@@ -306,52 +308,62 @@
     {% empty %}
     <p class="text-white">No tienes fincas registradas.</p>
     {% endfor %}
-  </div>
 
-  <!-- Card de Recomendaciones -->
-  <div class="bg-gray-800 border border-gray-700 rounded p-4 mt-8">
-    <div class="flex items-center mb-4">
-      <!-- Contenedor para la animación Lottie -->
-      <div id="lottieRecomendacion" class="w-14 h-14"></div>
-      <!-- Título con estilos: rojo que cambia a verde claro al pasar el cursor -->
-      <h2
-        class="text-2xl font-bold ml-2 text-red-600 hover:text-green-300 transition-colors duration-300"
-      >
-        Recomendaciones
-      </h2>
-    </div>
-    <ul class="list-disc list-inside text-sm">
-      <li class="text-yellow-400">
-        Revise constantemente los Indicadores economicos para saber en que es
-        mejor invertir.
-      </li>
-      <li class="text-yellow-400">
-        Administre la finca conforme a la actividad sea adecuada. Por ejemplo,
-        si es de uso agrícola con limitación de construcción, explote todo el
-        terreno para la agricultura y divídalo en secciones.
-      </li>
-      <li class="text-yellow-400">
-        Si la finca es de uso ganadero, divídala en secciones para la cría de
-        animales y la producción de alimentos.
-      </li>
-      <li class="text-yellow-400">
-        Si la finca es de uso mixto, divídala en secciones para la agricultura y
-        la cría de animales.
-      </li>
-      <li class="text-yellow-400">
-        Si la finca es de uso turístico, divídala en secciones para la
-        construcción de cabañas, piscinas y áreas de esparcimiento.
-      </li>
-      <li class="text-yellow-400">
-        Si la finca es de uso industrial, divídala en secciones para la
-        construcción de naves industriales, oficinas y áreas de almacenamiento.
-      </li>
-      <li class="text-yellow-400">
-        Si la finca es de uso residencial, divídala en secciones para la
-        construcción de viviendas, áreas verdes y zonas de recreación.
-      </li>
-    </ul>
+  <!-- Card de Publicidad -->
+<div class="bg-gray-800 border border-gray-700 rounded p-4 text-white w-full">
+  <h2 class="text-xl font-bold mb-2">Publicidad</h2>
+  <img
+    src="{% static 'img/publicidad.jpg' %}"
+    alt="Publicidad"
+    class="w-full h-auto object-cover rounded mt-20"
+  />
+</div>
+
+ <!-- Card de Recomendaciones -->
+<div class="bg-gray-800 border border-gray-700 rounded p-4 mt-8 w-full">
+  <div class="flex flex-col items-center mb-4">
+    <!-- Contenedor para la animación Lottie (con margen abajo para separarlo del título) -->
+    <div id="lottieRecomendacion" class="w-14 h-14 mb-2"></div>
+    <!-- Título con estilos: rojo que cambia a verde claro al pasar el cursor -->
+    <h2
+      class="text-2xl font-bold ml-2 text-red-600 hover:text-green-300 transition-colors duration-300"
+    >
+      Recomendaciones
+    </h2>
   </div>
+  <ul class="list-disc list-inside text-sm">
+    <li class="text-yellow-400">
+      Revise constantemente los Indicadores economicos para saber en que es
+      mejor invertir.
+    </li>
+    <li class="text-yellow-400">
+      Administre la finca conforme a la actividad sea adecuada. Por ejemplo,
+      si es de uso agrícola con limitación de construcción, explote todo el
+      terreno para la agricultura y divídalo en secciones.
+    </li>
+    <li class="text-yellow-400">
+      Si la finca es de uso ganadero, divídala en secciones para la cría de
+      animales y la producción de alimentos.
+    </li>
+    <li class="text-yellow-400">
+      Si la finca es de uso mixto, divídala en secciones para la agricultura y
+      la cría de animales.
+    </li>
+    <li class="text-yellow-400">
+      Si la finca es de uso turístico, divídala en secciones para la
+      construcción de cabañas, piscinas y áreas de esparcimiento.
+    </li>
+    <li class="text-yellow-400">
+      Si la finca es de uso industrial, divídala en secciones para la
+      construcción de naves industriales, oficinas y áreas de almacenamiento.
+    </li>
+    <li class="text-yellow-400">
+      Si la finca es de uso residencial, divídala en secciones para la
+      construcción de viviendas, áreas verdes y zonas de recreación.
+    </li>
+  </ul>
+</div>
+
 
   <!-- Lottie script (CDN) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>

@@ -182,6 +182,22 @@ class="flex items-center px-4 py-2 hover:bg-gray-700"
 <span class="whitespace-nowrap">{% trans "Indice Precios" %}</span>
 </a>
 
+<a
+href="{% url 'listar_indices' %}"
+class="flex items-center px-4 py-2 hover:bg-gray-700"
+>
+<!-- Ícono Lottie -->
+<lottie-player
+    src="{% static 'animations/calendario.json' %}"
+    background="transparent"
+    speed="1"
+    style="width: 54px; height: 54px; margin-left: 2px"
+    loop
+    autoplay
+></lottie-player>
+<span class="whitespace-nowrap margin-left: 5px">{% trans "Eventos" %}</span>
+</a>
+
 
         <a
         href="{% url 'opiniones' %}"

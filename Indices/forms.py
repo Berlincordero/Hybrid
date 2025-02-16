@@ -1,7 +1,6 @@
 # indices/forms.py
 from django import forms
-from .models import Indice
-from .models import LugarRecomendado
+from .models import Indice, LugarRecomendado
 
 class IndiceForm(forms.ModelForm):
     class Meta:
@@ -9,16 +8,15 @@ class IndiceForm(forms.ModelForm):
         fields = [
             'main_categoria',
             'sub_categoria',
-            'fecha',
-            'porcentaje',
+            'nombre',          # <-- Campo agregado
             'antes',
-            'sube',
+            'sube',           # <-- Este ahora es un select con "sube" o "baja"
             'total',
             'precio_actual',
+            'fuente',
             'inflacion',
             'image'
         ]
-
 
 class LugarRecomendadoForm(forms.ModelForm):
     class Meta:

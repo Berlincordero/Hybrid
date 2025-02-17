@@ -1,11 +1,13 @@
 # views.py
 import math
+from Indices.models import Indice
 from collections import defaultdict, Counter
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import localdate
 from .models import Planta, Vivero, Monitoreo
 from .forms import PlantaForm, ViveroForm, MonitoreoForm, PlantaImagenForm
+
 
 def calcular_recomendacion(planta):
     """
@@ -108,17 +110,15 @@ def panel_vivero(request):
     }
     return render(request, 'panel_vivero.html', context)
 
+def calcular_recomendacion(planta):
+    # Aquí iría tu lógica para recomendaciones
+    pass
+
 @login_required
 def listar_plantas(request):
-    """
-    Huerto mixto: recorre TODAS las plantas (ordenadas por ID), 
-    asume un 'orchard_capacity' = vivero.espacio_total, 
-    y descuenta 'avg_area_planta' de cada planta en el bloque actual.
-    Cuando no cabe, se pasa al siguiente bloque.
-    """
     vivero, _ = Vivero.objects.get_or_create(
         usuario=request.user, 
-        defaults={'espacio_total': 1}  # e.g. 1 m² por defecto
+        defaults={'espacio_total': 1}
     )
     
     if request.method == 'POST':
@@ -140,15 +140,15 @@ def listar_plantas(request):
                 fi.save()
                 return redirect('listar_plantas')
         elif 'vivero_name' in request.POST:
-            # Renombrar el vivero
             nuevo_nombre = request.POST.get('vivero_name', '').strip()
             if nuevo_nombre:
                 vivero.nombre = nuevo_nombre
                 vivero.save()
 
-    # Obtenemos todas las plantas ordenadas por ID (no por variedad)
+    # Todas las plantas del usuario
     plantas = Planta.objects.filter(usuario=request.user).order_by('id')
 
+    # (Tu lógica para bloques, recomendaciones, etc.)
     orchard_capacity = vivero.espacio_total
     orchard_area_left = orchard_capacity
     current_block = 1
@@ -159,12 +159,8 @@ def listar_plantas(request):
 
     for p in plantas:
         rec = calcular_recomendacion(p)
-        if rec:
-            avg_area = rec['avg_area_planta']
-        else:
-            avg_area = 1.0  # Valor por defecto si la variedad no está
+        avg_area = rec['avg_area_planta'] if rec else 1.0
 
-        # Verificamos si cabe en el bloque actual
         if avg_area > orchard_area_left:
             current_block += 1
             orchard_area_left = orchard_capacity
@@ -187,13 +183,21 @@ def listar_plantas(request):
         }
         recomendaciones[p.id] = rec
 
+    # Unificar ambos tipos de índices en un solo QuerySet
+    indices_unificados = Indice.objects.filter(
+        sub_categoria__in=['vegetales', 'granos']
+    ).order_by('nombre')  # O como quieras ordenarlos
+
     context = {
         'vivero': vivero,
         'plantas': plantas,
         'plant_block_info': plant_block_info,
         'recomendaciones': recomendaciones,
+        # Aquí pasamos un solo conjunto, que incluye vegetales y granos:
+        'indices': indices_unificados,
     }
     return render(request, 'listar_plantas.html', context)
+
 
 @login_required
 def crear_planta(request):

@@ -1,24 +1,91 @@
 {% extends 'base.html' %}
 {% load my_filters %}
-{% block content %}
-<div class="container mx-auto px-4 py-4">
+{% load static %}
 
-  <div id="vegetales-carousel" class="relative overflow-hidden mb-6">
-    <div class="carousel-inner">
-      {% for indice in vegetales_indices %}
-        <div class="carousel-item p-4" style="display: {% if forloop.first %}block{% else %}none{% endif %};">
-          <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-            <h2 class="text-xl font-bold mb-2">{{ indice.get_sub_categoria_display }}</h2>
-            <p class="text-sm">Fecha: {{ indice.fecha }}</p>
-            <p class="text-base">Precio Actual: {{ indice.precio_actual }}</p>
-            <p class="text-sm">Inflación: {{ indice.inflacion }}%</p>
-          </div>
+{% block content %}
+<!-- Estilos para el carrusel de índices (flecha parpadeante y ocultar scroll) -->
+<style>
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  .blink {
+    animation: blink 1s infinite;
+  }
+  
+  /* Ocultar la barra de scroll para navegadores Webkit (Chrome, Safari) */
+  #carousel::-webkit-scrollbar {
+    display: none;
+  }
+  /* Para Firefox e IE */
+  #carousel {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+</style>
+
+<div class="container mx-auto px-4 py-4">
+  
+  <!-- CARRUSEL DE ÍNDICES PARA VEGETALES Y GRANOS -->
+  <h2 class="text-2xl font-bold text-white mb-4">Índices de Vegetales y Granos</h2>
+  <div class="relative">
+    <!-- Contenedor con scroll horizontal tipo carrusel con id "carousel" -->
+    <div id="carousel" class="flex overflow-x-auto space-x-4 py-2">
+      {% for indice in indices %}
+      <div class="min-w-[270px] max-w-[300px] bg-gray-800 border border-gray-700 rounded p-4 text-white">
+        <!-- Título y fecha -->
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-lg uppercase">
+            {{ indice.nombre }} ({{ indice.sub_categoria|title }})
+          </span>
+          <span class="text-sm">{{ indice.fecha }}</span>
         </div>
+
+        <!-- Flecha parpadeante según si sube o baja -->
+        <div class="flex items-center mb-2">
+          {% if indice.sube == 'sube' %}
+            <span class="blink text-green-500 text-4xl" style="filter: brightness(1.5)">↑</span>
+          {% else %}
+            <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
+          {% endif %}
+        </div>
+
+        <!-- Datos económicos -->
+        <div class="text-base text-gray-300 mb-1">
+          Antes: {{ indice.antes }} colones<br>
+          {% if indice.sube == 'sube' %}
+            <span class="text-green-500 font-bold">Sube</span><br>
+          {% else %}
+            <span class="text-red-500 font-bold">Baja</span><br>
+          {% endif %}
+          Total (Baja o Sube): {{ indice.total }} colones<br>
+          Precio Actual: {{ indice.precio_actual }} colones<br>
+
+          {% if indice.fuente %}
+            <span class="text-sm text-green-400">
+              Fuente: {{ indice.fuente }}
+            </span>
+          {% endif %}
+        </div>
+
+        <!-- Inflación -->
+        <div class="text-base text-yellow-400 mb-2">
+          Porcentaje de Inflación: {{ indice.inflacion }}%
+        </div>
+
+        <!-- Imagen -->
+        {% if indice.image %}
+          <img src="{{ indice.image.url }}" alt="{{ indice.sub_categoria }}" class="w-40 h-40 rounded mb-2">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="{{ indice.sub_categoria }}" class="w-16 h-16 rounded mb-2">
+        {% endif %}
+      </div>
       {% endfor %}
     </div>
   </div>
+  <!-- FIN DEL CARRUSEL DE ÍNDICES -->
 
-  
   <!-- Título principal -->
   <h1 class="text-2xl font-bold text-bg-green-700 mb-4">
     Bienvenido a mi Vivero Virtual
@@ -184,7 +251,15 @@
     {% empty %}
       <p class="text-white">No tienes plantas registradas.</p>
     {% endfor %}
-  </div>
+
+<!-- CONTENEDOR INDEPENDIENTE PARA LA PUBLICIDAD -->
+<div class="bg-gray-800 border border-gray-700 rounded p-4 text-white mt-4">
+  <h2 class="text-lg font-bold mb-2">Publicidad</h2>
+  <img src="{% static 'images/publicidad.jpg' %}" alt="Publicidad" class="w-full h-auto object-cover rounded mb-2">
+  <p class="text-sm">
+    ¡Promociona tu marca aquí!<br>
+    <a href="#" class="text-blue-400 underline">Más información</a>
+  </p>
 </div>
 
 <!-- Script para mostrar el botón "Ver Sembradio 2" cuando en algún elemento del bloque 1 el remaining sea 0 -->
@@ -193,9 +268,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var elems = document.querySelectorAll(".sembradio-info");
     var showNext = false;
     elems.forEach(function(el) {
-        // Verificamos únicamente los elementos del bloque 1
         if (el.getAttribute("data-block") === "1") {
-            // Si el atributo "data-remaining" es "0" (o "0.0")
             if (el.getAttribute("data-remaining") === "0" || el.getAttribute("data-remaining") === "0.0") {
                 showNext = true;
             }
@@ -205,22 +278,41 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("next-sembradio-container").style.display = "block";
     }
 });
+</script>
 
-<scrip>
-  document.addEventListener("DOMContentLoaded", function(){
-    var items = document.querySelectorAll("#vegetales-carousel .carousel-item");
-    var currentIndex = 0;
-    function showItem(index) {
-      items.forEach(function(item, i){
-        item.style.display = (i === index) ? "block" : "none";
-      });
-    }
-    showItem(currentIndex);
-    setInterval(function(){
-      currentIndex = (currentIndex + 1) % items.length;
-      showItem(currentIndex);
+<!-- Script para rotar automáticamente el carrusel único cada 10 segundos -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const carousel = document.getElementById("carousel");
+  if (carousel && carousel.children.length > 0) {
+    // Se obtiene el ancho de la primera "tarjeta" y se suma un extra (margen Tailwind: space-x-4 = 16px)
+    const cardWidth = carousel.children[0].offsetWidth + 16;
+
+    setInterval(function() {
+      // Si se ha llegado al final del scroll, se vuelve al inicio
+      if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth) {
+        carousel.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        carousel.scrollBy({ left: cardWidth, behavior: 'smooth' });
+      }
     }, 10000); // 10,000 ms = 10 segundos
-  });
+  }
+});
+</script>
+
+<!-- Lottie script (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
+<script>
+  // Cargar la animación Lottie en el contenedor "lottieRecomendacion" (si lo usas en la página)
+  const recContainer = document.getElementById("lottieRecomendacion");
+  if (recContainer) {
+    lottie.loadAnimation({
+      container: recContainer,
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      path: '{% static "animations/bombillo.json" %}',
+    });
+  }
 </script>
 {% endblock %}
-

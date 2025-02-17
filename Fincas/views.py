@@ -1,16 +1,29 @@
+# views.py (Fincas)
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from django.db.models import Count
+
+# IMPORTA Indice
+from Indices.models import Indice
+
 from .models import Finca, Division, Galpon, GalponDivision, ControlAnimal
 from .forms import FincaForm, DivisionForm, GalponForm, GalponDivisionForm, ControlAnimalForm
 import json
 
 @login_required
 def listar_fincas(request):
-    """Lista todas las fincas del usuario autenticado."""
+    """Lista todas las fincas del usuario autenticado y además trae los vegetales del índice."""
     fincas = Finca.objects.filter(usuario=request.user).order_by('-fecha_creacion')
-    return render(request, 'listar_fincas.html', {'fincas': fincas})
+    
+    # Consulta de índices de la subcategoría "vegetales"
+    vegetales = Indice.objects.filter(sub_categoria='vegetales').order_by('-fecha')
+
+    return render(request, 'listar_fincas.html', {
+        'fincas': fincas,
+        'vegetales': vegetales,  # Pasamos esta queryset al template
+    })
+
 
 @login_required
 def crear_finca(request):

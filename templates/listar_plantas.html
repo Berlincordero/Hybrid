@@ -26,11 +26,9 @@
 </style>
 
 <div class="container mx-auto px-4 py-4">
-  
   <!-- CARRUSEL DE ÍNDICES PARA VEGETALES Y GRANOS -->
   <h2 class="text-2xl font-bold text-white mb-4">Índices de Vegetales y Granos</h2>
   <div class="relative">
-    <!-- Contenedor con scroll horizontal tipo carrusel con id "carousel" -->
     <div id="carousel" class="flex overflow-x-auto space-x-4 py-2">
       {% for indice in indices %}
       <div class="min-w-[270px] max-w-[300px] bg-gray-800 border border-gray-700 rounded p-4 text-white">
@@ -41,7 +39,6 @@
           </span>
           <span class="text-sm">{{ indice.fecha }}</span>
         </div>
-
         <!-- Flecha parpadeante según si sube o baja -->
         <div class="flex items-center mb-2">
           {% if indice.sube == 'sube' %}
@@ -50,7 +47,6 @@
             <span class="blink text-red-500 text-4xl" style="filter: brightness(1.5)">↓</span>
           {% endif %}
         </div>
-
         <!-- Datos económicos -->
         <div class="text-base text-gray-300 mb-1">
           Antes: {{ indice.antes }} colones<br>
@@ -61,19 +57,16 @@
           {% endif %}
           Total (Baja o Sube): {{ indice.total }} colones<br>
           Precio Actual: {{ indice.precio_actual }} colones<br>
-
           {% if indice.fuente %}
             <span class="text-sm text-green-400">
               Fuente: {{ indice.fuente }}
             </span>
           {% endif %}
         </div>
-
         <!-- Inflación -->
         <div class="text-base text-yellow-400 mb-2">
           Porcentaje de Inflación: {{ indice.inflacion }}%
         </div>
-
         <!-- Imagen -->
         {% if indice.image %}
           <img src="{{ indice.image.url }}" alt="{{ indice.sub_categoria }}" class="w-40 h-40 rounded mb-2">
@@ -109,23 +102,44 @@
     <div>
       <label for="vivero_name" class="block text-white mb-1">Nuevo Nombre</label>
       <input type="text" name="vivero_name" id="vivero_name" value="{{ vivero.nombre }}"
-             class="px-3 py-2 rounded text-black focus:outline-none focus:ring-2 focus:ring-blue-500" />
+             class="px-3 py-2 rounded text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
     </div>
     <div>
-      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Guardar</button>
+      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+        Guardar
+      </button>
     </div>
   </form>
 
-  <!-- Área de botones: "Añadir Planta" y contenedor para el botón de siguiente sembradio -->
-  <div class="flex items-center mb-4">
-    <a href="{% url 'crear_planta' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mr-2 inline-block">
-      Añadir Planta
-    </a>
-    <!-- Contenedor para el botón "Ver Sembradio 2" (oculto por defecto) -->
-    <div id="next-sembradio-container" style="display: none;">
-      <a id="next-sembradio-button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded" href="{% url 'listar_sembradio' 2 %}">
-        Ver Sembradio 2
+  <!-- Contenedor de botones "Añadir Planta" y "Ver Sembradio 2" -->
+  <div class="mb-6">
+    <div class="flex items-center gap-2">
+      <a href="{% url 'crear_planta' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+        Añadir Planta
       </a>
+      <!-- Botón "Ver Sembradio 2" (oculto por defecto) -->
+      <div id="next-sembradio-container" style="display: none;">
+        <a id="next-sembradio-button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+           href="{% url 'listar_sembradio' 2 %}">
+          Ver Sembradio 2
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card de publicidad, ubicado justo debajo de los botones (versión ampliada) -->
+  <div class="mb-6">
+    <div class="max-w-2xl w-full bg-gray-800 border border-gray-700 rounded p-8 text-white">
+      <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
+      <div class="w-full h-96 overflow-hidden rounded-lg mb-6">
+        <img src="{% static 'img/espacio_publicitario.png' %}" alt="Publicidad" class="w-full h-full object-cover">
+      </div>
+      <p class="text-xl text-center mb-6">¡Promociona tu marca aquí!</p>
+      <div class="flex justify-center">
+        <a href="#" class="text-blue-400 underline text-xl hover:text-blue-300 transition-colors">
+          Más información
+        </a>
+      </div>
     </div>
   </div>
 
@@ -147,64 +161,68 @@
         {% endif %}
         <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-50 cursor-pointer"
              onclick="document.getElementById('file-input-{{ planta.id }}').click()">
-          <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json" background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay></lottie-player>
+          <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_jcikwtux.json"
+                         background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay>
+          </lottie-player>
         </div>
       </div>
       {% if planta.necesita_actualizacion_foto %}
-        <p class="text-red-500 text-sm mt-1">
-          La foto debe ser actualizada cada 7 días para monitorear el progreso.
-        </p>
+      <p class="text-red-500 text-sm mt-1">
+        La foto debe ser actualizada cada 7 días para monitorear el progreso.
+      </p>
       {% endif %}
       
       <!-- Formulario oculto para editar la imagen -->
-      <form id="image-edit-form-{{ planta.id }}" method="post" action="{% url 'listar_plantas' %}" enctype="multipart/form-data" class="hidden">
+      <form id="image-edit-form-{{ planta.id }}" method="post" action="{% url 'listar_plantas' %}"
+            enctype="multipart/form-data" class="hidden">
         {% csrf_token %}
         <input type="hidden" name="action" value="editar_imagen">
         <input type="hidden" name="plant_id" value="{{ planta.id }}">
-        <input type="file" name="imagen" id="file-input-{{ planta.id }}" class="hidden" accept="image/*" onchange="this.form.submit()">
+        <input type="file" name="imagen" id="file-input-{{ planta.id }}" class="hidden"
+               accept="image/*" onchange="this.form.submit()">
       </form>
 
       <!-- Datos adicionales del cultivo -->
       {% if planta.variedad %}
       <div class="mt-2 p-2 bg-gray-700 text-sm rounded">
-         <p><strong>Variedad:</strong> {{ planta.get_variedad_display }}</p>
-         <p><strong>Sistema de Cultivo:</strong> {{ planta.get_sistema_cultivo_display }}</p>
-         <p><strong>Calidad del Suelo:</strong> {{ planta.get_calidad_suelo_display }}</p>
-         <p><strong>Sistema de Riego:</strong> {{ planta.get_sistema_riego_display }}</p>
-         <p><strong>Tipo de Poda:</strong> {{ planta.get_tipo_poda_display }}</p>
-         <p><strong>Exposición:</strong> {{ planta.get_exposicion_display }}</p>
-         <p><strong>Área a Sembrar:</strong> {{ planta.area_sembrar }} m²</p>
+        <p><strong>Variedad:</strong> {{ planta.get_variedad_display }}</p>
+        <p><strong>Sistema de Cultivo:</strong> {{ planta.get_sistema_cultivo_display }}</p>
+        <p><strong>Calidad del Suelo:</strong> {{ planta.get_calidad_suelo_display }}</p>
+        <p><strong>Sistema de Riego:</strong> {{ planta.get_sistema_riego_display }}</p>
+        <p><strong>Tipo de Poda:</strong> {{ planta.get_tipo_poda_display }}</p>
+        <p><strong>Exposición:</strong> {{ planta.get_exposicion_display }}</p>
+        <p><strong>Área a Sembrar:</strong> {{ planta.area_sembrar }} m²</p>
       </div>
       {% endif %}
 
       <!-- Información de Sembradio (utilizando los cálculos originales) -->
       {% with info=plant_block_info|get_item:planta.id %}
-        <p class="mt-2 sembradio-info" data-block="{{ info.block_num }}" data-remaining="{{ info.remaining }}">
-          <strong>Sembradio {{ info.block_num }}:</strong>
-          ({{ info.count_in_block }} planta{{ info.count_in_block|pluralize }} en este bloque,
-          capacidad: {{ info.capacity }},
-          restantes: {{ info.remaining }})
-        </p>
+      <p class="mt-2 sembradio-info" data-block="{{ info.block_num }}" data-remaining="{{ info.remaining }}">
+        <strong>Sembradio {{ info.block_num }}:</strong>
+        ({{ info.count_in_block }} planta{{ info.count_in_block|pluralize }} en este bloque,
+        capacidad: {{ info.capacity }},
+        restantes: {{ info.remaining }})
+      </p>
       {% endwith %}
 
       <!-- Recomendaciones calculadas si existen -->
       {% with rec=recomendaciones|get_item:planta.id %}
-        {% if rec %}
-        <div class="mt-2 p-2 bg-blue-900 text-sm rounded">
-          <p><strong>Recomendaciones para {{ planta.get_variedad_display }}:</strong></p>
-          <ul class="list-disc ml-4">
-            <li>Distancia entre plantas: {{ rec.recomendacion.distancia_entre_plantas.0 }} – {{ rec.recomendacion.distancia_entre_plantas.1 }} m</li>
-            <li>Distancia entre filas: {{ rec.recomendacion.distancia_entre_filas.0 }} – {{ rec.recomendacion.distancia_entre_filas.1 }} m</li>
-            <li>Área aproximada por planta: {{ rec.recomendacion.area_por_planta.0 }} – {{ rec.recomendacion.area_por_planta.1 }} m²</li>
-            <li>Consumo de agua recomendado: {{ rec.recomendacion.consumo_agua_recomendado }}</li>
-            <li>Consumo de fertilizante recomendado: {{ rec.recomendacion.consumo_fertilizante_recomendado }}</li>
-            <li>Observaciones: {{ rec.recomendacion.observaciones }}</li>
-            <li>Área efectiva para siembra: {{ rec.area_efectiva|floatformat:2 }} m²</li>
-            <li>Número de plantas posibles: {{ rec.num_plantas_posibles }}</li>
-            <li>Probabilidad de éxito: {{ rec.probabilidad_exito }}%</li>
-          </ul>
-        </div>
-        {% endif %}
+      {% if rec %}
+      <div class="mt-2 p-2 bg-blue-900 text-sm rounded">
+        <p><strong>Recomendaciones para {{ planta.get_variedad_display }}:</strong></p>
+        <ul class="list-disc ml-4">
+          <li>Distancia entre plantas: {{ rec.recomendacion.distancia_entre_plantas.0 }} – {{ rec.recomendacion.distancia_entre_plantas.1 }} m</li>
+          <li>Distancia entre filas: {{ rec.recomendacion.distancia_entre_filas.0 }} – {{ rec.recomendacion.distancia_entre_filas.1 }} m</li>
+          <li>Área aproximada por planta: {{ rec.recomendacion.area_por_planta.0 }} – {{ rec.recomendacion.area_por_planta.1 }} m²</li>
+          <li>Consumo de agua recomendado: {{ rec.recomendacion.consumo_agua_recomendado }}</li>
+          <li>Consumo de fertilizante recomendado: {{ rec.recomendacion.consumo_fertilizante_recomendado }}</li>
+          <li>Observaciones: {{ rec.recomendacion.observaciones }}</li>
+          <li>Área efectiva para siembra: {{ rec.area_efectiva|floatformat:2 }} m²</li>
+          <li>Número de plantas posibles: {{ rec.num_plantas_posibles }}</li>
+          <li>Probabilidad de éxito: {{ rec.probabilidad_exito }}%</li>
+        </ul>
+      </div>
+      {% endif %}
       {% endwith %}
 
       <!-- Tiempo transcurrido y restante -->
@@ -251,59 +269,49 @@
     {% empty %}
       <p class="text-white">No tienes plantas registradas.</p>
     {% endfor %}
-
-<!-- CONTENEDOR INDEPENDIENTE PARA LA PUBLICIDAD -->
-<div class="bg-gray-800 border border-gray-700 rounded p-4 text-white mt-4">
-  <h2 class="text-lg font-bold mb-2">Publicidad</h2>
-  <img src="{% static 'images/publicidad.jpg' %}" alt="Publicidad" class="w-full h-auto object-cover rounded mb-2">
-  <p class="text-sm">
-    ¡Promociona tu marca aquí!<br>
-    <a href="#" class="text-blue-400 underline">Más información</a>
-  </p>
+  </div>
 </div>
 
 <!-- Script para mostrar el botón "Ver Sembradio 2" cuando en algún elemento del bloque 1 el remaining sea 0 -->
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function() {
     var elems = document.querySelectorAll(".sembradio-info");
     var showNext = false;
     elems.forEach(function(el) {
-        if (el.getAttribute("data-block") === "1") {
-            if (el.getAttribute("data-remaining") === "0" || el.getAttribute("data-remaining") === "0.0") {
-                showNext = true;
-            }
+      if (el.getAttribute("data-block") === "1") {
+        if (el.getAttribute("data-remaining") === "0" || el.getAttribute("data-remaining") === "0.0") {
+          showNext = true;
         }
+      }
     });
     if (showNext) {
-        document.getElementById("next-sembradio-container").style.display = "block";
+      document.getElementById("next-sembradio-container").style.display = "block";
     }
-});
+  });
 </script>
 
-<!-- Script para rotar automáticamente el carrusel único cada 10 segundos -->
+<!-- Script para rotar automáticamente el carrusel cada 10 segundos -->
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const carousel = document.getElementById("carousel");
-  if (carousel && carousel.children.length > 0) {
-    // Se obtiene el ancho de la primera "tarjeta" y se suma un extra (margen Tailwind: space-x-4 = 16px)
-    const cardWidth = carousel.children[0].offsetWidth + 16;
-
-    setInterval(function() {
-      // Si se ha llegado al final del scroll, se vuelve al inicio
-      if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth) {
-        carousel.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        carousel.scrollBy({ left: cardWidth, behavior: 'smooth' });
-      }
-    }, 10000); // 10,000 ms = 10 segundos
-  }
-});
+  document.addEventListener("DOMContentLoaded", function() {
+    const carousel = document.getElementById("carousel");
+    if (carousel && carousel.children.length > 0) {
+      // Se obtiene el ancho de la primera tarjeta + margen (space-x-4 = 16px)
+      const cardWidth = carousel.children[0].offsetWidth + 16;
+      setInterval(function() {
+        if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth) {
+          carousel.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          carousel.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        }
+      }, 10000);
+    }
+  });
 </script>
 
 <!-- Lottie script (CDN) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
 <script>
-  // Cargar la animación Lottie en el contenedor "lottieRecomendacion" (si lo usas en la página)
+  // Cargar la animación Lottie en el contenedor "lottieRecomendacion" (si se utiliza)
   const recContainer = document.getElementById("lottieRecomendacion");
   if (recContainer) {
     lottie.loadAnimation({

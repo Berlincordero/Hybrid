@@ -1,6 +1,6 @@
 # forms.py
 from django import forms
-from .models import Planta, Vivero, Monitoreo
+from .models import Planta, Vivero, Monitoreo,  Mapa, Bodega
 
 class ViveroForm(forms.ModelForm):
     class Meta:
@@ -56,3 +56,34 @@ class PlantaImagenForm(forms.ModelForm):
     class Meta:
         model = Planta
         fields = ['imagen']
+
+
+class MapaForm(forms.ModelForm):
+    class Meta:
+        model = Mapa
+        fields = ['nombre', 'descripcion', 'tamano_terreno', 'cantidad_sectores', 'topografia', 'imagen']
+        labels = {
+            'nombre': 'Nombre de sembradio',
+            'descripcion': 'Descripción',
+            'tamano_terreno': 'Tamaño del terreno para cultivo (m²)',
+            'cantidad_sectores': 'Cantidad de sectores o sembradios',
+            'topografia': 'Topografía del terreno',
+            'imagen': 'Imagen o foto',
+        }
+        
+
+class BodegaForm(forms.ModelForm):
+    class Meta:
+        model = Bodega
+        fields = ['tipo', 'descripcion', 'tamano', 'imagen']
+        labels = {
+            'tipo': 'Tipo de Bodega',
+            'descripcion': 'Descripción',
+            'tamano': 'Tamaño de la Bodega metros cuadrados',
+            'imagen': 'Imagen',
+        }
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'class': 'form-input', 'placeholder': 'Descripción de la bodega...', 'rows': 3}),
+            'tamano': forms.NumberInput(attrs={'class': 'form-input', 'step': 'any'}),
+        }
+        

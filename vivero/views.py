@@ -5,8 +5,8 @@ from collections import defaultdict, Counter
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import localdate
-from .models import Planta, Vivero, Monitoreo
-from .forms import PlantaForm, ViveroForm, MonitoreoForm, PlantaImagenForm
+from .models import Planta, Vivero, Monitoreo, Mapa, Bodega
+from .forms import PlantaForm, ViveroForm, MonitoreoForm, PlantaImagenForm, MapaForm, BodegaForm
 
 
 def calcular_recomendacion(planta):
@@ -147,8 +147,10 @@ def listar_plantas(request):
 
     # Todas las plantas del usuario
     plantas = Planta.objects.filter(usuario=request.user).order_by('id')
+    # Se obtienen también los mapas creados por el usuario
+    mapas = Mapa.objects.filter(usuario=request.user).order_by('id')
 
-    # (Tu lógica para bloques, recomendaciones, etc.)
+    # (Lógica para bloques, recomendaciones, etc.)
     orchard_capacity = vivero.espacio_total
     orchard_area_left = orchard_capacity
     current_block = 1
@@ -183,17 +185,16 @@ def listar_plantas(request):
         }
         recomendaciones[p.id] = rec
 
-    # Unificar ambos tipos de índices en un solo QuerySet
     indices_unificados = Indice.objects.filter(
         sub_categoria__in=['vegetales', 'granos']
-    ).order_by('nombre')  # O como quieras ordenarlos
+    ).order_by('nombre')
 
     context = {
         'vivero': vivero,
         'plantas': plantas,
+        'mapas': mapas,  # Se agrega la lista de mapas
         'plant_block_info': plant_block_info,
         'recomendaciones': recomendaciones,
-        # Aquí pasamos un solo conjunto, que incluye vegetales y granos:
         'indices': indices_unificados,
     }
     return render(request, 'listar_plantas.html', context)
@@ -308,3 +309,46 @@ def monitorear_planta(request, planta_id):
         'planta': pl,
         'observaciones': observaciones,
     })
+
+
+@login_required
+def crear_mapa(request):
+    if request.method == 'POST':
+        form = MapaForm(request.POST, request.FILES)
+        if form.is_valid():
+            mapa = form.save(commit=False)
+            mapa.usuario = request.user
+            mapa.save()
+            return redirect('listar_plantas')
+    else:
+        form = MapaForm()
+    return render(request, 'crear_mapa.html', {'form': form})
+
+@login_required
+def eliminar_mapa(request, mapa_id):
+    mapa = get_object_or_404(Mapa, id=mapa_id, usuario=request.user)
+    if request.method == 'POST':
+        mapa.delete()
+        return redirect('listar_plantas')
+    return render(request, 'eliminar_mapa.html', {'mapa': mapa})
+
+@login_required
+def crear_bodega(request):
+    if request.method == 'POST':
+        form = BodegaForm(request.POST, request.FILES)
+        if form.is_valid():
+            bodega = form.save(commit=False)
+            bodega.usuario = request.user
+            bodega.save()
+            return redirect('listar_plantas')
+    else:
+        form = BodegaForm()
+    return render(request, 'crear_bodega.html', {'form': form})
+
+@login_required
+def eliminar_bodega(request, bodega_id):
+    bodega = get_object_or_404(Bodega, id=bodega_id, usuario=request.user)
+    if request.method == 'POST':
+        bodega.delete()
+        return redirect('listar_plantas')
+    return render(request, 'eliminar_bodega.html', {'bodega': bodega})

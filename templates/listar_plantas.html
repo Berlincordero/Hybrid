@@ -23,6 +23,43 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
+  /* Botón mejorado: Verde y bordeado */
+  .submit-button {
+    background-color: transparent; /* Sin fondo */
+    border: 2px solid #10b981; /* Verde-500 */
+    color: #10b981; /* Verde-500 */
+    font-weight: 600; /* font-semibold */
+    padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .submit-button:hover {
+    background-color: #10b981; /* Verde-500 */
+    color: white;
+    border-color: #059669; /* Verde-600 */
+    transform: scale(1.05);
+  }
+
+  /* Botón mejorado: Verde y bordeado */
+  .submit-button-red {
+    background-color: transparent; /* Sin fondo */
+    border: 2px solidrgb(246, 5, 5); /* Verde-500 */
+    color:rgb(255, 0, 0); /* Verde-500 */
+    font-weight: 600; /* font-semibold */
+    padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px rgb(255, 6, 6); /* shadow-lg */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .submit-button-red:hover {
+    background-color:rgb(185, 16, 16); /* Verde-500 */
+    color: white;
+    border-color:rgb(150, 5, 5); /* Verde-600 */
+    transform: scale(1.05);
+  }
 </style>
 
 <div class="container mx-auto px-4 py-4">
@@ -113,24 +150,24 @@
 <!-- Contenedor de botones "Añadir Planta" y "Ver Sembradio 2" -->
 <div class="mb-6">
   <div class="flex items-center gap-2">
-    <a href="{% url 'crear_planta' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+    <a href="{% url 'crear_planta' %}" class="submit-button">
       Añadir Planta
     </a>
-    <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+    <a href="#" class="submit-button">
       Añadir Empleados
     </a>
-    <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+    <a href="crear_bodega" class="submit-button">
       Añadir Bodega
     </a>
-    <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+    <a href="{% url 'crear_mapa' %}" class="submit-button">
       Añadir Mapa
     </a>
-    <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-      Control de Gastos
+    <a href="#" class="submit-button">
+      Control  Gastos
     </a>
     <!-- Botón "Ver Sembradio 2" (oculto por defecto) -->
     <div id="next-sembradio-container" style="display: none;">
-      <a id="next-sembradio-button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+      <a id="next-sembradio-button" class="submit-button"
          href="{% url 'listar_sembradio' 2 %}">
         Ver Sembradio 2
       </a>
@@ -287,7 +324,81 @@
       <p class="text-white">No tienes plantas registradas.</p>
     {% endfor %}
   </div>
+<!-- Sección para listar Mapas de Sembradios -->
+<div class="mt-8">
+  <h2 class="text-2xl font-bold text-white mb-4">Mapas de Sembradios</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    {% for mapa in mapas %}
+    <div class="bg-gray-800 border border-gray-700 rounded p-10 text-white">
+      <!-- Contenedor con aspect ratio 16:4 -->
+      <div class="image-container mb-4">
+        {% if mapa.imagen %}
+          <img src="{{ mapa.imagen.url }}" alt="{{ mapa.nombre }}" class="w-full h-full object-cover rounded cursor-pointer" onclick="openModal('{{ mapa.imagen.url }}')">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="{{ mapa.nombre }}" class="w-full h-full object-cover rounded cursor-pointer" onclick="openModal('{% static 'images/product_placeholder.png' %}')">
+        {% endif %}
+      </div>
+      <h2 class="text-2xl font-bold text-center">{{ mapa.nombre }}</h2>
+      <p class="text-base text-gray-300 mt-2">{{ mapa.descripcion }}</p>
+      <p class="text-sm text-red-400 mt-1">Tamaño: {{ mapa.tamano_terreno }} m²</p>
+      <p class="text-sm text-green-400 mt-1">Sectores: {{ mapa.cantidad_sectores }}</p>
+      <p class="text-sm text-blue-400 mt-1">Topografía: {{ mapa.get_topografia_display }}</p>
+      <!-- Botón de eliminar ubicado debajo de los datos -->
+      <form method="post" action="{% url 'eliminar_mapa' mapa.id %}" class="mt-6" onsubmit="return confirm('¿Estás seguro de eliminar este mapa?');">
+        {% csrf_token %}
+        <button type="submit" class="submit-button-red">
+          Eliminar
+        </button>
+      </form>
+    </div>
+    {% empty %}
+      <p class="text-white">No tienes mapas registrados.</p>
+    {% endfor %}
+  </div>
 </div>
+
+<!-- Sección para listar Bodegas -->
+<div class="mt-8">
+  <h2 class="text-2xl font-bold text-white mb-4">Bodegas</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    {% for bodega in request.user.bodegas.all %}
+    <div class="bg-gray-800 border border-gray-700 rounded p-10 text-white">
+      <!-- Contenedor de imagen con aspect ratio similar -->
+      <div class="image-container mb-4">
+        {% if bodega.imagen %}
+          <img src="{{ bodega.imagen.url }}" alt="Bodega {{ bodega.get_tipo_display }}" class="w-full h-full object-cover rounded cursor-pointer" onclick="openModal('{{ bodega.imagen.url }}')">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="Bodega {{ bodega.get_tipo_display }}" class="w-full h-full object-cover rounded cursor-pointer" onclick="openModal('{% static 'images/product_placeholder.png' %}')">
+        {% endif %}
+      </div>
+      <h2 class="text-2xl font-bold text-center">{{ bodega.get_tipo_display }}</h2>
+      <p class="text-base text-gray-300 mt-2">{{ bodega.descripcion }}</p>
+      <p class="text-sm text-gray-400 mt-1">Tamaño: {{ bodega.tamano }} m²</p>
+      <!-- Botón de eliminar -->
+      <form method="post" action="{% url 'eliminar_bodega' bodega.id %}" class="mt-6" onsubmit="return confirm('¿Estás seguro de eliminar esta bodega?');">
+        {% csrf_token %}
+        <button type="submit" class="submit-button-red">
+          Eliminar
+        </button>
+      </form>
+    </div>
+    {% empty %}
+      <p class="text-white">No tienes bodegas registradas.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Modal para ver la imagen completa -->
+<div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
+  <div class="relative">
+    <span class="absolute top-0 right-0 cursor-pointer text-white text-3xl p-4" onclick="closeModal()">&times;</span>
+    <img id="modalImage" class="max-w-full max-h-screen rounded" src="" alt="Imagen completa">
+  </div>
+</div>
+
+</div>
+</div>
+
 <!-- Card de publicidad -->
 <div class="flex-1 rounded p-8 text-white">
   <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
@@ -355,5 +466,22 @@
       path: '{% static "animations/bombillo.json" %}',
     });
   }
+
+  function openModal(imageUrl) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    modalImage.src = imageUrl;
+    modal.classList.remove('hidden');
+  }
+  function closeModal() {
+    const modal = document.getElementById('imageModal');
+    modal.classList.add('hidden');
+  }
+  // Cierra el modal si se hace clic fuera de la imagen
+  document.getElementById('imageModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeModal();
+    }
+  });
 </script>
 {% endblock %}

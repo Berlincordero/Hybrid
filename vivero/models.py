@@ -1,4 +1,3 @@
-# models.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now, localdate
@@ -105,8 +104,6 @@ class Planta(models.Model):
         default=120,
         help_text="Días estimados para que la planta esté lista"
     )
-
-    # **NUEVO**: bloque o número de “Sembradio”
     block_num = models.PositiveIntegerField(
         default=1,
         help_text="Número de bloque o sembradio donde se siembra esta planta"
@@ -124,10 +121,6 @@ class Planta(models.Model):
 
     @property
     def necesita_actualizacion_foto(self):
-        """
-        Retorna True si han pasado al menos 7 días desde la fecha de adquisición
-        y el número de días transcurridos es múltiplo de 7.
-        """
         dias = self.dias_transcurridos()
         return dias >= 7 and dias % 7 == 0
 
@@ -138,3 +131,38 @@ class Monitoreo(models.Model):
 
     def __str__(self):
         return f"Monitoreo {self.id} - {self.planta.nombre} ({self.fecha})"
+
+class Mapa(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mapas')
+    nombre = models.CharField(max_length=255)
+    descripcion = models.TextField(blank=True, null=True)
+    tamano_terreno = models.FloatField(help_text="Tamaño del terreno para cultivo en m²")
+    cantidad_sectores = models.PositiveIntegerField(help_text="Cantidad de sectores o sembradios")
+    TOPOGRAFIA_CHOICES = [
+        ('plano', 'Plano'),
+        ('semiplano', 'Semiplano'),
+        ('quebrado', 'Quebrado'),
+        ('pendiente', 'Pendiente'),
+        ('inclinado', 'Inclinado'),
+    ]
+    topografia = models.CharField(max_length=50, choices=TOPOGRAFIA_CHOICES)
+    imagen = models.ImageField(upload_to='mapas/', blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre
+
+class Bodega(models.Model):
+    TIPO_CHOICES = [
+        ('insumos', 'Insumos'),
+        ('almacenamiento', 'Almacenamiento'),
+        ('herramientas', 'Herramientas'),
+        ('varios', 'Varios'),
+    ]
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bodegas')
+    tipo = models.CharField(max_length=50, choices=TIPO_CHOICES)
+    descripcion = models.TextField(blank=True, null=True)
+    tamano = models.FloatField(help_text="Tamaño de la bodega (en m²)")
+    imagen = models.ImageField(upload_to='bodegas/', blank=True, null=True)
+
+    def __str__(self):
+        return f"Bodega ({self.get_tipo_display()}) - {self.usuario.username}"

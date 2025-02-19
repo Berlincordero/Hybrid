@@ -29,6 +29,43 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
+  /* Botón mejorado: Verde y bordeado */
+  .submit-button {
+    background-color: transparent; /* Sin fondo */
+    border: 2px solid #10b981; /* Verde-500 */
+    color: #10b981; /* Verde-500 */
+    font-weight: 600; /* font-semibold */
+    padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .submit-button:hover {
+    background-color: #10b981; /* Verde-500 */
+    color: white;
+    border-color: #059669; /* Verde-600 */
+    transform: scale(1.05);
+  }
+
+  /* Botón mejorado: Verde y bordeado */
+  .submit-button-rojo {
+    background-color: transparent; /* Sin fondo */
+    border: 2px solidrgb(255, 16, 16); /* Verde-500 */
+    color:rgb(243, 9, 9); /* Verde-500 */
+    font-weight: 600; /* font-semibold */
+    padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px rgb(255, 10, 10); /* shadow-lg */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .submit-button-rojo:hover {
+    background-color:rgb(185, 24, 16); /* Verde-500 */
+    color: white;
+    border-color:rgb(150, 5, 5); /* Verde-600 */
+    transform: scale(1.05);
+  }
 </style>
 
 <!-- ÚNICAMENTE se añaden las clases "w-full max-w-none" para forzar el ancho completo. -->
@@ -95,33 +132,34 @@
   <!-- FIN DEL CARRUSEL DE VEGETALES -->
 
   <!-- Card de publicidad -->
-<div class="flex-1 rounded p-8 text-white">
-  <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
-  <!-- Contenedor con altura fija -->
-  <div class="w-full h-[500px] overflow-hidden rounded-lg mb-6 flex items-center justify-center">
-    <div class="flex gap-4 items-center justify-center w-full h-full">
-      <!-- Ajusta el ancho de la imagen con w-[70%] -->
-      <img src="{% static 'img/anuncio_abono.png' %}" alt="Publicidad 1" class="w-[85%] h-full object-cover object-center">
+  <div class="flex-1 rounded p-8 text-white">
+    <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
+    <!-- Contenedor con altura fija -->
+    <div class="w-full h-[500px] overflow-hidden rounded-lg mb-6 flex items-center justify-center">
+      <div class="flex gap-4 items-center justify-center w-full h-full">
+        <!-- Ajusta el ancho de la imagen con w-[70%] -->
+        <img src="{% static 'img/anuncio_abono.png' %}" alt="Publicidad 1" class="w-[85%] h-full object-cover object-center">
+      </div>
+    </div>
+    <p class="text-xl text-center mb-6">¡Promociona tu marca aquí!</p>
+    <div class="flex justify-center">
+      <a href="#" class="text-blue-400 underline text-xl hover:text-blue-300 transition-colors">
+        Más información
+      </a>
     </div>
   </div>
-  <p class="text-xl text-center mb-6">¡Promociona tu marca aquí!</p>
-  <div class="flex justify-center">
-    <a href="#" class="text-blue-400 underline text-xl hover:text-blue-300 transition-colors">
-      Más información
-    </a>
-  </div>
-</div>
 
   <!-- Título principal para las fincas -->
   <h1 class="text-2xl font-bold text-white mb-4">Mis Fincas</h1>
 
-  <!-- Botón para crear nueva finca -->
-  <a
-    href="{% url 'crear_finca' %}"
-    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block"
-  >
-    Crear Nueva Finca
-  </a>
+  <!-- Contenedor de botones: "Crear Nueva Finca" y botones adicionales -->
+  <div class="mb-6">
+    <div class="flex items-center gap-2">
+      <a href="{% url 'crear_finca' %}" class="submit-button">
+        Crear Nueva Finca
+      </a>
+    </div>
+  </div>
 
   <!-- Grid responsive para mostrar las fincas -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-5">
@@ -188,7 +226,7 @@
       <div class="flex flex-col sm:flex-row gap-2">
         <a
           href="{% url 'administrar_finca' finca.id %}"
-          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+          class="submit-button"
         >
           Administrar
         </a>
@@ -196,7 +234,7 @@
           {% csrf_token %}
           <button
             type="submit"
-            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+            class="submit-button-rojo"
           >
             Eliminar
           </button>
@@ -207,40 +245,40 @@
     <p class="text-white">No tienes fincas registradas.</p>
     {% endfor %}
   </div>
-    <!-- Card de Recomendaciones -->
-    <div class="bg-gray-800 border border-gray-700 rounded p-4 mt-8 w-full">
-      <div class="flex flex-col items-center mb-4">
-        <!-- Contenedor para la animación Lottie (con margen abajo para separarlo del título) -->
-        <div id="lottieRecomendacion" class="w-14 h-14 mb-2"></div>
-        <!-- Título con estilos: rojo que cambia a verde claro al pasar el cursor -->
-        <h2 class="text-2xl font-bold ml-2 text-red-600 hover:text-green-300 transition-colors duration-300">
-          Recomendaciones
-        </h2>
-      </div>
-      <ul class="list-disc list-inside text-sm">
-        <li class="text-yellow-400">
-          Revise constantemente los Indicadores economicos para saber en qué es mejor invertir.
-        </li>
-        <li class="text-yellow-400">
-          Administre la finca conforme a la actividad sea adecuada. Por ejemplo, si es de uso agrícola con limitación de construcción, explote todo el terreno para la agricultura y divídalo en secciones.
-        </li>
-        <li class="text-yellow-400">
-          Si la finca es de uso ganadero, divídala en secciones para la cría de animales y la producción de alimentos.
-        </li>
-        <li class="text-yellow-400">
-          Si la finca es de uso mixto, divídala en secciones para la agricultura y la cría de animales.
-        </li>
-        <li class="text-yellow-400">
-          Si la finca es de uso turístico, divídala en secciones para la construcción de cabañas, piscinas y áreas de esparcimiento.
-        </li>
-        <li class="text-yellow-400">
-          Si la finca es de uso industrial, divídala en secciones para la construcción de naves industriales, oficinas y áreas de almacenamiento.
-        </li>
-        <li class="text-yellow-400">
-          Si la finca es de uso residencial, divídala en secciones para la construcción de viviendas, áreas verdes y zonas de recreación.
-        </li>
-      </ul>
+  
+  <!-- Card de Recomendaciones -->
+  <div class="bg-gray-800 border border-gray-700 rounded p-4 mt-8 w-full">
+    <div class="flex flex-col items-center mb-4">
+      <!-- Contenedor para la animación Lottie (con margen abajo para separarlo del título) -->
+      <div id="lottieRecomendacion" class="w-14 h-14 mb-2"></div>
+      <!-- Título con estilos: rojo que cambia a verde claro al pasar el cursor -->
+      <h2 class="text-2xl font-bold ml-2 text-red-600 hover:text-green-300 transition-colors duration-300">
+        Recomendaciones
+      </h2>
     </div>
+    <ul class="list-disc list-inside text-sm">
+      <li class="text-yellow-400">
+        Revise constantemente los Indicadores economicos para saber en qué es mejor invertir.
+      </li>
+      <li class="text-yellow-400">
+        Administre la finca conforme a la actividad sea adecuada. Por ejemplo, si es de uso agrícola con limitación de construcción, explote todo el terreno para la agricultura y divídalo en secciones.
+      </li>
+      <li class="text-yellow-400">
+        Si la finca es de uso ganadero, divídala en secciones para la cría de animales y la producción de alimentos.
+      </li>
+      <li class="text-yellow-400">
+        Si la finca es de uso mixto, divídala en secciones para la agricultura y la cría de animales.
+      </li>
+      <li class="text-yellow-400">
+        Si la finca es de uso turístico, divídala en secciones para la construcción de cabañas, piscinas y áreas de esparcimiento.
+      </li>
+      <li class="text-yellow-400">
+        Si la finca es de uso industrial, divídala en secciones para la construcción de naves industriales, oficinas y áreas de almacenamiento.
+      </li>
+      <li class="text-yellow-400">
+        Si la finca es de uso residencial, divídala en secciones para la construcción de viviendas, áreas verdes y zonas de recreación.
+      </li>
+    </ul>
   </div>
 </div>
 
@@ -261,7 +299,6 @@
     </a>
   </div>
 </div>
-
 
 <!-- Script para la rotación automática del carrusel cada 10 segundos -->
 <script>

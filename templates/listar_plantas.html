@@ -27,7 +27,7 @@
 
 <div class="container mx-auto px-4 py-4">
   <!-- CARRUSEL DE ÍNDICES PARA VEGETALES Y GRANOS -->
-  <h2 class="text-2xl font-bold text-white mb-4">Índices de Vegetales y Granos</h2>
+  <h2 class="text-2xl font-bold text-white mb-4">Indices Economicos de Vegetales y Granos</h2>
   <div class="relative">
     <div id="carousel" class="flex overflow-x-auto space-x-4 py-2">
       {% for indice in indices %}
@@ -110,38 +110,55 @@
       </button>
     </div>
   </form>
-
-  <!-- Contenedor de botones "Añadir Planta" y "Ver Sembradio 2" -->
-  <div class="mb-6">
-    <div class="flex items-center gap-2">
-      <a href="{% url 'crear_planta' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-        Añadir Planta
+<!-- Contenedor de botones "Añadir Planta" y "Ver Sembradio 2" -->
+<div class="mb-6">
+  <div class="flex items-center gap-2">
+    <a href="{% url 'crear_planta' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+      Añadir Planta
+    </a>
+    <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+      Añadir Empleados
+    </a>
+    <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+      Añadir Bodega
+    </a>
+    <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+      Añadir Mapa
+    </a>
+    <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+      Control de Gastos
+    </a>
+    <!-- Botón "Ver Sembradio 2" (oculto por defecto) -->
+    <div id="next-sembradio-container" style="display: none;">
+      <a id="next-sembradio-button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+         href="{% url 'listar_sembradio' 2 %}">
+        Ver Sembradio 2
       </a>
-      <!-- Botón "Ver Sembradio 2" (oculto por defecto) -->
-      <div id="next-sembradio-container" style="display: none;">
-        <a id="next-sembradio-button" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-           href="{% url 'listar_sembradio' 2 %}">
-          Ver Sembradio 2
-        </a>
-      </div>
     </div>
   </div>
+</div>
 
-  <!-- Card de publicidad, ubicado justo debajo de los botones (versión ampliada) -->
-  <div class="mb-6">
-    <div class="max-w-2xl w-full bg-gray-800 border border-gray-700 rounded p-8 text-white">
-      <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
-      <div class="w-full h-96 overflow-hidden rounded-lg mb-6">
-        <img src="{% static 'img/espacio_publicitario.png' %}" alt="Publicidad" class="w-full h-full object-cover">
-      </div>
-      <p class="text-xl text-center mb-6">¡Promociona tu marca aquí!</p>
-      <div class="flex justify-center">
-        <a href="#" class="text-blue-400 underline text-xl hover:text-blue-300 transition-colors">
-          Más información
-        </a>
-      </div>
+<!-- Card de publicidad -->
+<div class="flex-1 rounded p-8 text-white">
+  <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
+  <!-- Contenedor con altura fija -->
+  <div class="w-full h-[500px] overflow-hidden rounded-lg mb-6 flex items-center justify-center">
+    <div class="flex gap-4 items-center justify-center w-full h-full">
+      <!-- Ajusta el ancho de la imagen con w-[70%] -->
+      <img src="{% static 'img/anuncio_abono.png' %}" alt="Publicidad 1" class="w-[85%] h-full object-cover object-center">
     </div>
   </div>
+  <p class="text-xl text-center mb-6">¡Promociona tu marca aquí!</p>
+  <div class="flex justify-center">
+    <a href="#" class="text-blue-400 underline text-xl hover:text-blue-300 transition-colors">
+      Más información
+    </a>
+  </div>
+</div>
+
+
+
+</div>
 
   <!-- Grid para las plantas -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -271,7 +288,23 @@
     {% endfor %}
   </div>
 </div>
-
+<!-- Card de publicidad -->
+<div class="flex-1 rounded p-8 text-white">
+  <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
+  <!-- Contenedor con altura fija -->
+  <div class="w-full h-[500px] overflow-hidden rounded-lg mb-6 flex items-center justify-center">
+    <div class="flex gap-4 items-center justify-center w-full h-full">
+      <!-- Ajusta el ancho de la imagen con w-[70%] -->
+      <img src="{% static 'img/anuncio_abono.png' %}" alt="Publicidad 1" class="w-[85%] h-full object-cover object-center">
+    </div>
+  </div>
+  <p class="text-xl text-center mb-6">¡Promociona tu marca aquí!</p>
+  <div class="flex justify-center">
+    <a href="#" class="text-blue-400 underline text-xl hover:text-blue-300 transition-colors">
+      Más información
+    </a>
+  </div>
+</div>
 <!-- Script para mostrar el botón "Ver Sembradio 2" cuando en algún elemento del bloque 1 el remaining sea 0 -->
 <script>
   document.addEventListener("DOMContentLoaded", function() {

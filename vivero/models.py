@@ -166,3 +166,21 @@ class Bodega(models.Model):
 
     def __str__(self):
         return f"Bodega ({self.get_tipo_display()}) - {self.usuario.username}"
+    
+    
+class Empleado(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='empleados')
+    nombre_completo = models.CharField(max_length=255)
+    tareas = models.TextField(blank=True, null=True)
+    horario = models.CharField(max_length=100, blank=True, null=True)
+    direccion = models.CharField(max_length=255, blank=True, null=True)
+    telefono = models.CharField(max_length=50, blank=True, null=True)
+    correo = models.EmailField(blank=True, null=True)
+    whatsapp = models.CharField(max_length=50, blank=True, null=True)
+    salario = models.CharField(max_length=50, blank=True, null=True)  # Tipo cadena para poder poner "120000 colones"
+    profesion = models.CharField(max_length=255, blank=True, null=True)
+    servicios_requeridos = models.TextField(blank=True, null=True)
+    imagen = models.ImageField(upload_to='empleados/', blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre_completo

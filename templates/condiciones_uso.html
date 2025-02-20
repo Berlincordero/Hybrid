@@ -17,7 +17,7 @@
         <!-- Animación Lottie -->
         <div class="flex justify-center mb-6">
             <lottie-player
-                src="{% static 'animations/condicion.json' %}" 
+                src="{% static 'animations/condicion.json' %}"
                 background="transparent"
                 speed="1"
                 class="w-56 h-56"
@@ -25,50 +25,77 @@
                 autoplay
             ></lottie-player>
         </div>
- 
+
         <!-- Título -->
-        <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">{% trans "Condiciones de Uso" %}</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">
+            {% trans "Condiciones de Uso" %}
+        </h1>
 
         <!-- Contenido -->
         <div class="text-gray-300 text-sm sm:text-base space-y-4 sm:space-y-6 leading-6 sm:leading-7">
-            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Introducción" %}</h2>
+            <h2 class="text-lg sm:text-xl font-semibold">
+                {% trans "Introducción" %}
+            </h2>
             <p>
-                {% trans "FincaHub es una plataforma en fase beta diseñada exclusivamente para la comunidad agropecuaria. Al utilizar esta aplicación, aceptas estas Condiciones de Uso. Por favor, léelas detenidamente." %}
+                {% trans "FincaHub es una plataforma en fase beta diseñada exclusivamente para la comunidad agropecuaria. Al utilizar esta aplicación, aceptas estas Condiciones de Uso. Esta plataforma es para mayores de 18 años; toda persona que se registre siendo menor de edad está sujeta a la eliminación, baneo y bloqueo de la cuenta, y no nos hacemos responsables por el uso indebido de la plataforma por menores de edad o por mentir sobre su edad. Si un menor de edad se registra, debe tener el permiso de los padres y eximir a la plataforma de daños directos a la persona. Al usar esta plataforma, aceptas estas condiciones. Por favor, léelas detenidamente." %}
             </p>
 
-            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Derechos de Autor y Propiedad Intelectual" %}</h2>
+            <h2 class="text-lg sm:text-xl font-semibold">
+                {% trans "Derechos de Autor y Propiedad Intelectual" %}
+            </h2>
             <p>
                 {% trans "Todo el contenido, diseño, código fuente, logos, y materiales disponibles en FincaHub son propiedad exclusiva del desarrollador. Esto incluye la interfaz de usuario, animaciones, y cualquier contenido generado específicamente para la plataforma." %}
             </p>
             <p>
-                {% trans "Está estrictamente prohibido copiar, reproducir, distribuir o modificar cualquier parte de esta plataforma sin el consentimiento previo por escrito del propietario. Cualquier uso no autorizado del contenido o diseño de FincaHub será considerado una violación de los derechos de autor y estará sujeto a acciones legales. los uso de links ó herramientas para conectar a otras plataformas son las que la misma programacion y uso de codigo de abierto son permitidas por las mismas compañias o plataformas, esta plataforma respeta los derechos de autor, de privacidad y uso de cada plataforma y creador o dueño de la misma." %}
+                {% trans "Está estrictamente prohibido copiar, reproducir, distribuir o modificar cualquier parte de esta plataforma sin el consentimiento previo por escrito del propietario. Cualquier uso no autorizado del contenido o diseño de FincaHub será considerado una violación de los derechos de autor y estará sujeto a acciones legales. El uso de links o herramientas para conectar a otras plataformas, siempre y cuando se haga conforme a la programación y uso de código abierto permitidos por las mismas compañías o plataformas, es permitido. Esta plataforma respeta los derechos de autor, de privacidad y uso de cada plataforma y creador o dueño de la misma." %}
+            </p>
+            <p>
+                {% trans "En esta plataforma respetamos los derechos de autor de las personas, artistas, actores, creadores, etc. Por favor, si vas a subir contenido como música, videos, artículos, noticias, entre otros, agrega el autor del contenido y el nombre del mismo. Esto evita el plagio y evita que eliminemos tu contenido por copyright." %}
             </p>
 
-            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Fase Beta" %}</h2>
+            <h2 class="text-lg sm:text-xl font-semibold">
+                {% trans "Fase Beta" %}
+            </h2>
             <p>
                 {% trans "FincaHub se encuentra en una etapa de desarrollo. Esto significa que el software puede contener errores, características incompletas o experimentar fallos técnicos. Al utilizar FincaHub, aceptas que el software se proporciona 'tal cual' y que no ofrecemos garantías de funcionamiento completo durante esta fase." %}
             </p>
 
-            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Limitación de Responsabilidad" %}</h2>
+            <h2 class="text-lg sm:text-xl font-semibold">
+                {% trans "Limitación de Responsabilidad" %}
+            </h2>
             <p>
-                {% trans "Como desarrollador independiente, no seré responsable por daños directos o indirectos derivados del uso de FincaHub, excepto cuando la ley lo requiera expresamente. toda informacion en esta plataforma  el usuario la provee voluntariamente y se respeta al maximo la libertad de expresión." %}
+                {% trans "Como desarrollador independiente, no seré responsable por daños directos o indirectos derivados del uso de FincaHub, excepto cuando la ley lo requiera expresamente. Toda información en esta plataforma es proporcionada voluntariamente por el usuario, respetando al máximo la libertad de expresión, y se proveerá toda la información y cooperación con las autoridades cuando se cometa un delito en esta plataforma. Por lo tanto, absténgase de hacer algo indebido." %}
             </p>
 
-            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Modificaciones" %}</h2>
+            <h2 class="text-lg sm:text-xl font-semibold">
+                {% trans "Modificaciones" %}
+            </h2>
             <p>
-                {% trans "Estas condiciones pueden ser modificadas en cualquier momento para reflejar cambios en la plataforma. Te notificaremos sobre cambios importantes y, al continuar utilizando FincaHub, aceptas las condiciones actualizadas de no ser asi el usuario podra enviar un correo para que su cuenta y contenido de la misma sea eliminada de nuestra base de datos y plataforma." %}
+                {% trans "Estas condiciones pueden ser modificadas en cualquier momento para reflejar cambios en la plataforma. Te notificaremos sobre cambios importantes y, al continuar utilizando FincaHub, aceptas las condiciones actualizadas. De lo contrario, el usuario podrá enviar un correo para que su cuenta y contenido sean eliminados de nuestra base de datos y plataforma." %}
             </p>
-            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Informacion" %}</h2>
+
+            <h2 class="text-lg sm:text-xl font-semibold">
+                {% trans "Información" %}
+            </h2>
             <p>
-                {% trans "FincaHub nunca jamas por ningun motivo te pedira informacion  sensible como informacion  financiera como claves, usuarios o numeros de cuenta o de tarjetas  ni dejara que ningun usuario lo haga , a menos que el usuario desee algún servicío de la plataforma entonces solo  asi se pedira la informacion necesaria para completar el pagó, cualquier acto o intento de estafa o corrupción será castigado por la ley sujeta del país y la eliminación de la cuenta." %}
+                {% trans "FincaHub nunca, jamás, por ningún motivo te pedirá información sensible como información financiera, como claves, usuarios o números de cuenta o de tarjetas, ni permitirá que ningún usuario lo haga, a menos que el usuario desee algún servicio de la plataforma. Solo así se pedirá la información necesaria para completar el pago. Cualquier acto o intento de estafa o corrupción será castigado por la ley correspondiente y resultará en la eliminación de la cuenta." %}
             </p>
-            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Pautas y Uso comercial de los usuarios" %}</h2>
+
+            <h2 class="text-lg sm:text-xl font-semibold">
+                {% trans "Pautas y Uso Comercial de los Usuarios" %}
+            </h2>
             <p>
-                {% trans "FincaHub es una plataforma gratuita y abierta para cualquier persona del mundo sin embargo el contenido comercial de esta plataforma es del creador por ello esta sujeta a ser eliminada si el administrador asi lo requiere y se le notificara al usuario el motivo de censura tambien en esta plataforma todos tienen la misma prioridad de anuciar o promocionar sus anuncios y contenidc comercial." %}
+                {% trans "FincaHub es una plataforma gratuita y abierta para cualquier persona del mundo. Sin embargo, el contenido comercial en esta plataforma es del creador, por lo que está sujeto a ser eliminado si el administrador así lo requiere, notificándole al usuario el motivo de la censura. Además, en esta plataforma todos tienen la misma prioridad para anunciar o promocionar sus anuncios y contenido comercial." %}
             </p>
-            <h2 class="text-lg sm:text-xl font-semibold">{% trans "Contenido Ilegal" %}</h2>
+
+            <h2 class="text-lg sm:text-xl font-semibold">
+                {% trans "Contenido Ilegal" %}
+            </h2>
             <p>
-                {% trans "FincaHub es una plataforma gratuita y abierta para cualquier persona del mundo sin embargo el contenido de esta plataforma debe estar sujeta a las leyes de cualquier pais y a la moral de lo correcto sin importar el pais por lo tanto es prohibido absolutamente subir contenido inmoral y ilegal o corrputo queda absolutamente prohibido subir pornografia de cualquier tipo del ser el caso se procedera con todo el peso de la ley y eliminacion de la cuenta." %}
+                {% trans "FincaHub es una plataforma gratuita y abierta para cualquier persona del mundo; sin embargo, el contenido debe cumplir con las leyes de cualquier país y con la moral establecida. Por lo tanto, está absolutamente prohibido subir contenido inmoral e ilegal o corrupto. Queda prohibido subir pornografía de cualquier tipo. En caso de hacerlo, se procederá con todo el peso de la ley, eliminando la cuenta y baneando la IP." %}
+            </p>
+            <p>
+                {% trans "También está prohibido publicar anuncios de tabaco y alcohol, así como de apuestas o préstamos ilegales. Absténgase de cometer acciones que puedan causarle problemas legales a usted y a su familia." %}
             </p>
         </div>
 

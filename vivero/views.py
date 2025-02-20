@@ -5,8 +5,8 @@ from collections import defaultdict, Counter
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import localdate
-from .models import Planta, Vivero, Monitoreo, Mapa, Bodega
-from .forms import PlantaForm, ViveroForm, MonitoreoForm, PlantaImagenForm, MapaForm, BodegaForm
+from .models import Planta, Vivero, Monitoreo, Mapa, Bodega, Empleado
+from .forms import PlantaForm, ViveroForm, MonitoreoForm, PlantaImagenForm, MapaForm, BodegaForm, EmpleadoForm
 
 
 def calcular_recomendacion(planta):
@@ -352,3 +352,24 @@ def eliminar_bodega(request, bodega_id):
         bodega.delete()
         return redirect('listar_plantas')
     return render(request, 'eliminar_bodega.html', {'bodega': bodega})
+
+@login_required
+def crear_empleado(request):
+    if request.method == 'POST':
+        form = EmpleadoForm(request.POST, request.FILES)
+        if form.is_valid():
+            empleado = form.save(commit=False)
+            empleado.usuario = request.user
+            empleado.save()
+            return redirect('listar_plantas')
+    else:
+        form = EmpleadoForm()
+    return render(request, 'empleados_subir.html', {'form': form})
+
+@login_required
+def eliminar_empleado(request, empleado_id):
+    empleado = get_object_or_404(Empleado, id=empleado_id, usuario=request.user)
+    if request.method == 'POST':
+        empleado.delete()
+        return redirect('listar_plantas')
+    return render(request, 'eliminar_empleado.html', {'empleado': empleado})

@@ -116,7 +116,7 @@
             <div class="flex items-center space-x-4 mb-4">
               <form method="POST" action="{% url 'toggle_estrella' foro.pk %}">
                 {% csrf_token %}
-                <button class="flex items-center text-yellow-400 hover:text-yellow-300 transition">
+                <button class="flex items-center text-red-400 hover:text-yellow-300 transition">
                   <span class="text-2xl">&#9733;</span>
                   <span class="ml-1 text-sm">{{ foro.total_estrellas }}</span>
                 </button>

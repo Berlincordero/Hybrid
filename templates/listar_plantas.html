@@ -60,6 +60,27 @@
     border-color:rgb(150, 5, 5); /* Verde-600 */
     transform: scale(1.05);
   }
+
+  /* Botón mejorado: Verde y bordeado */
+  .submit-button-blue {
+    background-color: transparent; /* Sin fondo */
+    border: 2px solidrgb(246, 5, 5); /* Verde-500 */
+    color:rgb(64, 158, 253); /* Verde-500 */
+    font-weight: 600; /* font-semibold */
+    padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px rgb(12, 91, 227); /* shadow-lg */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .submit-button-blue:hover {
+    background-color:rgb(19, 105, 255); /* Verde-500 */
+    color: white;
+    border-color:rgb(22, 49, 255); /* Verde-600 */
+    transform: scale(1.05);
+  }
+
+ 
 </style>
 
 <div class="container mx-auto px-4 py-4">
@@ -147,27 +168,27 @@
       </button>
     </div>
   </form>
-<!-- Contenedor de botones "Añadir Planta" y "Ver Sembradio 2" -->
+<!-- Contenedor de botones "Añadir Planta", etc. -->
 <div class="mb-6">
-  <div class="flex items-center gap-2">
-    <a href="{% url 'crear_planta' %}" class="submit-button">
+  <div class="flex flex-wrap items-center gap-2">
+    <a href="{% url 'crear_planta' %}" class="submit-button w-full sm:w-auto">
       Añadir Planta
     </a>
-    <a href="#" class="submit-button">
+    <a href="empleados_subir" class="submit-button w-full sm:w-auto">
       Añadir Empleados
     </a>
-    <a href="crear_bodega" class="submit-button">
+    <a href="crear_bodega" class="submit-button w-full sm:w-auto">
       Añadir Bodega
     </a>
-    <a href="{% url 'crear_mapa' %}" class="submit-button">
+    <a href="{% url 'crear_mapa' %}" class="submit-button w-full sm:w-auto">
       Añadir Mapa
     </a>
-    <a href="#" class="submit-button">
-      Control  Gastos
+    <a href="#" class="submit-button w-full sm:w-auto">
+      Control Gastos
     </a>
     <!-- Botón "Ver Sembradio 2" (oculto por defecto) -->
     <div id="next-sembradio-container" style="display: none;">
-      <a id="next-sembradio-button" class="submit-button"
+      <a id="next-sembradio-button" class="submit-button w-full sm:w-auto"
          href="{% url 'listar_sembradio' 2 %}">
         Ver Sembradio 2
       </a>
@@ -293,7 +314,7 @@
       <div class="mt-2">
         <form method="post" action="{% url 'eliminar_planta' planta.id %}" class="inline-block">
           {% csrf_token %}
-          <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+          <button type="submit" class="submit-button-red">
             Descartar Planta
           </button>
         </form>
@@ -307,7 +328,7 @@
           <input type="hidden" name="action" value="monitoreo">
           <input type="hidden" name="plant_id" value="{{ planta.id }}">
           <textarea name="observacion" class="w-full p-2 rounded bg-gray-700 text-white" placeholder="Escribe tu observación..." rows="2"></textarea>
-          <button type="submit" class="mt-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+          <button type="submit" class="submit-button-blue mt-2">
             Guardar Monitoreo
           </button>
         </form>
@@ -397,6 +418,44 @@
 </div>
 
 </div>
+</div>
+
+<!-- Sección para listar Empleados -->
+<div class="mt-8">
+  <h2 class="text-2xl font-bold text-white mb-4">Empleados</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    {% for empleado in request.user.empleados.all %}
+    <div class="bg-gray-800 border border-gray-700 rounded p-10 text-white">
+      <!-- Contenedor para la imagen con aspect ratio 16:4 -->
+      <div class="image-container mb-4">
+        {% if empleado.imagen %}
+          <img src="{{ empleado.imagen.url }}" alt="{{ empleado.nombre_completo }}" class="w-full h-full object-cover rounded cursor-pointer" onclick="openModal('{{ empleado.imagen.url }}')">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="{{ empleado.nombre_completo }}" class="w-full h-full object-cover rounded cursor-pointer" onclick="openModal('{% static 'images/product_placeholder.png' %}')">
+        {% endif %}
+      </div>
+      <h2 class="text-2xl font-bold text-center">{{ empleado.nombre_completo }}</h2>
+      <p class="text-base text-gray-300 mt-2"><strong>Tareas:</strong> {{ empleado.tareas }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Horario:</strong> {{ empleado.horario }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Dirección:</strong> {{ empleado.direccion }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Teléfono:</strong> {{ empleado.telefono }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Correo:</strong> {{ empleado.correo }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Whatsapp:</strong> {{ empleado.whatsapp }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Salario:</strong> {{ empleado.salario }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Profesión/Estudios:</strong> {{ empleado.profesion }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Servicios Requeridos:</strong> {{ empleado.servicios_requeridos }}</p>
+      <!-- Botón de eliminar -->
+      <form method="post" action="{% url 'eliminar_empleado' empleado.id %}" class="mt-6" onsubmit="return confirm('¿Estás seguro de eliminar este empleado?');">
+        {% csrf_token %}
+        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+          Eliminar
+        </button>
+      </form>
+    </div>
+    {% empty %}
+      <p class="text-white">No tienes empleados registrados.</p>
+    {% endfor %}
+  </div>
 </div>
 
 <!-- Card de publicidad -->

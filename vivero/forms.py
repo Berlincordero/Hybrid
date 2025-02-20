@@ -1,6 +1,5 @@
-# forms.py
 from django import forms
-from .models import Planta, Vivero, Monitoreo,  Mapa, Bodega
+from .models import Planta, Vivero, Monitoreo, Mapa, Bodega, Empleado
 
 class ViveroForm(forms.ModelForm):
     class Meta:
@@ -57,7 +56,6 @@ class PlantaImagenForm(forms.ModelForm):
         model = Planta
         fields = ['imagen']
 
-
 class MapaForm(forms.ModelForm):
     class Meta:
         model = Mapa
@@ -70,7 +68,6 @@ class MapaForm(forms.ModelForm):
             'topografia': 'Topografía del terreno',
             'imagen': 'Imagen o foto',
         }
-        
 
 class BodegaForm(forms.ModelForm):
     class Meta:
@@ -86,4 +83,33 @@ class BodegaForm(forms.ModelForm):
             'descripcion': forms.Textarea(attrs={'class': 'form-input', 'placeholder': 'Descripción de la bodega...', 'rows': 3}),
             'tamano': forms.NumberInput(attrs={'class': 'form-input', 'step': 'any'}),
         }
-        
+
+class EmpleadoForm(forms.ModelForm):
+    class Meta:
+        model = Empleado
+        fields = [
+            'nombre_completo',
+            'tareas',
+            'horario',
+            'direccion',
+            'telefono',
+            'correo',
+            'whatsapp',
+            'salario',
+            'profesion',
+            'servicios_requeridos',
+            'imagen'
+        ]
+        labels = {
+            'nombre_completo': 'Nombre Completo del Empleado',
+            'tareas': 'Tareas asignadas',
+            'horario': 'Horario',
+            'direccion': 'Dirección',
+            'telefono': 'Teléfono de contacto',
+            'correo': 'Correo de contacto',
+            'whatsapp': 'Whatsapp',
+            'salario': 'Salario',
+            'profesion': 'Profesión o estudios',
+            'servicios_requeridos': 'Servicios requeridos',
+            'imagen': 'Imagen o foto',
+        }

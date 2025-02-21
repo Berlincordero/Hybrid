@@ -1,5 +1,5 @@
 from django import forms
-from .models import Finca, Division, Galpon, GalponDivision
+from .models import Finca, Division, Galpon, GalponDivision, PersonalFinca, GastoFinca
 from .models import ControlAnimal
 
 class FincaForm(forms.ModelForm):
@@ -61,4 +61,33 @@ class ControlAnimalForm(forms.ModelForm):
         ]
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 3}),
+        }
+
+class PersonalFincaForm(forms.ModelForm):
+    class Meta:
+        model = PersonalFinca
+        fields = [
+            'nombre', 'horario', 'direccion', 'correo', 'telefono', 'whatsapp',
+            'salario', 'profesion_estudios', 'servicios_requeridos', 'area_designada',
+            'contrato', 'salario_por_mes', 'foto'
+        ]
+        widgets = {
+            'servicios_requeridos': forms.Textarea(attrs={'rows': 3}),
+        }
+        
+class GastoFincaForm(forms.ModelForm):
+    class Meta:
+        model = GastoFinca
+        fields = [
+            'descripcion',
+            'lista_productos',
+            'total',
+            'tipo_transaccion',
+            'fecha',
+            'foto',
+        ]
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'rows': 3}),
+            'lista_productos': forms.Textarea(attrs={'rows': 3}),
+            'fecha': forms.DateInput(attrs={'type': 'date'}),
         }

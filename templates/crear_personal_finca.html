@@ -1,0 +1,206 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "Agregar Personal" %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- TailwindCSS desde CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Estilos para inputs de texto, textarea, selects, email, number y file */
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="file"],
+    textarea,
+    select {
+      background-color: #1a202c; /* bg-gray-900 */
+      color: white;
+      border: 2px solid #10b981; /* Verde-500 */
+      border-radius: 0.5rem; /* rounded-lg */
+      padding: 0.5rem 1rem; /* py-2 px-4 */
+      width: 100%;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input::placeholder,
+    textarea::placeholder {
+      color: #718096; /* text-gray-500 */
+    }
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #059669; /* Verde-600 */
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Botón mejorado: Verde y bordeado */
+    .submit-button {
+      background-color: transparent;
+      border: 2px solid #10b981;
+      color: #10b981;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+    .submit-button:hover {
+      background-color: #10b981;
+      color: white;
+      border-color: #059669;
+      transform: scale(1.05);
+    }
+
+    /* Estilos para labels */
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #d1d5db;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Estilos para la tarjeta */
+    .card {
+      background-color: #2d3748;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Estilos para el enlace de regresar */
+    .back-link {
+      color: #10b981;
+      transition: color 0.3s;
+    }
+    .back-link:hover {
+      color: #059669;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-xl">
+    <!-- Enlace para regresar a la administración de la finca -->
+    <div class="mb-4">
+      <a href="{% url 'administrar_finca' finca.id %}" class="inline-flex items-center back-link">
+        <span class="text-2xl mr-2">&#8592;</span>
+        <span>{% trans "Regresar a la Administración" %}</span>
+      </a>
+    </div>
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight text-white">
+        {% trans "Agregar Personal" %}
+      </h1>
+    </header>
+    <!-- Formulario para agregar personal -->
+    <section class="card">
+      <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        <div>
+          {{ form.nombre.label_tag }}
+          {{ form.nombre }}
+          {% if form.nombre.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.nombre.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.horario.label_tag }}
+          {{ form.horario }}
+          {% if form.horario.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.horario.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.direccion.label_tag }}
+          {{ form.direccion }}
+          {% if form.direccion.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.direccion.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.correo.label_tag }}
+          {{ form.correo }}
+          {% if form.correo.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.correo.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.telefono.label_tag }}
+          {{ form.telefono }}
+          {% if form.telefono.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.telefono.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.whatsapp.label_tag }}
+          {{ form.whatsapp }}
+          {% if form.whatsapp.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.whatsapp.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.salario.label_tag }}
+          {{ form.salario }}
+          {% if form.salario.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.salario.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.profesion_estudios.label_tag }}
+          {{ form.profesion_estudios }}
+          {% if form.profesion_estudios.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.profesion_estudios.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.servicios_requeridos.label_tag }}
+          {{ form.servicios_requeridos }}
+          {% if form.servicios_requeridos.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.servicios_requeridos.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.area_designada.label_tag }}
+          {{ form.area_designada }}
+          {% if form.area_designada.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.area_designada.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.contrato.label_tag }}
+          {{ form.contrato }}
+          {% if form.contrato.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.contrato.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.salario_por_mes.label_tag }}
+          {{ form.salario_por_mes }}
+          {% if form.salario_por_mes.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.salario_por_mes.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.foto.label_tag }}
+          {{ form.foto }}
+          {% if form.foto.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.foto.errors }}</p>
+          {% endif %}
+        </div>
+        <button type="submit" class="submit-button">
+          {% trans "Guardar Personal" %}
+        </button>
+      </form>
+    </section>
+  </div>
+</body>
+</html>

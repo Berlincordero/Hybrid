@@ -67,6 +67,11 @@
       color: inherit;
       padding: 0 !important;
     }
+    
+    /* Estilos para el modal de la foto */
+    #photoModal {
+      background-color: rgba(0, 0, 0, 0.75);
+    }
   </style>
 {% endblock %}
 
@@ -100,7 +105,7 @@
         <div class="flex flex-col items-center">
           <div class="circle-container rounded-full bg-gray-600 flex items-center justify-center overflow-hidden">
             {% if perfil.foto_perfil %}
-              <img src="{{ perfil.foto_perfil.url }}" alt="{% trans 'Foto de Perfil' %}" class="w-full h-full object-cover">
+              <img src="{{ perfil.foto_perfil.url }}" alt="{% trans 'Foto de Perfil' %}" class="w-full h-full object-cover cursor-pointer" onclick="openPhotoModal('{{ perfil.foto_perfil.url }}')">
             {% else %}
               <span class="text-gray-400">{% trans "Sin Foto" %}</span>
             {% endif %}
@@ -373,11 +378,35 @@
     </div>
   </div>
 
+  <!-- Modal para visualizar la foto de perfil en grande -->
+  <div id="photoModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+    <div class="relative">
+      <button onclick="closePhotoModal()" class="absolute top-0 right-0 m-4 text-white text-3xl font-bold">&times;</button>
+      <img id="modalImage" src="" alt="{% trans 'Foto de Perfil' %}" class="max-w-full max-h-screen rounded">
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script>
     function guardarFoto() {
       document.getElementById('foto-perfil-form').submit();
     }
+
+    function openPhotoModal(url) {
+      document.getElementById('modalImage').src = url;
+      document.getElementById('photoModal').classList.remove('hidden');
+    }
+
+    function closePhotoModal() {
+      document.getElementById('photoModal').classList.add('hidden');
+    }
+
+    // Cerrar modal al hacer clic fuera de la imagen
+    document.getElementById('photoModal').addEventListener('click', function(event) {
+      if (event.target === this) {
+        closePhotoModal();
+      }
+    });
 
     document.addEventListener('DOMContentLoaded', function() {
       // Hacer readonly todos los campos al inicio

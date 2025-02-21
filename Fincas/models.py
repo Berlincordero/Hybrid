@@ -144,3 +144,43 @@ class ControlAnimal(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.tipo_animal})"
+
+class PersonalFinca(models.Model):
+    finca = models.ForeignKey('Finca', on_delete=models.CASCADE, related_name='personal')
+    nombre = models.CharField(max_length=255)
+    horario = models.CharField(max_length=255)
+    direccion = models.CharField(max_length=255)
+    correo = models.EmailField()
+    telefono = models.CharField(max_length=20)
+    whatsapp = models.CharField(max_length=20)
+    salario = models.DecimalField(max_digits=10, decimal_places=2)
+    profesion_estudios = models.CharField(max_length=255)
+    servicios_requeridos = models.TextField(blank=True, null=True)
+    area_designada = models.CharField(max_length=255)
+    contrato = models.BooleanField(default=False)  # True = Sí, False = No
+    salario_por_mes = models.DecimalField(max_digits=10, decimal_places=2)
+    foto = models.ImageField(upload_to='personal/', blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre
+    
+class GastoFinca(models.Model):
+    finca = models.ForeignKey('Finca', on_delete=models.CASCADE, related_name='gastos')
+    descripcion = models.TextField()
+    lista_productos = models.TextField(blank=True, null=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    TIPO_TRANSACCION_CHOICES = [
+        ('gasto', 'Gasto'),
+        ('venta', 'Venta'),
+        ('equipo', 'Equipo'),
+        ('inversion', 'Inversión'),
+        ('planilla', 'Planilla'),
+        ('servicios', 'Servicios'),
+        ('insumos', 'Insumos'),
+    ]
+    tipo_transaccion = models.CharField(max_length=20, choices=TIPO_TRANSACCION_CHOICES)
+    fecha = models.DateField()
+    foto = models.ImageField(upload_to='gastos/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.descripcion[:20]} - {self.total}"

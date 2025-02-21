@@ -7,8 +7,8 @@ from django.db.models import Count
 # IMPORTA Indice
 from Indices.models import Indice
 
-from .models import Finca, Division, Galpon, GalponDivision, ControlAnimal
-from .forms import FincaForm, DivisionForm, GalponForm, GalponDivisionForm, ControlAnimalForm
+from .models import Finca, Division, Galpon, GalponDivision, ControlAnimal, PersonalFinca, GastoFinca
+from .forms import FincaForm, DivisionForm, GalponForm, GalponDivisionForm, ControlAnimalForm, PersonalFincaForm, GastoFincaForm
 import json
 
 @login_required
@@ -48,13 +48,44 @@ def eliminar_finca(request, finca_id):
         return redirect('listar_fincas')
     return render(request, 'confirmar_eliminar_finca.html', {'finca': finca})
 
+
+@login_required
+def crear_personal_finca(request, finca_id):
+    finca = get_object_or_404(Finca, id=finca_id, usuario=request.user)
+    if request.method == 'POST':
+        form = PersonalFincaForm(request.POST, request.FILES)
+        if form.is_valid():
+            personal = form.save(commit=False)
+            personal.finca = finca
+            personal.save()
+            return redirect('administrar_finca', finca_id=finca.id)
+    else:
+        form = PersonalFincaForm()
+    return render(request, 'crear_personal_finca.html', {'form': form, 'finca': finca})
+
+@login_required
+def editar_personal_finca(request, personal_id):
+    personal = get_object_or_404(PersonalFinca, id=personal_id, finca__usuario=request.user)
+    if request.method == 'POST':
+        form = PersonalFincaForm(request.POST, request.FILES, instance=personal)
+        if form.is_valid():
+            form.save()
+            return redirect('administrar_finca', finca_id=personal.finca.id)
+    else:
+        form = PersonalFincaForm(instance=personal)
+    return render(request, 'editar_personal_finca.html', {'form': form, 'personal': personal})
+
+@login_required
+def eliminar_personal_finca(request, personal_id):
+    personal = get_object_or_404(PersonalFinca, id=personal_id, finca__usuario=request.user)
+    finca_id = personal.finca.id
+    if request.method == 'POST':
+        personal.delete()
+        return redirect('administrar_finca', finca_id=finca_id)
+    return render(request, 'confirmar_eliminar_personal_finca.html', {'personal': personal})
+
 @login_required
 def administrar_finca(request, finca_id):
-    """
-    Vista para administrar una finca específica.
-    Se muestra la finca, así como sus divisiones, galpones y controles de animales.
-    Además, se calculan datos para el análisis: total de animales, rendimiento promedio, etc.
-    """
     finca = get_object_or_404(Finca, id=finca_id, usuario=request.user)
     fincas = Finca.objects.filter(usuario=request.user).order_by('-fecha_creacion')
     
@@ -79,7 +110,7 @@ def administrar_finca(request, finca_id):
     for galpon in finca.galpones.all():
         divisions = galpon.divisiones.all()
         labels_div = [f"División {i+1}" for i, div in enumerate(divisions)]
-        data_div = [div.tamano for div in divisions]
+        data_div = [div.tamaño for div in divisions]
         galpon_division_data[galpon.id] = {
             "labels": labels_div,
             "data": data_div,
@@ -87,6 +118,9 @@ def administrar_finca(request, finca_id):
             "total": galpon.tamano,
         }
     galpon_division_data_json = json.dumps(galpon_division_data)
+    
+    personal_list = finca.personal.all()
+    gastos_list = finca.gastos.all()
     
     context = {
         'finca': finca,
@@ -96,9 +130,10 @@ def administrar_finca(request, finca_id):
         'composition_labels': composition_labels,
         'composition_values': composition_values,
         'galpon_division_data_json': galpon_division_data_json,
+        'personal_list': personal_list,
+        'gastos_list': gastos_list,
     }
     return render(request, 'administrar_finca.html', context)
-
 @login_required
 def editar_finca_imagen(request, finca_id):
     """Permite actualizar únicamente la imagen de una finca."""
@@ -290,3 +325,40 @@ def eliminar_galpon(request, galpon_id):
         galpon.delete()
         return redirect('administrar_finca', finca_id=finca_id)
     return render(request, 'confirmar_eliminar_galpon.html', {'galpon': galpon})
+
+
+
+@login_required
+def administrar_costos_ficas(request, finca_id):
+    finca = get_object_or_404(Finca, id=finca_id, usuario=request.user)
+    if request.method == 'POST':
+        form = GastoFincaForm(request.POST, request.FILES)
+        if form.is_valid():
+            gasto = form.save(commit=False)
+            gasto.finca = finca
+            gasto.save()
+            return redirect('administrar_finca', finca_id=finca.id)
+    else:
+        form = GastoFincaForm()
+    return render(request, 'administrar_costos_fincas.html', {'form': form, 'finca': finca})
+
+@login_required
+def editar_gasto_finca(request, gasto_id):
+    gasto = get_object_or_404(GastoFinca, id=gasto_id, finca__usuario=request.user)
+    if request.method == 'POST':
+        form = GastoFincaForm(request.POST, request.FILES, instance=gasto)
+        if form.is_valid():
+            form.save()
+            return redirect('administrar_finca', finca_id=gasto.finca.id)
+    else:
+        form = GastoFincaForm(instance=gasto)
+    return render(request, 'editar_costos_fincas.html', {'form': form, 'gasto': gasto})
+
+@login_required
+def eliminar_gasto_finca(request, gasto_id):
+    gasto = get_object_or_404(GastoFinca, id=gasto_id, finca__usuario=request.user)
+    finca_id = gasto.finca.id
+    if request.method == 'POST':
+        gasto.delete()
+        return redirect('administrar_finca', finca_id=finca_id)
+    return render(request, 'confirmar_eliminar_gasto_finca.html', {'gasto': gasto})

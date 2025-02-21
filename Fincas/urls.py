@@ -18,4 +18,10 @@ urlpatterns = [
     path('eliminar-control-animal/<int:control_id>/', views.eliminar_control_animal, name='eliminar_control_animal'),
     path('galpon/editar/<int:galpon_id>/', views.editar_galpon, name='editar_galpon'),
     path('galpon/eliminar/<int:galpon_id>/', views.eliminar_galpon, name='eliminar_galpon'),
+    path('crear-personal/<int:finca_id>/', views.crear_personal_finca, name='crear_personal_finca'),
+    path('editar-personal/<int:personal_id>/', views.editar_personal_finca, name='editar_personal_finca'),
+    path('eliminar-personal/<int:personal_id>/', views.eliminar_personal_finca, name='eliminar_personal_finca'),
+    path('administrar_costos_fincas/<int:finca_id>/', views.administrar_costos_ficas, name='administrar_costos_fincas'),
+    path('editar-gasto/<int:gasto_id>/', views.editar_gasto_finca, name='editar_gasto_finca'),
+    path('eliminar-gasto/<int:gasto_id>/', views.eliminar_gasto_finca, name='eliminar_gasto_finca'),
 ]

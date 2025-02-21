@@ -109,36 +109,35 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-6">
-  <!-- Encabezado con Título y botones -->
-  <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-    <h1 class="text-3xl font-bold text-white mb-4 sm:mb-0">
+  <!-- Encabezado: Título y botones debajo en una misma fila -->
+  <header class="mb-6">
+    <h1 class="text-3xl font-bold text-white mb-4 text-start">
       Subastas Disponibles
     </h1>
-    <div class="flex flex-col sm:flex-row gap-4">
-      <a href="{% url 'crear_subasta' %}" class="submit-button">Crear Subasta</a>
-      <a href="{% url 'mis_subastas' %}" class="submit-button">Mis Subastas</a>
-      <a href="{% url 'crear_subasta' %}" class="submit-button-rojo">En Vivo</a>
+    <div class="flex gap-4 justify-start">
+      <a href="{% url 'crear_subasta' %}" class="submit-button ">Crear Subasta</a>
+      <a href="{% url 'mis_subastas' %}" class="submit-button ">Mis Subastas</a>
+      <a href="{% url 'crear_subasta' %}" class="submit-button-rojo ">En Vivo</a>
     </div>
   </header>
 
   <!-- Card de publicidad -->
-<div class="flex-1 rounded p-8 text-white">
-  <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
-  <!-- Contenedor con altura fija -->
-  <div class="w-full h-[500px] overflow-hidden rounded-lg mb-6 flex items-center justify-center">
-    <div class="flex gap-4 items-center justify-center w-full h-full">
-      <!-- Ajusta el ancho de la imagen con w-[70%] -->
-      <img src="{% static 'img/anuncio_abono.png' %}" alt="Publicidad 1" class="w-[85%] h-full object-cover object-center">
+  <div class="flex-1 rounded p-8 text-white">
+    <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
+    <!-- Contenedor con altura fija -->
+    <div class="w-full h-[500px] overflow-hidden rounded-lg mb-6 flex items-center justify-center">
+      <div class="flex gap-4 items-center justify-center w-full h-full">
+        <!-- Ajusta el ancho de la imagen -->
+        <img src="{% static 'img/anuncio_abono.png' %}" alt="Publicidad 1" class="w-[85%] h-full object-cover object-center">
+      </div>
+    </div>
+    <p class="text-xl text-center mb-6">¡Promociona tu marca aquí!</p>
+    <div class="flex justify-center">
+      <a href="#" class="text-blue-400 underline text-xl hover:text-blue-300 transition-colors">
+        Más información
+      </a>
     </div>
   </div>
-  <p class="text-xl text-center mb-6">¡Promociona tu marca aquí!</p>
-  <div class="flex justify-center">
-    <a href="#" class="text-blue-400 underline text-xl hover:text-blue-300 transition-colors">
-      Más información
-    </a>
-  </div>
-</div>
-
 
   <!-- Listado de Categorías -->
   <h2 class="text-2xl font-bold text-white mb-4">Listado de Categorías</h2>
@@ -270,7 +269,7 @@
   <!-- Contenedor con altura fija -->
   <div class="w-full h-[500px] overflow-hidden rounded-lg mb-6 flex items-center justify-center">
     <div class="flex gap-4 items-center justify-center w-full h-full">
-      <!-- Ajusta el ancho de la imagen con w-[70%] -->
+      <!-- Ajusta el ancho de la imagen -->
       <img src="{% static 'img/anuncio_abono.png' %}" alt="Publicidad 1" class="w-[85%] h-full object-cover object-center">
     </div>
   </div>

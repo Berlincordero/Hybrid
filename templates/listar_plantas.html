@@ -395,7 +395,7 @@
       </div>
       <h2 class="text-2xl font-bold text-center">{{ bodega.get_tipo_display }}</h2>
       <p class="text-base text-gray-300 mt-2">{{ bodega.descripcion }}</p>
-      <p class="text-sm text-gray-400 mt-1">Tamaño: {{ bodega.tamano }} m²</p>
+      <p class="text-sm text-red-400 mt-1">Tamaño: {{ bodega.tamano }} m²</p>
       <!-- Contenedor de botones para editar y eliminar -->
       <div class="flex gap-2 mt-6">
         <a href="{% url 'editar_bodega' bodega.id %}" class="submit-button-blue w-1/2">
@@ -486,7 +486,7 @@
       <h2 class="text-2xl font-bold text-center">{{ gasto.nombre }}</h2>
       <p class="text-base text-gray-300 mt-2"><strong>Descripción:</strong> {{ gasto.descripcion }}</p>
       <p class="text-sm text-gray-400 mt-1"><strong>Lista de Productos:</strong> {{ gasto.lista_productos }}</p>
-      <p class="text-sm text-gray-400 mt-1"><strong>Total Gastos:</strong> {{ gasto.total_gasto }}</p>
+      <p class="text-sm text-red-400 mt-1"><strong>Total Gastos:</strong> {{ gasto.total_gasto }}</p>
       <p class="text-sm text-gray-400 mt-1"><strong>Tipo de Transacción:</strong> {{ gasto.get_tipo_transaccion_display }}</p>
       <p class="text-sm text-gray-400 mt-1"><strong>Fecha:</strong> {{ gasto.fecha }}</p>
       <div class="flex gap-2 mt-6">

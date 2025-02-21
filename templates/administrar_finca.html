@@ -1,6 +1,64 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<style>
+  /* Botón mejorado: Verde y bordeado */
+  .submit-button {
+    background-color: transparent; /* Sin fondo */
+    border: 2px solid #10b981; /* Verde-500 */
+    color: #10b981; /* Verde-500 */
+    font-weight: 600; /* font-semibold */
+    padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .submit-button:hover {
+    background-color: #10b981; /* Verde-500 */
+    color: white;
+    border-color: #059669; /* Verde-600 */
+    transform: scale(1.05);
+  }
+
+  /* Botón mejorado: Verde y bordeado */
+  .submit-button-rojo {
+    background-color: transparent; /* Sin fondo */
+    border: 2px solidrgb(255, 16, 16); /* Verde-500 */
+    color:rgb(243, 9, 9); /* Verde-500 */
+    font-weight: 600; /* font-semibold */
+    padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px rgb(255, 10, 10); /* shadow-lg */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .submit-button-rojo:hover {
+    background-color:rgb(185, 24, 16); /* Verde-500 */
+    color: white;
+    border-color:rgb(150, 5, 5); /* Verde-600 */
+    transform: scale(1.05);
+  }
+
+  /* Botón mejorado: Verde y bordeado */
+  .submit-button-blue {
+    background-color: transparent; /* Sin fondo */
+    border: 2px solidrgb(255, 16, 16); /* Verde-500 */
+    color:rgb(20, 98, 255); /* Verde-500 */
+    font-weight: 600; /* font-semibold */
+    padding: 0.75rem 1.5rem; /* Tailwind py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 4px 6px rgb(10, 149, 255); /* shadow-lg */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .submit-button-rojo:hover {
+    background-color:rgb(12, 155, 244); /* Verde-500 */
+    color: white;
+    border-color:rgb(5, 156, 220); /* Verde-600 */
+    transform: scale(1.05);
+  }
+</style>
 <div class="container mx-auto px-4 py-4">
   <!-- Enlace para regresar al listado general -->
   <a href="{% url 'listar_fincas' %}" class="inline-flex items-center back-link mb-4">
@@ -11,23 +69,51 @@
   <!-- Título de la página de administración -->
   <h1 class="text-3xl font-bold text-white mb-4">Administración de mi Finca</h1>
   
-  <!-- Información de la finca seleccionada -->
   <div class="bg-gray-800 p-6 rounded shadow mb-6">
     <h2 class="text-2xl font-semibold text-green-400 mb-2">{{ finca.nombre }}</h2>
-    <p class="text-gray-300">En esta sección podrás gestionar y modificar los datos de tu finca.</p>
-    <!-- Botón para organizar divisiones -->
-    <a href="{% url 'organizar_finca' finca.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded inline-block mt-4">
-      Organizar
-    </a>
-    <!-- Botón para organizar galpón -->
-    <a href="{% url 'organizar_galpon' finca.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded inline-block mt-4 ml-4">
-      Organizar Galpón
-    </a>
-    <!-- Botón para control de animales -->
-    <a href="{% url 'control_animales' finca.id %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded inline-block mt-4 ml-4">
-      Control de Animales
-    </a>
+    <p class="text-gray-300 mb-4">En esta sección podrás gestionar y modificar los datos de tu finca.</p>
+    <div class="flex flex-wrap gap-4 mt-4">
+      <!-- Botón para organizar divisiones -->
+      <a href="{% url 'organizar_finca' finca.id %}" class="submit-button">
+        Organizar
+      </a>
+      <!-- Botón para organizar galpón -->
+      <a href="{% url 'organizar_galpon' finca.id %}" class="submit-button">
+        Organizar Galpón
+      </a>
+      <!-- Botón para control de animales -->
+      <a href="{% url 'control_animales' finca.id %}" class="submit-button">
+        Control de Animales
+      </a>
+      <!-- Nuevo botón para agregar empleados -->
+      <a href="{% url 'crear_personal_finca' finca.id %}" class="submit-button">
+        Agregar Empleados
+      </a>
+      <!-- Nuevo botón para control de gastos -->
+      <a href="{% url 'administrar_costos_fincas' finca.id %}" class="submit-button">
+        Control Gastos
+      </a>
+    </div>
   </div>
+  
+  
+    <!-- Card de publicidad -->
+    <div class="flex-1 rounded p-8 text-white">
+      <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
+      <!-- Contenedor con altura fija -->
+      <div class="w-full h-[500px] overflow-hidden rounded-lg mb-6 flex items-center justify-center">
+        <div class="flex gap-4 items-center justify-center w-full h-full">
+          <!-- Ajusta el ancho de la imagen con w-[70%] -->
+          <img src="{% static 'img/anuncio_abono.png' %}" alt="Publicidad 1" class="w-[85%] h-full object-cover object-center">
+        </div>
+      </div>
+      <p class="text-xl text-center mb-6">¡Promociona tu marca aquí!</p>
+      <div class="flex justify-center">
+        <a href="#" class="text-blue-400 underline text-xl hover:text-blue-300 transition-colors">
+          Más información
+        </a>
+      </div>
+    </div>
   
   <!-- Listado de fincas (cards) del usuario -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
@@ -169,6 +255,35 @@
       <p class="text-gray-300">No se han agregado controles de animales.</p>
     {% endfor %}
   </div>
+
+
+  <h2 class="text-2xl font-bold text-white mt-8 mb-4">Gastos de la Finca</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for gasto in gastos_list %}
+      <div class="bg-gray-700 border border-gray-600 rounded p-4 text-white">
+        <!-- Encabezado similar a otros cards -->
+        <h3 class="text-xl font-semibold mb-2">{{ gasto.descripcion }}</h3>
+        {% if gasto.foto %}
+          <img src="{{ gasto.foto.url }}" alt="Sin imagen" class="w-full h-32 object-cover rounded mb-2 control-img">
+        {% endif %}
+        <p><strong>Productos:</strong> {{ gasto.lista_productos }}</p>
+        <p><strong>Total:</strong> {{ gasto.total }}</p>
+        <p><strong>Tipo:</strong> {{ gasto.get_tipo_transaccion_display }}</p>
+        <p><strong>Fecha:</strong> {{ gasto.fecha }}</p>
+        <div class="flex space-x-2 mt-2">
+          <a href="{% url 'editar_gasto_finca' gasto.id %}" class="submit-button-blue">
+            Editar
+          </a>
+          <a href="{% url 'eliminar_gasto_finca' gasto.id %}" class="submit-button-rojo">
+            Eliminar
+          </a>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-gray-300">No se han registrado gastos.</p>
+    {% endfor %}
+  </div>
+  
   
   <!-- Sección: Análisis y Rendimiento de la Finca -->
   <h2 class="text-2xl font-bold text-white mt-8 mb-4">Análisis y Rendimiento de la Finca</h2>
@@ -194,6 +309,24 @@
     <img id="universalModalImage" src="" alt="Imagen ampliada" class="max-h-screen max-w-full rounded">
   </div>
 </div>
+
+  <!-- Card de publicidad -->
+  <div class="flex-1 rounded p-8 text-white">
+    <h2 class="text-3xl font-bold mb-6 text-center">Publicidad</h2>
+    <!-- Contenedor con altura fija -->
+    <div class="w-full h-[500px] overflow-hidden rounded-lg mb-6 flex items-center justify-center">
+      <div class="flex gap-4 items-center justify-center w-full h-full">
+        <!-- Ajusta el ancho de la imagen con w-[70%] -->
+        <img src="{% static 'img/anuncio_abono.png' %}" alt="Publicidad 1" class="w-[85%] h-full object-cover object-center">
+      </div>
+    </div>
+    <p class="text-xl text-center mb-6">¡Promociona tu marca aquí!</p>
+    <div class="flex justify-center">
+      <a href="#" class="text-blue-400 underline text-xl hover:text-blue-300 transition-colors">
+        Más información
+      </a>
+    </div>
+  </div>
 
 <!-- JavaScript: activar modal sólo en .finca-img, .division-img, .galpon-img, .control-img -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

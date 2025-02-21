@@ -184,3 +184,26 @@ class Empleado(models.Model):
 
     def __str__(self):
         return self.nombre_completo
+    
+class Gasto(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='gastos')
+    fecha = models.DateField(default=now)
+    nombre = models.CharField(max_length=255)
+    descripcion = models.TextField(blank=True, null=True)
+    lista_productos = models.TextField(blank=True, null=True)
+    total_gasto = models.CharField(max_length=50, blank=True, null=True)  # Ahora es string
+    TIPO_TRANSACCION_CHOICES = [
+        ('gasto', 'Gasto'),
+        ('venta', 'Venta'),
+        ('mantenimiento', 'Mantenimiento'),
+        ('equipo', 'Equipo'),
+        ('inversion', 'Inversión'),
+        ('planilla', 'Planilla'),
+        ('servicios', 'Servicios'),
+        ('insumos', 'Insumos'),
+    ]
+    tipo_transaccion = models.CharField(max_length=50, choices=TIPO_TRANSACCION_CHOICES)
+    factura = models.ImageField(upload_to='gastos/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.nombre} ({self.get_tipo_transaccion_display()}) - {self.usuario.username}"

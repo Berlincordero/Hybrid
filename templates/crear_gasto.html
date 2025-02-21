@@ -1,0 +1,156 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "Control de Gastos" %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- TailwindCSS desde CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="date"],
+    textarea,
+    select,
+    input[type="file"] {
+      background-color: #1a202c;
+      color: white;
+      border: 2px solid #10b981;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      width: 100%;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input::placeholder,
+    textarea::placeholder {
+      color: #718096;
+    }
+    input:focus,
+    textarea:focus,
+    select:focus,
+    input[type="file"]:focus,
+    input[type="date"]:focus {
+      outline: none;
+      border-color: #059669;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+    }
+    .submit-button {
+      background-color: transparent;
+      border: 2px solid #10b981;
+      color: #10b981;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+    .submit-button:hover {
+      background-color: #10b981;
+      color: white;
+      border-color: #059669;
+      transform: scale(1.05);
+    }
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #d1d5db;
+      margin-bottom: 0.25rem;
+    }
+    .card {
+      background-color: #2d3748;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+    }
+    .back-link {
+      color: #10b981;
+      transition: color 0.3s;
+    }
+    .back-link:hover {
+      color: #059669;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-xl">
+    <div class="mb-4">
+      <a href="{% url 'listar_plantas' %}" class="inline-flex items-center back-link">
+        <span class="text-2xl mr-2">&#8592;</span>
+        <span>{% trans "Regresar a la lista" %}</span>
+      </a>
+    </div>
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight text-white">
+        {% trans "Control de Gastos" %}
+      </h1>
+    </header>
+    <section class="card">
+      <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        <div>
+          {{ form.fecha.label_tag }}
+          {{ form.fecha }}
+          {% if form.fecha.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.fecha.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.nombre.label_tag }}
+          {{ form.nombre }}
+          {% if form.nombre.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.nombre.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.descripcion.label_tag }}
+          {{ form.descripcion }}
+          {% if form.descripcion.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.descripcion.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.lista_productos.label_tag }}
+          {{ form.lista_productos }}
+          {% if form.lista_productos.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.lista_productos.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.total_gasto.label_tag }}
+          {{ form.total_gasto }}
+          {% if form.total_gasto.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.total_gasto.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.tipo_transaccion.label_tag }}
+          {{ form.tipo_transaccion }}
+          {% if form.tipo_transaccion.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.tipo_transaccion.errors }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {{ form.factura.label_tag }}
+          {{ form.factura }}
+          {% if form.factura.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.factura.errors }}</p>
+          {% endif %}
+        </div>
+        <button type="submit" class="submit-button">
+          {% trans "Guardar Gasto" %}
+        </button>
+      </form>
+    </section>
+  </div>
+</body>
+</html>

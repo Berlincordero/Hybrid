@@ -183,7 +183,7 @@
     <a href="{% url 'crear_mapa' %}" class="submit-button w-full sm:w-auto">
       Añadir Mapa
     </a>
-    <a href="#" class="submit-button w-full sm:w-auto">
+    <a href="{% url 'crear_gasto' %}" class="submit-button w-full sm:w-auto">
       Control Gastos
     </a>
     <!-- Botón "Ver Sembradio 2" (oculto por defecto) -->
@@ -378,6 +378,7 @@
   </div>
 </div>
 
+
 <!-- Sección para listar Bodegas -->
 <div class="mt-8">
   <h2 class="text-2xl font-bold text-white mb-4">Bodegas</h2>
@@ -395,19 +396,25 @@
       <h2 class="text-2xl font-bold text-center">{{ bodega.get_tipo_display }}</h2>
       <p class="text-base text-gray-300 mt-2">{{ bodega.descripcion }}</p>
       <p class="text-sm text-gray-400 mt-1">Tamaño: {{ bodega.tamano }} m²</p>
-      <!-- Botón de eliminar -->
-      <form method="post" action="{% url 'eliminar_bodega' bodega.id %}" class="mt-6" onsubmit="return confirm('¿Estás seguro de eliminar esta bodega?');">
-        {% csrf_token %}
-        <button type="submit" class="submit-button-red">
-          Eliminar
-        </button>
-      </form>
+      <!-- Contenedor de botones para editar y eliminar -->
+      <div class="flex gap-2 mt-6">
+        <a href="{% url 'editar_bodega' bodega.id %}" class="submit-button-blue w-1/2">
+          Editar
+        </a>
+        <form method="post" action="{% url 'eliminar_bodega' bodega.id %}" class="w-1/2" onsubmit="return confirm('¿Estás seguro de eliminar esta bodega?');">
+          {% csrf_token %}
+          <button type="submit" class="submit-button-red">
+            Eliminar
+          </button>
+        </form>
+      </div>
     </div>
     {% empty %}
       <p class="text-white">No tienes bodegas registradas.</p>
     {% endfor %}
   </div>
 </div>
+
 
 <!-- Modal para ver la imagen completa -->
 <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
@@ -444,19 +451,62 @@
       <p class="text-sm text-gray-400 mt-1"><strong>Salario:</strong> {{ empleado.salario }}</p>
       <p class="text-sm text-gray-400 mt-1"><strong>Profesión/Estudios:</strong> {{ empleado.profesion }}</p>
       <p class="text-sm text-gray-400 mt-1"><strong>Servicios Requeridos:</strong> {{ empleado.servicios_requeridos }}</p>
-      <!-- Botón de eliminar -->
-      <form method="post" action="{% url 'eliminar_empleado' empleado.id %}" class="mt-6" onsubmit="return confirm('¿Estás seguro de eliminar este empleado?');">
-        {% csrf_token %}
-        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
-          Eliminar
-        </button>
-      </form>
+      <!-- Contenedor de botones para Editar y Eliminar -->
+      <div class="flex gap-2 mt-6">
+        <a href="{% url 'editar_empleado' empleado.id %}" class="submit-button-blue w-1/2">
+          Editar
+        </a>
+        <form method="post" action="{% url 'eliminar_empleado' empleado.id %}" class="w-1/2" onsubmit="return confirm('¿Estás seguro de eliminar este empleado?');">
+          {% csrf_token %}
+          <button type="submit" class="submit-button-red">
+            Eliminar
+          </button>
+        </form>
+      </div>
     </div>
     {% empty %}
       <p class="text-white">No tienes empleados registrados.</p>
     {% endfor %}
   </div>
+
+<!-- Sección para listar Gastos -->
+<div class="mt-8">
+  <h2 class="text-2xl font-bold text-white mb-4">Control de Gastos</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    {% for gasto in request.user.gastos.all %}
+    <div class="bg-gray-800 border border-gray-700 rounded p-10 text-white">
+      <!-- Contenedor para la imagen de la factura con aspect ratio 16:4 -->
+      <div class="image-container mb-4">
+        {% if gasto.factura %}
+          <img src="{{ gasto.factura.url }}" alt="{{ gasto.nombre }}" class="w-full h-full object-cover rounded cursor-pointer" onclick="openModal('{{ gasto.factura.url }}')">
+        {% else %}
+          <img src="{% static 'images/product_placeholder.png' %}" alt="{{ gasto.nombre }}" class="w-full h-full object-cover rounded cursor-pointer" onclick="openModal('{% static 'images/product_placeholder.png' %}')">
+        {% endif %}
+      </div>
+      <h2 class="text-2xl font-bold text-center">{{ gasto.nombre }}</h2>
+      <p class="text-base text-gray-300 mt-2"><strong>Descripción:</strong> {{ gasto.descripcion }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Lista de Productos:</strong> {{ gasto.lista_productos }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Total Gastos:</strong> {{ gasto.total_gasto }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Tipo de Transacción:</strong> {{ gasto.get_tipo_transaccion_display }}</p>
+      <p class="text-sm text-gray-400 mt-1"><strong>Fecha:</strong> {{ gasto.fecha }}</p>
+      <div class="flex gap-2 mt-6">
+        <a href="{% url 'editar_gasto' gasto.id %}" class="submit-button-blue w-1/2">
+          Editar
+        </a>
+        <form method="post" action="{% url 'eliminar_gasto' gasto.id %}" class="w-1/2" onsubmit="return confirm('¿Estás seguro de eliminar este gasto?');">
+          {% csrf_token %}
+          <button type="submit" class="submit-button-red">
+            Eliminar
+          </button>
+        </form>
+      </div>
+    </div>
+    {% empty %}
+      <p class="text-white">No tienes gastos registrados.</p>
+    {% endfor %}
+  </div>
 </div>
+
 
 <!-- Card de publicidad -->
 <div class="flex-1 rounded p-8 text-white">

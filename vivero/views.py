@@ -5,8 +5,8 @@ from collections import defaultdict, Counter
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import localdate
-from .models import Planta, Vivero, Monitoreo, Mapa, Bodega, Empleado
-from .forms import PlantaForm, ViveroForm, MonitoreoForm, PlantaImagenForm, MapaForm, BodegaForm, EmpleadoForm
+from .models import Planta, Vivero, Monitoreo, Mapa, Bodega, Empleado, Gasto
+from .forms import PlantaForm, ViveroForm, MonitoreoForm, PlantaImagenForm, MapaForm, BodegaForm, EmpleadoForm, GastoForm
 
 
 def calcular_recomendacion(planta):
@@ -346,6 +346,19 @@ def crear_bodega(request):
     return render(request, 'crear_bodega.html', {'form': form})
 
 @login_required
+def editar_bodega(request, bodega_id):
+    bodega = get_object_or_404(Bodega, id=bodega_id, usuario=request.user)
+    if request.method == 'POST':
+        form = BodegaForm(request.POST, request.FILES, instance=bodega)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_plantas')
+    else:
+        form = BodegaForm(instance=bodega)
+    return render(request, 'editar_bodega.html', {'form': form, 'bodega': bodega})
+
+
+@login_required
 def eliminar_bodega(request, bodega_id):
     bodega = get_object_or_404(Bodega, id=bodega_id, usuario=request.user)
     if request.method == 'POST':
@@ -367,9 +380,57 @@ def crear_empleado(request):
     return render(request, 'empleados_subir.html', {'form': form})
 
 @login_required
+def editar_empleado(request, empleado_id):
+    empleado = get_object_or_404(Empleado, id=empleado_id, usuario=request.user)
+    if request.method == 'POST':
+        form = EmpleadoForm(request.POST, request.FILES, instance=empleado)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_plantas')
+    else:
+        form = EmpleadoForm(instance=empleado)
+    return render(request, 'editar_empleado.html', {'form': form, 'empleado': empleado})
+
+
+@login_required
 def eliminar_empleado(request, empleado_id):
     empleado = get_object_or_404(Empleado, id=empleado_id, usuario=request.user)
     if request.method == 'POST':
         empleado.delete()
         return redirect('listar_plantas')
     return render(request, 'eliminar_empleado.html', {'empleado': empleado})
+
+
+@login_required
+def crear_gasto(request):
+    if request.method == 'POST':
+        form = GastoForm(request.POST, request.FILES)
+        if form.is_valid():
+            gasto = form.save(commit=False)
+            gasto.usuario = request.user
+            gasto.save()
+            return redirect('listar_plantas')
+    else:
+        form = GastoForm()
+    return render(request, 'crear_gasto.html', {'form': form})
+
+@login_required
+def eliminar_gasto(request, gasto_id):
+    gasto = get_object_or_404(Gasto, id=gasto_id, usuario=request.user)
+    if request.method == 'POST':
+        gasto.delete()
+        return redirect('listar_plantas')
+    return render(request, 'eliminar_gasto.html', {'gasto': gasto})
+
+
+@login_required
+def editar_gasto(request, gasto_id):
+    gasto = get_object_or_404(Gasto, id=gasto_id, usuario=request.user)
+    if request.method == 'POST':
+        form = GastoForm(request.POST, request.FILES, instance=gasto)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_plantas')
+    else:
+        form = GastoForm(instance=gasto)
+    return render(request, 'editar_gasto.html', {'form': form, 'gasto': gasto})

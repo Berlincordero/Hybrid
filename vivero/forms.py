@@ -1,5 +1,5 @@
 from django import forms
-from .models import Planta, Vivero, Monitoreo, Mapa, Bodega, Empleado
+from .models import Planta, Vivero, Monitoreo, Mapa, Bodega, Empleado, Gasto
 
 class ViveroForm(forms.ModelForm):
     class Meta:
@@ -112,4 +112,26 @@ class EmpleadoForm(forms.ModelForm):
             'profesion': 'Profesión o estudios',
             'servicios_requeridos': 'Servicios requeridos',
             'imagen': 'Imagen o foto',
+        }
+        
+class GastoForm(forms.ModelForm):
+      class Meta:
+        model = Gasto
+        fields = ['fecha', 'nombre', 'descripcion', 'lista_productos', 'total_gasto', 'tipo_transaccion', 'factura']
+        labels = {
+            'fecha': 'Fecha',
+            'nombre': 'Nombre',
+            'descripcion': 'Descripción',
+            'lista_productos': 'Lista de Productos',
+            'total_gasto': 'Gastos en Total',
+            'tipo_transaccion': 'Tipo de Transacción',
+            'factura': 'Imagen de la Factura',
+        }
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date', 'class': 'form-input'}),
+            'nombre': forms.TextInput(attrs={'class': 'form-input'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-input', 'rows': 3}),
+            'lista_productos': forms.Textarea(attrs={'class': 'form-input', 'rows': 3}),
+            'total_gasto': forms.TextInput(attrs={'class': 'form-input'}),
+            'tipo_transaccion': forms.Select(attrs={'class': 'form-input'}),
         }

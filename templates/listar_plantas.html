@@ -526,6 +526,7 @@
   </div>
 </div>
 <!-- Script para mostrar el botón "Ver Sembradio 2" cuando en algún elemento del bloque 1 el remaining sea 0 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     var elems = document.querySelectorAll(".sembradio-info");
@@ -541,29 +542,28 @@
       document.getElementById("next-sembradio-container").style.display = "block";
     }
   });
-</script>
 
-<!-- Script para rotar automáticamente el carrusel cada 10 segundos -->
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const carousel = document.getElementById("carousel");
-    if (carousel && carousel.children.length > 0) {
-      // Se obtiene el ancho de la primera tarjeta + margen (space-x-4 = 16px)
-      const cardWidth = carousel.children[0].offsetWidth + 16;
-      setInterval(function() {
-        if (carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth) {
-          carousel.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          carousel.scrollBy({ left: cardWidth, behavior: 'smooth' });
-        }
-      }, 10000);
-    }
-  });
-</script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const carousel = document.getElementById("carousel");
+      if (carousel && carousel.children.length > 0) {
+        const firstCard = carousel.children[0];
+        // Obtener el margen derecho real de la tarjeta
+        const style = window.getComputedStyle(firstCard);
+        const marginRight = parseInt(style.marginRight) || 0;
+        const cardWidth = firstCard.offsetWidth + marginRight;
+        
+        setInterval(function() {
+          // Se establece una tolerancia de 5px para asegurar el reinicio
+          if (carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 5) {
+            carousel.scrollTo({ left: 0, behavior: 'smooth' });
+          } else {
+            carousel.scrollBy({ left: cardWidth, behavior: 'smooth' });
+          }
+        }, 10000);
+      }
+    });
+  
 
-<!-- Lottie script (CDN) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.4/lottie.min.js"></script>
-<script>
   // Cargar la animación Lottie en el contenedor "lottieRecomendacion" (si se utiliza)
   const recContainer = document.getElementById("lottieRecomendacion");
   if (recContainer) {

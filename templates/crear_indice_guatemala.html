@@ -1,0 +1,202 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "Crear Índice para Guatemala" %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- TailwindCSS desde CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Estilos compartidos */
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    textarea,
+    select {
+      background-color: #1a202c;
+      color: white;
+      border: 2px solid #10b981;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      width: 100%;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: #718096;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #059669;
+      box-shadow: 0 0 0 3px rgba(16,185,129,0.3);
+    }
+    .submit-button {
+      background-color: transparent;
+      border: 2px solid #10b981;
+      color: #10b981;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+    .submit-button:hover {
+      background-color: #10b981;
+      color: white;
+      border-color: #059669;
+      transform: scale(1.05);
+    }
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #d1d5db;
+      margin-bottom: 0.25rem;
+    }
+    .card {
+      background-color: #2d3748;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+      padding: 2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px rgba(0,0,0,0.15);
+    }
+    .back-link {
+      color: #10b981;
+      transition: color 0.3s;
+    }
+    .back-link:hover {
+      color: #059669;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-xl">
+    
+    <!-- Enlace para volver al listado de índices de Guatemala -->
+    <div class="mb-4">
+      <a href="{% url 'indice_guatemala' %}" class="inline-flex items-center back-link">
+        <span class="text-2xl mr-2">&#8592;</span>
+        <span>{% trans "Regresar a los índices de Guatemala" %}</span>
+      </a>
+    </div>
+
+    <header class="mb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight text-white">
+        {% trans "Crear Índice para Guatemala" %}
+      </h1>
+    </header>
+
+    <!-- Formulario para crear un índice -->
+    <section class="card">
+      <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Campo: Categoría Principal -->
+        <div>
+          {{ form.main_categoria.label_tag }}
+          {{ form.main_categoria }}
+          {% if form.main_categoria.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.main_categoria.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Sub Categoría -->
+        <div>
+          {{ form.sub_categoria.label_tag }}
+          {{ form.sub_categoria }}
+          {% if form.sub_categoria.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.sub_categoria.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Nombre -->
+        <div>
+          {{ form.nombre.label_tag }}
+          {{ form.nombre }}
+          {% if form.nombre.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.nombre.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Antes -->
+        <div>
+          {{ form.antes.label_tag }}
+          {{ form.antes }}
+          {% if form.antes.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.antes.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Sube/Baja (select) -->
+        <div>
+          {{ form.sube.label_tag }}
+          {{ form.sube }}
+          {% if form.sube.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.sube.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Total -->
+        <div>
+          {{ form.total.label_tag }}
+          {{ form.total }}
+          {% if form.total.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.total.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Precio Actual -->
+        <div>
+          {{ form.precio_actual.label_tag }}
+          {{ form.precio_actual }}
+          {% if form.precio_actual.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.precio_actual.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Fuente -->
+        <div>
+          {{ form.fuente.label_tag }}
+          {{ form.fuente }}
+          {% if form.fuente.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.fuente.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Inflación (Porcentaje) -->
+        <div>
+          {{ form.inflacion.label_tag }}
+          {{ form.inflacion }}
+          {% if form.inflacion.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.inflacion.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Campo: Imagen (opcional) -->
+        <div>
+          {{ form.image.label_tag }}
+          {{ form.image }}
+          {% if form.image.errors %}
+            <p class="text-red-400 text-sm mt-1">{{ form.image.errors }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Botón de Envío -->
+        <button type="submit" class="submit-button">
+          {% trans "Crear Índice" %}
+        </button>
+      </form>
+    </section>
+  </div>
+</body>
+</html>

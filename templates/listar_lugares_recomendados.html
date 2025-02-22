@@ -2,13 +2,94 @@
 {% load static %}
 {% block title %}Lugares Recomendados{% endblock %}
 {% block content %}
+<style>
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  .blink {
+    animation: blink 1s infinite;
+  }
+
+  /* Botón mejorado: Verde y bordeado */
+  .submit-button {
+    background-color: transparent;
+    border: 2px solid #10b981;
+    color: #10b981;
+    font-weight: 600;
+    padding: 0.5rem 1rem; /* tamaño reducido */
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+    font-size: 0.875rem;
+  }
+  .submit-button:hover {
+    background-color: #10b981;
+    color: white;
+    border-color: #059669;
+    transform: scale(1.05);
+  }
+
+  /* Botón mejorado: Rojo y bordeado */
+  .submit-button-red {
+    background-color: transparent;
+    border: 2px solid #f60505;
+    color: #ff0000;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(255, 6, 6, 0.1);
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+    font-size: 0.875rem;
+  }
+  .submit-button-red:hover {
+    background-color: #b51010;
+    color: white;
+    border-color: #960505;
+    transform: scale(1.05);
+  }
+
+  /* Botón mejorado: Azul y bordeado */
+  .submit-button-blue {
+    background-color: transparent;
+    border: 2px solid rgb(64, 158, 253);
+    color: rgb(64, 158, 253);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(12, 91, 227, 0.1);
+    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: pointer;
+    font-size: 0.875rem;
+  }
+  .submit-button-blue:hover {
+    background-color: rgb(19, 105, 255);
+    color: white;
+    border-color: rgb(22, 49, 255);
+    transform: scale(1.05);
+  }
+</style>
 <div class="container mx-auto px-4 py-4">
+
+   <!-- Botón de regresar en su propio bloque -->
+   <div class="mb-2">
+    <a href="{% url 'listar_indices' %}" class="submit-button-blue inline-block">
+      Regresar a la lista de índices
+    </a>
+  </div>
+  
   <h1 class="text-2xl font-bold text-white mb-4">Lugares Recomendados</h1>
   
-  <!-- Botón para agregar un nuevo lugar recomendado -->
-  <a href="{% url 'crear_lugar_recomendado' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-4 inline-block">
-    Recomendar Mi Negocio
-  </a>
+ 
+  <!-- Botón para recomendar negocio en bloque separado -->
+  <div class="mb-4">
+    <a href="{% url 'crear_lugar_recomendado' %}" class="submit-button-red inline-block">
+      Recomendar Mi Negocio
+    </a>
+  </div>
   
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
     {% for lugar in lugares %}
@@ -32,3 +113,4 @@
   </div>
 </div>
 {% endblock %}
+

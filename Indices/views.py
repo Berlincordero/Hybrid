@@ -155,11 +155,27 @@ def eliminar_lugar_recomendado(request, pk):
         return redirect('mis_negocios')
     return render(request, 'eliminar_lugar_recomendado.html', {'lugar': lugar})
 
-
 @login_required
 def mis_negocios(request):
-    negocios = LugarRecomendado.objects.filter(usuario=request.user)
-    return render(request, 'mis_negocios.html', {'negocios': negocios})
+    """
+    Lista únicamente los negocios creados por el usuario actual,
+    pero con la misma estructura de reacciones, comentarios, etc.
+    """
+    # Filtramos solo los lugares del usuario en sesión
+    lugares = LugarRecomendado.objects.filter(usuario=request.user).order_by('nombre')
+    
+    # Contabilizamos reacciones de la misma forma que en listar_lugares_recomendados
+    for lugar in lugares:
+        lugar.like_count = lugar.reacciones.filter(tipo='like').count()
+        lugar.love_count = lugar.reacciones.filter(tipo='love').count()
+        lugar.haha_count = lugar.reacciones.filter(tipo='haha').count()
+        lugar.wow_count = lugar.reacciones.filter(tipo='wow').count()
+        lugar.sad_count = lugar.reacciones.filter(tipo='sad').count()
+        lugar.angry_count = lugar.reacciones.filter(tipo='angry').count()
+        lugar.poop_count = lugar.reacciones.filter(tipo='poop').count()
+
+    return render(request, 'mis_negocios.html', {'lugares': lugares})
+
 
 
 @login_required

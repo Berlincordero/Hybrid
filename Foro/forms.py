@@ -37,4 +37,3 @@ class ComentarioForm(forms.ModelForm):
                 'rows': 2
             })
         }
-

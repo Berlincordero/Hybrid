@@ -1,16 +1,9 @@
 # indices/views.py
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import Indice, LugarRecomendado
-from .forms import IndiceForm, LugarRecomendadoForm
-from django.contrib import messages
-from django.utils import timezone
-# indices/views.py
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Indice, LugarRecomendado
-from .forms import IndiceForm, LugarRecomendadoForm
+from .models import Indice, LugarRecomendado, ReaccionLugar
+from .forms import IndiceForm, LugarRecomendadoForm, ComentarioLugarForm
 from django.contrib import messages
 from django.utils import timezone
 
@@ -46,8 +39,8 @@ def crear_indice(request):
 @login_required
 def editar_indice(request, pk):
     """
-    Editar únicamente índices de Costa Rica. Si se intenta
-    editar otro país, se redirige con un mensaje de error.
+    Editar únicamente índices de Costa Rica. 
+    Si se intenta editar otro país, se redirige con error.
     """
     if request.user.email != "enriquecorderob33@gmail.com":
         messages.error(request, "No tienes permiso para acceder.")
@@ -63,7 +56,7 @@ def editar_indice(request, pk):
     if request.method == "POST":
         form = IndiceForm(request.POST, request.FILES, instance=indice)
         if form.is_valid():
-            # Aunque sea edición, forzamos que siga siendo de Costa Rica
+            # Forzamos que siga siendo de Costa Rica
             indice_editado = form.save(commit=False)
             indice_editado.pais = "Costa Rica"
             indice_editado.save()
@@ -81,7 +74,7 @@ def editar_indice(request, pk):
 @login_required
 def listar_indices(request):
     """
-    Vista para listar únicamente los índices de Costa Rica.
+    Lista únicamente los índices de Costa Rica.
     """
     indices_carnes = Indice.objects.filter(pais="Costa Rica", sub_categoria='carnes').order_by('-fecha')
     indices_granos = Indice.objects.filter(pais="Costa Rica", sub_categoria='granos').order_by('-fecha')
@@ -102,25 +95,119 @@ def listar_indices(request):
     return render(request, "listar_indices.html", context)
 
 
-# El resto de tus vistas (lugares, índices de otros países, etc.) se mantienen igual...
-
+# ------------------------ LUGARES RECOMENDADOS ------------------------
 
 @login_required
 def listar_lugares_recomendados(request):
+    """
+    Lista de lugares recomendados, con conteo de reacciones 
+    calculado en la vista, para no usar filtros en el template.
+    """
     lugares = LugarRecomendado.objects.all().order_by('nombre')
-    return render(request, 'listar_lugares_recomendados.html', {'lugares': lugares})
+
+    # Añadimos atributos al objeto "lugar" con las cantidades de reacciones
+    for lugar in lugares:
+        lugar.like_count = lugar.reacciones.filter(tipo='like').count()
+        lugar.love_count = lugar.reacciones.filter(tipo='love').count()
+        lugar.haha_count = lugar.reacciones.filter(tipo='haha').count()
+        lugar.wow_count = lugar.reacciones.filter(tipo='wow').count()
+        lugar.sad_count = lugar.reacciones.filter(tipo='sad').count()
+        lugar.angry_count = lugar.reacciones.filter(tipo='angry').count()
+        lugar.poop_count = lugar.reacciones.filter(tipo='poop').count()  # <-- NUEVO
+
+    return render(request, 'listar_lugares_recomendados.html', {
+        'lugares': lugares
+    })
 
 @login_required
 def crear_lugar_recomendado(request):
     if request.method == 'POST':
         form = LugarRecomendadoForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            lugar = form.save(commit=False)
+            lugar.usuario = request.user
+            lugar.save()
             return redirect('listar_lugares_recomendados')
     else:
         form = LugarRecomendadoForm()
     return render(request, 'crear_lugar_recomendado.html', {'form': form})
 
+
+@login_required
+def editar_lugar_recomendado(request, pk):
+    lugar = get_object_or_404(LugarRecomendado, pk=pk, usuario=request.user)
+    if request.method == 'POST':
+        form = LugarRecomendadoForm(request.POST, request.FILES, instance=lugar)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Negocio actualizado correctamente.")
+            return redirect('mis_negocios')
+    else:
+        form = LugarRecomendadoForm(instance=lugar)
+    return render(request, 'editar_lugar_recomendado.html', {'form': form, 'lugar': lugar})
+
+@login_required
+def eliminar_lugar_recomendado(request, pk):
+    lugar = get_object_or_404(LugarRecomendado, pk=pk, usuario=request.user)
+    if request.method == 'POST':
+        lugar.delete()
+        messages.success(request, "Negocio eliminado correctamente.")
+        return redirect('mis_negocios')
+    return render(request, 'eliminar_lugar_recomendado.html', {'lugar': lugar})
+
+
+@login_required
+def mis_negocios(request):
+    negocios = LugarRecomendado.objects.filter(usuario=request.user)
+    return render(request, 'mis_negocios.html', {'negocios': negocios})
+
+
+@login_required
+def add_comentario_lugar(request, lugar_pk):
+    """
+    Agrega un comentario a un lugar recomendado.
+    """
+    lugar = get_object_or_404(LugarRecomendado, pk=lugar_pk)
+    if request.method == 'POST':
+        form = ComentarioLugarForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.autor = request.user
+            comentario.lugar = lugar
+            comentario.save()
+            messages.success(request, "¡Tu comentario fue agregado!")
+        else:
+            messages.error(request, "Hubo un error con tu comentario.")
+    return redirect('listar_lugares_recomendados')  # O podrías ir a un detalle del lugar
+
+
+@login_required
+def reaccionar_lugar(request, lugar_pk, tipo):
+    """
+    Agrega o actualiza la reacción (emoji) de un usuario sobre un lugar.
+    """
+    lugar = get_object_or_404(LugarRecomendado, pk=lugar_pk)
+    reaccion_existente = ReaccionLugar.objects.filter(lugar=lugar, user=request.user).first()
+
+    if reaccion_existente:
+        # Si el usuario hace click en la misma reacción, la quitamos (toggle off)
+        if reaccion_existente.tipo == tipo:
+            reaccion_existente.delete()
+            messages.info(request, "Quitaste tu reacción.")
+        else:
+            # Cambiamos la reacción anterior por la nueva
+            reaccion_existente.tipo = tipo
+            reaccion_existente.save()
+            messages.info(request, "¡Reacción actualizada!")
+    else:
+        # Crear una nueva reacción
+        ReaccionLugar.objects.create(lugar=lugar, user=request.user, tipo=tipo)
+        messages.success(request, "¡Tu reacción fue agregada!")
+
+    return redirect('listar_lugares_recomendados')
+
+
+# --------------------- ÍNDICES DE OTROS PAÍSES ------------------------
 
 @login_required
 def indice_panama(request):
@@ -142,6 +229,7 @@ def indice_panama(request):
     }
     return render(request, "indice_panama.html", context)
 
+
 @login_required
 def crear_indice_panama(request):
     if request.user.email != "enriquecorderob33@gmail.com":
@@ -153,7 +241,6 @@ def crear_indice_panama(request):
         if form.is_valid():
             indice = form.save(commit=False)
             indice.fecha = timezone.now().date()
-            # Asigna el país automáticamente a Panamá
             indice.pais = "Panamá"
             indice.save()
             messages.success(request, "Índice creado correctamente para Panamá.")
@@ -177,7 +264,6 @@ def crear_indice_nicaragua(request):
         if form.is_valid():
             indice = form.save(commit=False)
             indice.fecha = timezone.now().date()
-            # Asignamos el país automáticamente a Nicaragua
             indice.pais = "Nicaragua"
             indice.save()
             messages.success(request, "Índice creado correctamente para Nicaragua.")
@@ -222,7 +308,6 @@ def crear_indice_el_salvador(request):
         if form.is_valid():
             indice = form.save(commit=False)
             indice.fecha = timezone.now().date()
-            # Asigna el país automáticamente a "El Salvador"
             indice.pais = "El Salvador"
             indice.save()
             messages.success(request, "Índice creado correctamente para El Salvador.")
@@ -237,7 +322,6 @@ def crear_indice_el_salvador(request):
 
 @login_required
 def indice_el_salvador(request):
-    # Filtra los índices según su campo "pais" sea "El Salvador"
     indices_carnes = Indice.objects.filter(pais="El Salvador", sub_categoria="carnes").order_by('-fecha')
     indices_granos = Indice.objects.filter(pais="El Salvador", sub_categoria="granos").order_by('-fecha')
     indices_vegetales = Indice.objects.filter(pais="El Salvador", sub_categoria="vegetales").order_by('-fecha')
@@ -268,7 +352,6 @@ def crear_indice_guatemala(request):
         if form.is_valid():
             indice = form.save(commit=False)
             indice.fecha = timezone.now().date()
-            # Asignamos el país automáticamente a Guatemala
             indice.pais = "Guatemala"
             indice.save()
             messages.success(request, "Índice creado correctamente para Guatemala.")
@@ -313,7 +396,6 @@ def crear_indice_mexico(request):
         if form.is_valid():
             indice = form.save(commit=False)
             indice.fecha = timezone.now().date()
-            # Asignamos el país automáticamente a México
             indice.pais = "México"
             indice.save()
             messages.success(request, "Índice creado correctamente para México.")
@@ -358,7 +440,6 @@ def crear_indice_honduras(request):
         if form.is_valid():
             indice = form.save(commit=False)
             indice.fecha = timezone.now().date()
-            # Asigna el país automáticamente a Honduras
             indice.pais = "Honduras"
             indice.save()
             messages.success(request, "Índice creado correctamente para Honduras.")

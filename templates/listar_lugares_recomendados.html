@@ -1,116 +1,285 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block title %}Lugares Recomendados{% endblock %}
-{% block content %}
-<style>
-  @keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-  .blink {
-    animation: blink 1s infinite;
-  }
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% trans "Lugares Recomendados" %}</title>
+  <style>
+    /* Botón verde (igual que en Foros) */
+    .submit-button {
+      background-color: transparent;
+      border: 2px solid rgb(107, 248, 68);
+      color: rgb(254, 7, 7);
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgb(34, 254, 38);
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+    }
+    .submit-button:hover {
+      background-color: #10b981;
+      color: white;
+      border-color: rgb(110, 254, 78);
+      transform: scale(1.05);
+    }
 
-  /* Botón mejorado: Verde y bordeado */
-  .submit-button {
-    background-color: transparent;
-    border: 2px solid #10b981;
-    color: #10b981;
-    font-weight: 600;
-    padding: 0.5rem 1rem; /* tamaño reducido */
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
-    cursor: pointer;
-    font-size: 0.875rem;
-  }
-  .submit-button:hover {
-    background-color: #10b981;
-    color: white;
-    border-color: #059669;
-    transform: scale(1.05);
-  }
+    /* Fondo gris oscuro y tipografía */
+    body {
+      background-color: #1f2937;
+      margin: 0; 
+      padding: 1rem;
+      font-family: sans-serif;
+      color: #fff; /* Para texto general en color blanco */
+    }
 
-  /* Botón mejorado: Rojo y bordeado */
-  .submit-button-red {
-    background-color: transparent;
-    border: 2px solid #f60505;
-    color: #ff0000;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(255, 6, 6, 0.1);
-    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
-    cursor: pointer;
-    font-size: 0.875rem;
-  }
-  .submit-button-red:hover {
-    background-color: #b51010;
-    color: white;
-    border-color: #960505;
-    transform: scale(1.05);
-  }
+    /* Tarjeta para cada lugar */
+    .card-lugar {
+      background-color: rgb(38, 51, 68);
+      padding: 1.5rem;
+      margin: 1rem auto;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+      max-width: 800px;
+    }
 
-  /* Botón mejorado: Azul y bordeado */
-  .submit-button-blue {
-    background-color: transparent;
-    border: 2px solid rgb(64, 158, 253);
-    color: rgb(64, 158, 253);
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(12, 91, 227, 0.1);
-    transition: background-color 0.3s, color 0.3s, transform 0.3s, border-color 0.3s;
-    cursor: pointer;
-    font-size: 0.875rem;
-  }
-  .submit-button-blue:hover {
-    background-color: rgb(19, 105, 255);
-    color: white;
-    border-color: rgb(22, 49, 255);
-    transform: scale(1.05);
-  }
-</style>
-<div class="container mx-auto px-4 py-4">
+    .titulo-lugar {
+      font-size: 1.75rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+    }
 
-   <!-- Botón de regresar en su propio bloque -->
-   <div class="mb-2">
-    <a href="{% url 'listar_indices' %}" class="submit-button-blue inline-block">
-      Regresar a la lista de índices
+    .texto-verde {
+      color: #10b981;
+      font-size: 1rem;
+    }
+
+    .texto-base {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Sección de comentarios */
+    .comentarios-container {
+      background-color: rgb(53, 71, 95);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-top: 1rem;
+    }
+    .comentario-autor {
+      color: #10b981;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+    .comentario-texto {
+      margin-bottom: 1rem;
+    }
+    .sin-comentarios {
+      color: #00ff00; /* verde claro */
+      font-size: 0.9rem;
+    }
+
+    /* Sección de reacciones con emojis */
+    .reaction-container {
+      margin-top: 1rem;
+    }
+    .reaction-button {
+      cursor: pointer;
+      font-size: 1.40rem; /* Para que el emoji se vea más grande */
+      margin-right: 0.5rem;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+      display: inline-block; /* Para que respete el scale adecuadamente */
+    }
+    .reaction-button:hover {
+      transform: scale(1.5);
+    }
+
+    /* Ajuste para que el conteo de reacciones se vea en blanco */
+    .reaction-count {
+      margin-left: 0.2rem;
+      font-size: 1rem;
+      color: #fff; /* Ahora en blanco */
+    }
+
+    /* Estilos para el textarea (campo de comentarios) en modo oscuro */
+    textarea {
+      width: 100%;
+      background-color: #2d2d2d; /* Fondo oscuro */
+      color: #fff;              /* Texto claro */
+      border-radius: 0.5rem;
+      border: 1px solid #10b981;
+      padding: 0.5rem;
+      font-family: inherit;     /* Hereda la fuente del body */
+    }
+    /* Color para el placeholder del textarea */
+    textarea::placeholder {
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Enlace para regresar a la lista de índices -->
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <a href="{% url 'index' %}" class="submit-button">
+      {% trans "Regresar a la lista de índices" %}
     </a>
   </div>
-  
-  <h1 class="text-2xl font-bold text-white mb-4">Lugares Recomendados</h1>
-  
- 
-  <!-- Botón para recomendar negocio en bloque separado -->
-  <div class="mb-4">
-    <a href="{% url 'crear_lugar_recomendado' %}" class="submit-button-red inline-block">
-      Recomendar Mi Negocio
-    </a>
-  </div>
-  
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-    {% for lugar in lugares %}
-      <div class="bg-gray-800 border border-gray-700 rounded p-4 text-white">
-        {% if lugar.imagen %}
-          <img src="{{ lugar.imagen.url }}" alt="{{ lugar.nombre }}" class="w-full h-40 object-cover rounded mb-2">
-        {% else %}
-          <img src="{% static 'images/default_lugar.png' %}" alt="{{ lugar.nombre }}" class="w-full h-40 object-cover rounded mb-2">
-        {% endif %}
-        <h2 class="text-xl font-bold mb-1">{{ lugar.nombre }}</h2>
-        <p class="text-sm mb-1"><strong>Dirección:</strong> {{ lugar.direccion }}</p>
-        <p class="text-sm mb-1">{{ lugar.descripcion }}</p>
-        <p class="text-base mb-1"><strong>Precio Promedio:</strong> ${{ lugar.precio }}</p>
-        {% if lugar.url %}
-          <a href="{{ lugar.url }}" target="_blank" class="text-blue-400 underline text-sm">Ver sitio web</a>
-        {% endif %}
-      </div>
-    {% empty %}
-      <p class="text-white">No hay lugares recomendados registrados.</p>
-    {% endfor %}
-  </div>
+
+  <h1 style="text-align: center; margin-bottom: 2rem;">
+    {% trans "Lugares Recomendados" %}
+  </h1>
+
+  <!-- Botones juntos: Recomendar Mi Negocio y Mi Negocio -->
+<div style="text-align: center; margin-bottom: 2rem;">
+  <a href="{% url 'crear_lugar_recomendado' %}" class="submit-button">
+    {% trans "Recomendar Mi Negocio" %}
+  </a>
+  <a href="{% url 'mis_negocios' %}" class="submit-button">
+    {% trans "Mi Negocio" %}
+  </a>
 </div>
-{% endblock %}
 
+  {% if lugares %}
+    {% for lugar in lugares %}
+      <div class="card-lugar">
+        <h2 class="titulo-lugar">{{ lugar.nombre }}</h2>
+        
+        <!-- Dirección en verde (similar a @usuario en foros) -->
+        <p class="texto-verde texto-base">
+          <strong>{% trans "Dirección:" %}</strong> {{ lugar.direccion }}
+        </p>
+
+        <!-- Imagen del lugar (si existe) -->
+        {% if lugar.imagen %}
+          <img
+            src="{{ lugar.imagen.url }}"
+            alt="{{ lugar.nombre }}"
+            style="width:100%; max-height:400px; object-fit:cover; display:block; margin-bottom:1rem;"
+          >
+        {% endif %}
+
+        <!-- Descripción y precio promedio -->
+        <p class="texto-base">{{ lugar.descripcion }}</p>
+        <p class="texto-base">
+          <strong>{% trans "Precio Promedio:" %}</strong> ${{ lugar.precio }}
+        </p>
+
+        <!-- Enlace al sitio web con BOTÓN CENTRADO -->
+        {% if lugar.url %}
+          <div style="text-align: center; margin-top: 1rem;">
+            <a 
+              href="{{ lugar.url }}" 
+              target="_blank" 
+              class="submit-button"
+            >
+              {% trans "Ver sitio web" %}
+            </a>
+          </div>
+        {% endif %}
+
+        <!-- SECCIÓN DE REACCIONES con emojis -->
+        <div class="reaction-container">
+          <!-- Botón Like -->
+          <a href="{% url 'reaccionar_lugar' lugar.pk 'like' %}" class="reaction-button">
+            👍
+            <span class="reaction-count">
+              {{ lugar.like_count }}
+            </span>
+          </a>
+          <!-- Botón Love -->
+          <a href="{% url 'reaccionar_lugar' lugar.pk 'love' %}" class="reaction-button">
+            ❤️
+            <span class="reaction-count">
+              {{ lugar.love_count }}
+            </span>
+          </a>
+          <!-- Botón Haha -->
+          <a href="{% url 'reaccionar_lugar' lugar.pk 'haha' %}" class="reaction-button">
+            😂
+            <span class="reaction-count">
+              {{ lugar.haha_count }}
+            </span>
+          </a>
+          <!-- Botón Wow -->
+          <a href="{% url 'reaccionar_lugar' lugar.pk 'wow' %}" class="reaction-button">
+            😮
+            <span class="reaction-count">
+              {{ lugar.wow_count }}
+            </span>
+          </a>
+          <!-- Botón Sad -->
+          <a href="{% url 'reaccionar_lugar' lugar.pk 'sad' %}" class="reaction-button">
+            😢
+            <span class="reaction-count">
+              {{ lugar.sad_count }}
+            </span>
+          </a>
+          <!-- Botón Angry -->
+          <a href="{% url 'reaccionar_lugar' lugar.pk 'angry' %}" class="reaction-button">
+            😡
+            <span class="reaction-count">
+              {{ lugar.angry_count }}
+            </span>
+          </a>
+          <!-- Botón Poop -->
+          <a href="{% url 'reaccionar_lugar' lugar.pk 'poop' %}" class="reaction-button">
+            💩
+            <span class="reaction-count">
+              {{ lugar.poop_count }}
+            </span>
+          </a>
+        </div>
+        <!-- FIN SECCIÓN REACCIONES -->
+
+        <!-- Sección de comentarios -->
+        <div class="comentarios-container">
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">
+            {% trans "Comentarios" %}
+          </h3>
+          {% if lugar.comentarios.all %}
+            {% for comentario in lugar.comentarios.all %}
+              <div>
+                <p class="comentario-autor">
+                  {% trans "Por @" %} {{ comentario.autor.username }}
+                  - {{ comentario.created_at|date:"d/m/Y H:i" }}
+                </p>
+                <p class="comentario-texto">{{ comentario.contenido }}</p>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="sin-comentarios">
+              {% trans "No hay comentarios aún." %}
+            </p>
+          {% endif %}
+
+          <!-- Formulario para agregar un comentario a este lugar -->
+          <form 
+            method="POST" 
+            action="{% url 'add_comentario_lugar' lugar.pk %}"
+            style="margin-top: 1rem;"
+          >
+            {% csrf_token %}
+            <textarea 
+              name="contenido" 
+              placeholder="{% trans 'Escribe tu comentario...' %}" 
+              rows="2"
+              required
+            ></textarea>
+
+            <button type="submit" class="submit-button" style="margin-top: 0.5rem;">
+              {% trans "Comentar" %}
+            </button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p style="text-align: center;">
+      {% trans "No hay lugares recomendados registrados." %}
+    </p>
+  {% endif %}
+</body>
+</html>

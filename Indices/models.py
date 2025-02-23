@@ -1,8 +1,8 @@
-# Indices/models.py
+from django.conf import settings
 from django.db import models
 
-# Indices/models.py
-from django.db import models
+
+
 
 class Indice(models.Model):
     MAIN_CATEGORIES = (
@@ -92,19 +92,68 @@ class Indice(models.Model):
     def __str__(self):
         # Muestra la categoría y fecha; también podrías incluir nombre si gustas
         return f"{self.nombre} - {self.get_main_categoria_display()} ({self.fecha})"
+from django.db import models
 
 class LugarRecomendado(models.Model):
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="lugares",
+        null=True,  # opcional si se quiere permitir registros sin usuario (pero lo ideal es asignarlo siempre)
+        blank=True
+    )
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True, null=True)
-    precio = models.DecimalField(max_digits=10, decimal_places=2, help_text="Precio promedio")
+    precio = models.CharField(max_length=50, help_text="Precio promedio")
     imagen = models.ImageField(upload_to='lugares/', blank=True, null=True)
     url = models.URLField(blank=True, null=True, help_text="Sitio web del lugar (opcional)")
 
     def __str__(self):
         return self.nombre
-
-
     
 
-   
+
+
+class ComentarioLugar(models.Model):
+    lugar = models.ForeignKey(
+        'LugarRecomendado', 
+        on_delete=models.CASCADE,
+        related_name='comentarios'
+    )
+    autor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    contenido = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comentario de {self.autor} en {self.lugar.nombre}"
+
+class ReaccionLugar(models.Model):
+    REACTION_CHOICES = [
+        ('like', '👍'),
+        ('love', '❤️'),
+        ('haha', '😂'),
+        ('wow', '😮'),
+        ('sad', '😢'),
+        ('angry', '😡'),
+        ('poop', '💩'),  # <-- NUEVO TIPO
+    ]
+
+    lugar = models.ForeignKey(
+        'LugarRecomendado', 
+        on_delete=models.CASCADE, 
+        related_name='reacciones'
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE
+    )
+    tipo = models.CharField(max_length=10, choices=REACTION_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        # Muestra la reacción con su emoji y el usuario
+        return f"{self.get_tipo_display()} por {self.user} en {self.lugar.nombre}"

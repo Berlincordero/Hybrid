@@ -1,6 +1,6 @@
 # indices/forms.py
 from django import forms
-from .models import Indice, LugarRecomendado
+from .models import Indice, LugarRecomendado, ComentarioLugar
 
 class IndiceForm(forms.ModelForm):
     class Meta:
@@ -22,3 +22,16 @@ class LugarRecomendadoForm(forms.ModelForm):
     class Meta:
         model = LugarRecomendado
         fields = ['nombre', 'direccion', 'descripcion', 'precio', 'imagen', 'url']
+
+
+class ComentarioLugarForm(forms.ModelForm):
+    class Meta:
+        model = ComentarioLugar
+        fields = ['contenido']
+        widgets = {
+            'contenido': forms.Textarea(attrs={
+                'placeholder': 'Escribe tu comentario...', 
+                'rows': 2,
+                'cols': 40
+            }),
+        }
